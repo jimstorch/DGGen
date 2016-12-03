@@ -8,12 +8,6 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 TEXT_COLOR = (0, .1, .5)
 
-#DEFAULT_FONT = 'GNUTypewriter'
-#pdfmetrics.registerFont(TTFont('GNUTypewriter', 'data/GNUTypewriter.ttf'))
-
-#DEFAULT_FONT = 'CMU Typewriter Tex'
-#pdfmetrics.registerFont(TTFont('CMU Typewriter Tex', 'data/cmuntb.ttf'))
-
 DEFAULT_FONT = 'Special Elite'
 pdfmetrics.registerFont(TTFont('Special Elite', 'data/SpecialElite.ttf'))
 
@@ -28,7 +22,7 @@ with open('data/surnames.txt') as f:
     SURNAMES = f.read().splitlines()  
 
 with open('data/towns.txt') as f:
-    towns = f.read().splitlines() 
+    TOWNS = f.read().splitlines() 
 
 
 MONTHS = ('JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC')
@@ -54,7 +48,7 @@ class Need2KnowCharacter(object):
             self.d['name'] = choice(SURNAMES).upper() + ', ' + choice(FEMALES)
 
         self.d['profession'] = profession
-        self.d['nationality'] = '(U.S.A.) ' + choice(towns)
+        self.d['nationality'] = '(U.S.A.) ' + choice(TOWNS)
       
         self.d['age'] = '%d    (%s %d)' % (randint(24,55), choice(MONTHS), (randint(1,28)))
         #self.d['birthday'] = '-- %d %s' % (randint(1,28),choice(MONTHS))
