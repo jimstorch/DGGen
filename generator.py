@@ -38,6 +38,7 @@ class Need2KnowCharacter(object):
   
     def __init__(self, gender='male', profession=''):
 
+        ## Hold all dictionary
         self.d = {}
 
         if gender == 'male':
@@ -46,12 +47,10 @@ class Need2KnowCharacter(object):
         else:
             self.d['female'] = 'X'
             self.d['name'] = choice(SURNAMES).upper() + ', ' + choice(FEMALES)
-
         self.d['profession'] = profession
         self.d['nationality'] = '(U.S.A.) ' + choice(TOWNS)
-      
         self.d['age'] = '%d    (%s %d)' % (randint(24,55), choice(MONTHS), (randint(1,28)))
-        #self.d['birthday'] = '-- %d %s' % (randint(1,28),choice(MONTHS))
+
 
         ## Spend the Point Pool
         pool = choice(self.statpools)
@@ -103,7 +102,11 @@ class Need2KnowCharacter(object):
             self.d['language2'] = 30 
             self.d['history'] = 60 
             self.d['occult'] = 40 
-            self.d['persuade'] = 40 
+            self.d['persuade'] = 40
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['bond4'] = self.d['charisma']
 
             possible = set([
                 ('archeology',40),
@@ -113,7 +116,6 @@ class Need2KnowCharacter(object):
                 ('search',60),
                 ('survival',50),
                 ])
-      
             choice1, choice2 = sample(possible,2)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -126,7 +128,11 @@ class Need2KnowCharacter(object):
             self.d['language2'] = 30 
             self.d['history'] = 60 
             self.d['occult'] = 40 
-            self.d['persuade'] = 40 
+            self.d['persuade'] = 40
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['bond4'] = self.d['charisma'] 
 
             possible = set([
                 ('anthropology',40),
@@ -152,7 +158,10 @@ class Need2KnowCharacter(object):
             self.d['craft3value'] = 40             
             self.d['science1label'] = 'Mathematics'
             self.d['science1value'] = 40
-            self.d['sigint'] = 40                
+            self.d['sigint'] = 40
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
 
             possible = set([
                 ('accounting',50),
@@ -182,7 +191,10 @@ class Need2KnowCharacter(object):
             self.d['law'] = 30                
             self.d['persuade'] = 50  
             self.d['search'] = 50  
-            self.d['unarmed combat'] = 60  
+            self.d['unarmed combat'] = 60
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
 
             possible = set([
                 ('accounting',60),
@@ -191,7 +203,7 @@ class Need2KnowCharacter(object):
                 ('heavy weapons',50),
                 ('pharmacy',50),
                 ])
-            choice1 = sample(possible,2)[0]
+            choice1 = sample(possible,1)[0]
             self.d[choice1[0]] = choice1[1]
 
 
@@ -204,7 +216,10 @@ class Need2KnowCharacter(object):
             self.d['pharmacy'] = 50
             self.d['science1label'] = 'Biology'
             self.d['science1value'] = 60
-            self.d['search'] = 40                
+            self.d['search'] = 40
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
 
             possible = set([
                 ('forensics',50),
@@ -224,6 +239,10 @@ class Need2KnowCharacter(object):
             self.d['science1value'] = 60
             self.d['science2value'] = 50
             self.d['science3value'] = 50
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['bond4'] = self.d['charisma']
 
             possible = set([
                 ('accounting',50),
@@ -253,6 +272,9 @@ class Need2KnowCharacter(object):
             self.d['survival'] = 50
             self.d['swim'] = 50
             self.d['unarmed combat'] = 60
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+
 
         ## bonus points
 
@@ -331,11 +353,14 @@ class Need2KnowPDF(object):
         'intelligence':(164,550),
         'power':(164,532),
         'charisma':(164,514),
-
         'hitpoints':(223,482),
         'willpower':(223,464),
         'sanity':(223,446),
         'breaking point':(223,428),
+        'bond1':(543,604),
+        'bond2':(543,586),
+        'bond3':(543,568),
+        'bond4':(543,550),
 
         ## Applicable Skill Sets
         'accounting':(226,361),
@@ -485,7 +510,6 @@ for x in range(10):
     p.add_page(c.d)
     c=Need2KnowCharacter(gender='female',profession='Special Operator')
     p.add_page(c.d) 
-
 
 
 p.save_pdf()
