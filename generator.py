@@ -463,49 +463,49 @@ class Need2KnowPDF(object):
 
 p = Need2KnowPDF()
 
-for x in range(10):  
+for x in range(50):  
     c=Need2KnowCharacter(gender='male',profession='Anthropologist')
     p.add_page(c.d)
     c=Need2KnowCharacter(gender='female',profession='Anthropologist')
     p.add_page(c.d) 
 
-for x in range(10):  
+for x in range(50):  
     c=Need2KnowCharacter(gender='male',profession='Computer Science')
     p.add_page(c.d)
     c=Need2KnowCharacter(gender='female',profession='Computer Science')
     p.add_page(c.d) 
 
-for x in range(10):  
+for x in range(50):  
     c=Need2KnowCharacter(gender='male',profession='Engineer')
     p.add_page(c.d)
     c=Need2KnowCharacter(gender='female',profession='Engineer')
     p.add_page(c.d) 
 
-for x in range(10):  
+for x in range(50):  
     c=Need2KnowCharacter(gender='male',profession='Federal Agent')
     p.add_page(c.d)
     c=Need2KnowCharacter(gender='female',profession='Federal Agent')
     p.add_page(c.d) 
 
-for x in range(10):  
+for x in range(50):  
     c=Need2KnowCharacter(gender='male',profession='Historian')
     p.add_page(c.d)
     c=Need2KnowCharacter(gender='female',profession='Historian')
     p.add_page(c.d) 
 
-for x in range(10):  
+for x in range(50):  
     c=Need2KnowCharacter(gender='male',profession='Physician')
     p.add_page(c.d)
     c=Need2KnowCharacter(gender='female',profession='Physician')
     p.add_page(c.d) 
 
-for x in range(10):  
+for x in range(50):  
     c=Need2KnowCharacter(gender='male',profession='Scientist')
     p.add_page(c.d)
     c=Need2KnowCharacter(gender='female',profession='Scientist')
     p.add_page(c.d) 
 
-for x in range(10):  
+for x in range(50):  
     c=Need2KnowCharacter(gender='male',profession='Special Operator')
     p.add_page(c.d)
     c=Need2KnowCharacter(gender='female',profession='Special Operator')
