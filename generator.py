@@ -1,17 +1,21 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
+# Modules
 from random import randint, shuffle, choice, sample
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
+# Global variables
 TEXT_COLOR = (0, .1, .5)
 
 DEFAULT_FONT = 'Special Elite'
 pdfmetrics.registerFont(TTFont('Special Elite', 'data/SpecialElite.ttf'))
 
+MONTHS = ('JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC')
 
+# Read names and places
 with open('data/boys1986.txt') as f:
     MALES = f.read().splitlines() 
 
@@ -24,10 +28,7 @@ with open('data/surnames.txt') as f:
 with open('data/towns.txt') as f:
     TOWNS = f.read().splitlines() 
 
-
-MONTHS = ('JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC')
-
-
+# Classes
 class Need2KnowCharacter(object):
 
     statpools = (
@@ -49,8 +50,8 @@ class Need2KnowCharacter(object):
             self.d['name'] = choice(SURNAMES).upper() + ', ' + choice(FEMALES)
         self.d['profession'] = profession
         self.d['nationality'] = '(U.S.A.) ' + choice(TOWNS)
-        self.d['age'] = '%d    (%s %d)' % (randint(24,55), choice(MONTHS), (randint(1,28)))
-
+        self.d['age'] = '%d    (%s %d)' % (randint(24,55), choice(MONTHS),
+                (randint(1,28)))
 
         ## Spend the Point Pool
         pool = choice(self.statpools)
@@ -63,7 +64,8 @@ class Need2KnowCharacter(object):
         self.d['charisma'] = pool[5]
 
         ## Derived Stats
-        self.d['hitpoints'] = int(round((self.d['strength'] + self.d['constitution']) / 2.0))
+        self.d['hitpoints'] = int(round((self.d['strength'] +
+            self.d['constitution']) / 2.0))
         self.d['willpower'] = self.d['power']
         self.d['sanity'] = self.d['power'] * 5
         self.d['breaking point'] = self.d['power'] * 4
@@ -146,7 +148,6 @@ class Need2KnowCharacter(object):
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
 
-
         if profession == 'Computer Science' or profession == 'Engineer':
 
             self.d['computer science'] = 60
@@ -178,7 +179,6 @@ class Need2KnowCharacter(object):
             self.d[choice3[0]] = choice3[1]
             self.d[choice4[0]] = choice4[1]
            
-
         if profession == 'Federal Agent':
 
             self.d['alertness'] = 50
@@ -206,7 +206,6 @@ class Need2KnowCharacter(object):
             choice1 = sample(possible,1)[0]
             self.d[choice1[0]] = choice1[1]
 
-
         if profession == 'Physician':
 
             self.d['bureaucracy'] = 50
@@ -230,7 +229,6 @@ class Need2KnowCharacter(object):
             choice1, choice2 = sample(possible,2)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
-
 
         if profession == 'Scientist':
 
@@ -257,7 +255,6 @@ class Need2KnowCharacter(object):
             self.d[choice2[0]] = choice2[1]     
             self.d[choice3[0]] = choice3[1]   
 
-
         if profession == 'Special Operator':
 
             self.d['alertness'] = 60
@@ -274,7 +271,6 @@ class Need2KnowCharacter(object):
             self.d['unarmed combat'] = 60
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
-
 
         ## bonus points
 
@@ -329,8 +325,6 @@ class Need2KnowCharacter(object):
             if boost > 80:
                 boost = 80
             self.d[skill] = boost
-    
-
 
 class Need2KnowPDF(object):
 
@@ -428,10 +422,11 @@ class Need2KnowPDF(object):
     }
 
     ## Fields that also get a multiplier
-    x5_stats = ['strength','constitution','dexterity','intelligence','power','charisma']
+    x5_stats = ['strength','constitution','dexterity','intelligence',
+            'power','charisma']
 
     def __init__(self, width=612, height=792):
-        self.c = canvas.Canvas('out.pdf')
+        self.c = canvas.Canvas('random_delta_green_characters.pdf')
         self.c.setPageSize((width, height))
 
     def save_pdf(self):
@@ -455,63 +450,25 @@ class Need2KnowPDF(object):
         self.c.setFont(DEFAULT_FONT,11)
         self.font_color(*TEXT_COLOR)
         self.c.drawImage('data/dg_print.png',0,0,612,792)
+
         for key in d:
             self.fill_field(key,d[key])
+
         ## Tell ReportLab we're done with current page
         self.c.showPage()
 
+# Generating characters
+num_char_per_class = 8
+classes =  ['Anthropologist', 'Computer Science' 'Engineer', 'Federal Agent',
+        'Historian', 'Physician', 'Scientist', 'Special Operator']
 
 p = Need2KnowPDF()
 
-for x in range(50):  
-    c=Need2KnowCharacter(gender='male',profession='Anthropologist')
-    p.add_page(c.d)
-    c=Need2KnowCharacter(gender='female',profession='Anthropologist')
-    p.add_page(c.d) 
-
-for x in range(50):  
-    c=Need2KnowCharacter(gender='male',profession='Computer Science')
-    p.add_page(c.d)
-    c=Need2KnowCharacter(gender='female',profession='Computer Science')
-    p.add_page(c.d) 
-
-for x in range(50):  
-    c=Need2KnowCharacter(gender='male',profession='Engineer')
-    p.add_page(c.d)
-    c=Need2KnowCharacter(gender='female',profession='Engineer')
-    p.add_page(c.d) 
-
-for x in range(50):  
-    c=Need2KnowCharacter(gender='male',profession='Federal Agent')
-    p.add_page(c.d)
-    c=Need2KnowCharacter(gender='female',profession='Federal Agent')
-    p.add_page(c.d) 
-
-for x in range(50):  
-    c=Need2KnowCharacter(gender='male',profession='Historian')
-    p.add_page(c.d)
-    c=Need2KnowCharacter(gender='female',profession='Historian')
-    p.add_page(c.d) 
-
-for x in range(50):  
-    c=Need2KnowCharacter(gender='male',profession='Physician')
-    p.add_page(c.d)
-    c=Need2KnowCharacter(gender='female',profession='Physician')
-    p.add_page(c.d) 
-
-for x in range(50):  
-    c=Need2KnowCharacter(gender='male',profession='Scientist')
-    p.add_page(c.d)
-    c=Need2KnowCharacter(gender='female',profession='Scientist')
-    p.add_page(c.d) 
-
-for x in range(50):  
-    c=Need2KnowCharacter(gender='male',profession='Special Operator')
-    p.add_page(c.d)
-    c=Need2KnowCharacter(gender='female',profession='Special Operator')
-    p.add_page(c.d) 
-
+for the_class in classes:
+    for x in range(num_char_per_class):
+        c=Need2KnowCharacter(gender='male',profession=the_class)
+        p.add_page(c.d)
+        c=Need2KnowCharacter(gender='female',profession=the_class)
+        p.add_page(c.d)
 
 p.save_pdf()
-
-
