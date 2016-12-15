@@ -4,7 +4,8 @@ The following character sheet images were graciously provided by Simeon Cogswell
 * Character Sheet NO BACKGROUND.pdf
 * Character Sheet NO BACKGROUND BACK.jpg
 * Character Sheet NO BACKGROUND FRONT.jpg
-Huge thank you to Simeon and the folks at Arc Dream Publishing for the support.
+
+Big thank you to Simeon and the folks at Arc Dream Publishing for the support.
 
 
 ## Setting up a virtual environment
