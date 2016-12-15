@@ -9,7 +9,6 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 # Global variables
 TEXT_COLOR = (0, .1, .5)
-
 DEFAULT_FONT = 'Special Elite'
 pdfmetrics.registerFont(TTFont('Special Elite', 'data/SpecialElite.ttf'))
 
@@ -178,6 +177,40 @@ class Need2KnowCharacter(object):
             self.d[choice2[0]] = choice2[1]
             self.d[choice3[0]] = choice3[1]
             self.d[choice4[0]] = choice4[1]
+
+
+        if profession == 'Criminal':
+
+            self.d['alertness'] = 50
+            self.d['criminology'] = 60
+            self.d['dodge'] = 40
+            self.d['drive'] = 50
+            self.d['firearms'] = 40
+            self.d['law'] = 40
+            self.d['melee weapons'] = 40
+            self.d['persuade'] = 50
+            self.d['stealth'] = 50
+            self.d['unarmed combat'] = 50
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['craft1label'] = 'locksmithing'
+
+            possible = set([
+                ('craft1value',40),
+                ('demolitions',40),
+                ('disguise',50),
+                ('language1',40),
+                ('humint',50),
+                ('navigate',50),
+                ('occult',50),
+                ('pharmacy',40),                
+                ])
+            choice1, choice2 = sample(possible,2)
+            self.d[choice1[0]] = choice1[1]
+            self.d[choice2[0]] = choice2[1]
+
            
         if profession == 'Federal Agent':
 
@@ -206,6 +239,165 @@ class Need2KnowCharacter(object):
             choice1 = sample(possible,1)[0]
             self.d[choice1[0]] = choice1[1]
 
+
+        if profession == 'Firefighter':
+
+            self.d['alertness'] = 50
+            self.d['athletics'] = 60
+            self.d['craft1label'] = 'Electrician'
+            self.d['craft1value'] = 40
+            self.d['craft2label'] = 'Mechanic'
+            self.d['craft2value'] = 40
+            self.d['demolitions'] = 50
+            self.d['drive'] = 50
+            self.d['first aide'] = 50
+            self.d['forensics'] = 40
+            self.d['heavy machinery'] = 50
+            self.d['navigate'] = 50
+            self.d['search'] = 40
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+
+
+        if profession == 'Foreign Service Officer':
+
+            self.d['accounting'] = 40
+            self.d['anthropology'] = 40
+            self.d['bureaucracy'] = 60
+            self.d['language1'] = 50
+            self.d['language2'] = 50
+            self.d['language3'] = 40
+            self.d['history'] = 40
+            self.d['humint'] = 50
+            self.d['law'] = 40
+            self.d['persuade'] = 50
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+
+
+        if profession == 'Intelligence Analyst':
+
+            self.d['anthropology'] = 40
+            self.d['bureaucracy'] = 50
+            self.d['computer science'] = 40
+            self.d['criminology'] = 40
+            self.d['language1'] = 50
+            self.d['language2'] = 50
+            self.d['language3'] = 40
+            self.d['history'] = 40
+            self.d['humint'] = 50
+            self.d['sigint'] = 40
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+
+
+
+        if profession == 'Intelligence Case Officer':
+
+            self.d['alertness'] = 50
+            self.d['bureaucracy'] = 40
+            self.d['criminology'] = 50
+            self.d['disguise'] = 50
+            self.d['drive'] = 40
+            self.d['firearms'] = 40
+            self.d['language1'] = 50
+            self.d['language2'] = 40
+            self.d['humint'] = 60
+            self.d['sigint'] = 40
+            self.d['stealth'] = 50
+            self.d['unarmed combat'] = 50
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+
+
+        if profession == 'Lawyer' or profession == 'Business Executive':
+    
+            self.d['accounting'] = 50
+            self.d['bureaucracy'] = 50
+            self.d['humint'] = 40
+            self.d['persuade'] = 60
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['bond4'] = self.d['charisma']
+
+            possible = set([
+                ('computer science',50),
+                ('criminology',60),
+                ('language1',50),
+                ('law',50),
+                ('pharmacy',50),
+                ])
+       
+            choice1, choice2, choice3, choice4 = sample(possible,4)
+            self.d[choice1[0]] = choice1[1]
+            self.d[choice2[0]] = choice2[1]     
+            self.d[choice3[0]] = choice3[1]
+            self.d[choice4[0]] = choice4[1]  
+
+
+        if profession == 'Media Specialist':
+            
+            self.d['art1'] = 60
+            self.d['history'] = 40
+            self.d['humint'] = 40
+            self.d['persuade'] = 50
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['bond4'] = self.d['charisma']
+
+            possible = set([
+                ('anthropology',40),
+                ('archeology',40),
+                ('art2',40),
+                ('bureaucracy',50),
+                ('computer science',40),
+                ('criminology',50),
+                ('language1',40),
+                ('law',40),
+                ('military science',40),
+                ('occult',50),
+                ('science1value',40),
+                ])
+            choice1, choice2, choice3, choice4, choice5 = sample(possible,5)
+            self.d[choice1[0]] = choice1[1]
+            self.d[choice2[0]] = choice2[1]     
+            self.d[choice3[0]] = choice3[1]
+            self.d[choice4[0]] = choice4[1]  
+            self.d[choice5[0]] = choice5[1]  
+
+
+        if profession == 'Nurse' or profession == 'Paramedic':
+
+            self.d['alertness'] = 40
+            self.d['bureaucracy'] = 40
+            self.d['first aide'] = 60
+            self.d['humint'] = 40
+            self.d['medicine'] = 40
+            self.d['persuade'] = 40
+            self.d['pharmacy'] = 40
+            self.d['science1label'] = 'Biology'
+            self.d['science1value'] = 40
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['bond4'] = self.d['charisma']
+    
+            possible = set([
+                ('drive',60),
+                ('forensics',40),
+                ('navigate',50),
+                ('psychotherapy',50),
+                ('search',60),
+                ])
+            choice1, choice2 = sample(possible,2)
+            self.d[choice1[0]] = choice1[1]
+            self.d[choice2[0]] = choice2[1]
+
         if profession == 'Physician':
 
             self.d['bureaucracy'] = 50
@@ -230,6 +422,89 @@ class Need2KnowCharacter(object):
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
 
+
+        if profession == 'Pilot' or profession == 'Sailor':
+
+            self.d['alertness'] = 60
+            self.d['bureaucracy'] = 30
+            self.d['craft1label'] = 'Electrician'
+            self.d['craft1value'] = 40
+            self.d['craft2label'] = 'Mechanic'
+            self.d['craft2value'] = 40
+            self.d['navigate'] = 50
+            self.d['pilot1'] = 60        
+            self.d['science1label'] = 'Meteorology'
+            self.d['science1value'] = 40
+            self.d['swim'] = 40
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+    
+            possible = set([
+                ('language1',50),
+                ('pilot2',50),
+                ('heavy weapons',50),
+                ('military science',50),
+                ])
+            choice1, choice2 = sample(possible,2)
+            self.d[choice1[0]] = choice1[1]
+            self.d[choice2[0]] = choice2[1]
+
+
+        if profession == 'Police Officer':
+
+            self.d['alertness'] = 60
+            self.d['bureaucracy'] = 40
+            self.d['criminology'] = 50
+            self.d['drive'] = 50
+            self.d['firearms'] = 40
+            self.d['first aide'] = 30
+            self.d['humint'] = 50
+            self.d['law'] = 30
+            self.d['melee weapons'] = 50
+            self.d['navigate'] = 40                
+            self.d['persuade'] = 40  
+            self.d['search'] = 50  
+            self.d['unarmed combat'] = 60
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+
+            possible = set([
+                ('forensics',50),
+                ('heavy machinery',60),
+                ('heavy weapons',50),
+                ('ride',60),
+                ])
+            choice1 = sample(possible,1)[0]
+            self.d[choice1[0]] = choice1[1]
+
+
+        if profession == 'Program Manager':
+
+            self.d['accounting'] = 60
+            self.d['bureaucracy'] = 60
+            self.d['computer science'] = 50
+            self.d['criminology'] = 30
+            self.d['language1'] = 50
+            self.d['history'] = 40
+            self.d['law'] = 40
+            self.d['persuade'] = 50  
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['bond4'] = self.d['charisma']
+
+            possible = set([
+                ('anthropology',30),
+                ('art1',30),
+                ('craft1value',30),
+                ('science1value',30),
+                ])
+            choice1 = sample(possible,1)[0]
+            self.d[choice1[0]] = choice1[1]
+
+
         if profession == 'Scientist':
 
             self.d['bureaucracy'] = 40
@@ -253,7 +528,44 @@ class Need2KnowCharacter(object):
             choice1, choice2, choice3 = sample(possible,3)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]     
-            self.d[choice3[0]] = choice3[1]   
+            self.d[choice3[0]] = choice3[1]
+
+
+        if profession == 'Soldier' or profession == 'Marine':
+
+            self.d['alertness'] = 50
+            self.d['athletics'] = 50
+            self.d['bureaucracy'] = 30
+            self.d['drive'] = 40
+            self.d['firearms'] = 40
+            self.d['first aide'] = 40
+            self.d['military science'] = 40
+            self.d['milsci label'] = 'Land'
+            self.d['navigate'] = 40
+            self.d['persuade'] = 30
+            self.d['unarmed combat'] = 50
+            self.d['bond1'] = self.d['charisma']
+            self.d['bond2'] = self.d['charisma']
+            self.d['bond3'] = self.d['charisma']
+            self.d['bond4'] = self.d['charisma']
+
+    
+            possible = set([
+                ('artillery',40),
+                ('computer science',40),
+                ('demolitions',40),
+                ('language1',40),
+                ('heavy machinery',50),
+                ('heavy weapons',40),
+                ('search',60),
+                ('sigint',40),
+                ('swim',60),
+                ])
+            choice1, choice2, choice3 = sample(possible,3)
+            self.d[choice1[0]] = choice1[1]
+            self.d[choice2[0]] = choice2[1]     
+            self.d[choice3[0]] = choice3[1]
+
 
         if profession == 'Special Operator':
 
@@ -279,7 +591,7 @@ class Need2KnowCharacter(object):
             'alertness',
             'anthropology',
             'archeology',
-            'art',
+            'art1',
             'artillery',
             'athletics',
             'bureaucracy',
@@ -305,7 +617,7 @@ class Need2KnowCharacter(object):
             'occult',
             'persuade',
             'pharmacy',
-            'pilot',
+            'pilot1',
             'psychotherapy',
             'ride',
             'science1value',
@@ -361,7 +673,8 @@ class Need2KnowPDF(object):
         'alertness':(200,343),
         'anthropology':(200,325),
         'archeology':(200,307),
-        'art':(200,289),
+        'art1':(200,289),
+        'art2':(200,281),
         'artillery':(200,253),
         'athletics':(200,235),
         'bureaucracy':(200,217),
@@ -390,11 +703,13 @@ class Need2KnowPDF(object):
         'medicine':(361,235),
         'melee weapons':(361,217),
         'military science':(361,199),
+        'milsci label':(327,199),
         'navigate':(361,163),
         'occult':(361,145),
         'persuade':(361,127),
         'pharmacy':(361,109),
-        'pilot':(361,91),
+        'pilot1':(361,91),
+        'pilot2':(361,83),
         'psychotherapy':(361,54),
         'ride':(521,361),
         'science1label':(442,347),
@@ -425,12 +740,10 @@ class Need2KnowPDF(object):
     x5_stats = ['strength','constitution','dexterity','intelligence',
             'power','charisma']
 
-    def __init__(self, width=612, height=792):
-        self.c = canvas.Canvas('random_delta_green_characters.pdf')
-        self.c.setPageSize((width, height))
-
-    def save_pdf(self):
-        self.c.save()
+    def __init__(self, filename='out.pdf'):
+        self.filename = filename
+        self.c = canvas.Canvas(self.filename)
+        self.c.setPageSize((612, 792))
 
     def font_color(self, r,g,b):
         self.c.setFillColorRGB(r,g,b)
@@ -457,18 +770,50 @@ class Need2KnowPDF(object):
         ## Tell ReportLab we're done with current page
         self.c.showPage()
 
+    def save_pdf(self):
+        self.c.drawImage('data/Character Sheet NO BACKGROUND BACK.jpg',0,0,612,792)
+        self.c.showPage()
+        self.c.save()
+
+
 # Generating characters
-num_char_per_class = 8
-classes =  ['Anthropologist', 'Computer Science', 'Engineer', 'Federal Agent',
-        'Historian', 'Physician', 'Scientist', 'Special Operator']
 
-p = Need2KnowPDF()
+professions =  [
+    'Anthropologist',
+    'Business Executive',
+    'Computer Science',
+    'Criminal',
+    'Engineer',
+    'Federal Agent',
+    'Firefighter',
+    'Foreign Service Officer',
+    'Historian',
+    'Intelligence Analyst',
+    'Intelligence Case Officer',
+    'Lawyer',
+    'Marine',
+    'Media Specialist',
+    'Nurse',
+    'Paramedic',
+    'Physician',
+    'Pilot',
+    'Police Officer',
+    'Program Manager',
+    'Sailor',
+    'Scientist',
+    'Soldier',
+    'Special Operator',
+    ]
 
-for the_class in classes:
-    for x in range(num_char_per_class):
-        c=Need2KnowCharacter(gender='male',profession=the_class)
+
+p = Need2KnowPDF('DeltaGreenPregen.pdf')
+
+for profession in professions:
+
+    for x in range(20):
+        c=Need2KnowCharacter(gender='female',profession=profession)
         p.add_page(c.d)
-        c=Need2KnowCharacter(gender='female',profession=the_class)
+        c=Need2KnowCharacter(gender='male',profession=profession)
         p.add_page(c.d)
 
 p.save_pdf()
