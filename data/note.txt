@@ -1,1 +1,0 @@
-convert -density 600 1920blank_orig.pdf  -quality 90 bg.png
