@@ -6,6 +6,7 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+import csv
 
 # Global variables
 TEXT_COLOR = (0, .1, .5)
@@ -25,7 +26,13 @@ with open('data/surnames.txt') as f:
     SURNAMES = f.read().splitlines()  
 
 with open('data/towns.txt') as f:
-    TOWNS = f.read().splitlines() 
+    TOWNS = f.read().splitlines()
+
+DISTINGUISHING = {}
+with open('data/distinguishing-features.csv') as distinguishing:
+    for row in csv.DictReader(distinguishing):
+        for value in range(int(row['from']), int(row['to'])+1):
+            DISTINGUISHING.setdefault((row['statistic'], value), []).append(row['distinguishing'])
 
 # Classes
 class Need2KnowCharacter(object):
@@ -757,6 +764,10 @@ class Need2KnowPDF(object):
 
         if field in self.x5_stats:
             self.draw_string(x+36, y,str(value * 5))
+            self.draw_string(x+72, y, self.distinguishing(field, value))
+
+    def distinguishing(self, field, value):
+        return choice(DISTINGUISHING.get((field, value), [""]))
 
     def add_page(self, d):
         ## Add background.  ReportLab will cache it for repeat
