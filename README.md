@@ -1,6 +1,6 @@
 # DGGen
 
-DGGen is a program written in Python to generate characters for the pen-and-paper roleplaying game Delta Green from Arc Dream Publishing.  It follows the character creations rules included in Delta Green:Need to Know and the Delta Green Agent's Handbook.  The Python Libraries PyPDF2 and ReportLab are required.  Characters are created one-per-page into a PDF.  The second-page of the character sheet is included as the final page in the PDF.  By default, forty characters of alternating genders are created in each of the following professions:
+DGGen is a program written in Python to generate characters for the pen-and-paper roleplaying game Delta Green from Arc Dream Publishing.  It follows the character creations rules included in Delta Green:Need to Know and the Delta Green Agent's Handbook.  The Python libraries PyPDF2 and ReportLab are required.  Characters are created one-per-page into a PDF.  The second-page of the character sheet is included as the final page in the PDF.  By default, forty characters of alternating genders are created in each of the following professions:
 
 * Anthropologist
 * Business Executive
