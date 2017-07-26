@@ -1,29 +1,29 @@
 #!/usr/bin/env python3
 
 # Modules
+import csv
+import datetime
 from random import randint, shuffle, choice, sample
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-import csv
 
-# Global variables
+# Globals
 TEXT_COLOR = (0, .1, .5)
 DEFAULT_FONT = 'Special Elite'
 pdfmetrics.registerFont(TTFont('Special Elite', 'data/SpecialElite.ttf'))
-
 MONTHS = ('JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC')
 
 # Read names and places
 with open('data/boys1986.txt') as f:
-    MALES = f.read().splitlines() 
+    MALES = f.read().splitlines()
 
 with open('data/girls1986.txt') as f:
     FEMALES = f.read().splitlines()
 
 with open('data/surnames.txt') as f:
-    SURNAMES = f.read().splitlines()  
+    SURNAMES = f.read().splitlines()
 
 with open('data/towns.txt') as f:
     TOWNS = f.read().splitlines()
@@ -42,7 +42,7 @@ class Need2KnowCharacter(object):
         [15,14,12,11,10,10],
         [17,14,13,10,10,8],
         )
-  
+
     def __init__(self, gender='male', profession=''):
 
         ## Hold all dictionary
@@ -105,11 +105,11 @@ class Need2KnowCharacter(object):
         if profession == 'Anthropologist':
 
             self.d['anthropology'] = 50
-            self.d['bureaucracy'] = 40 
-            self.d['language1'] = 50 
-            self.d['language2'] = 30 
-            self.d['history'] = 60 
-            self.d['occult'] = 40 
+            self.d['bureaucracy'] = 40
+            self.d['language1'] = 50
+            self.d['language2'] = 30
+            self.d['history'] = 60
+            self.d['occult'] = 40
             self.d['persuade'] = 40
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
@@ -131,16 +131,16 @@ class Need2KnowCharacter(object):
         if profession == 'Historian':
 
             self.d['archeology'] = 50
-            self.d['bureaucracy'] = 40 
-            self.d['language1'] = 50 
-            self.d['language2'] = 30 
-            self.d['history'] = 60 
-            self.d['occult'] = 40 
+            self.d['bureaucracy'] = 40
+            self.d['language1'] = 50
+            self.d['language2'] = 30
+            self.d['history'] = 60
+            self.d['occult'] = 40
             self.d['persuade'] = 40
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
-            self.d['bond4'] = self.d['charisma'] 
+            self.d['bond4'] = self.d['charisma']
 
             possible = set([
                 ('anthropology',40),
@@ -162,7 +162,7 @@ class Need2KnowCharacter(object):
             self.d['craft2label'] = 'Mechanic'
             self.d['craft2value'] = 30
             self.d['craft3label'] = 'Microelectronics'
-            self.d['craft3value'] = 40             
+            self.d['craft3value'] = 40
             self.d['science1label'] = 'Mathematics'
             self.d['science1value'] = 40
             self.d['sigint'] = 40
@@ -212,13 +212,13 @@ class Need2KnowCharacter(object):
                 ('humint',50),
                 ('navigate',50),
                 ('occult',50),
-                ('pharmacy',40),                
+                ('pharmacy',40),
                 ])
             choice1, choice2 = sample(possible,2)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
 
-           
+
         if profession == 'Federal Agent':
 
             self.d['alertness'] = 50
@@ -228,9 +228,9 @@ class Need2KnowCharacter(object):
             self.d['firearms'] = 50
             self.d['forensics'] = 30
             self.d['humint'] = 60
-            self.d['law'] = 30                
-            self.d['persuade'] = 50  
-            self.d['search'] = 50  
+            self.d['law'] = 30
+            self.d['persuade'] = 50
+            self.d['search'] = 50
             self.d['unarmed combat'] = 60
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
@@ -321,7 +321,7 @@ class Need2KnowCharacter(object):
 
 
         if profession == 'Lawyer' or profession == 'Business Executive':
-    
+
             self.d['accounting'] = 50
             self.d['bureaucracy'] = 50
             self.d['humint'] = 40
@@ -338,16 +338,16 @@ class Need2KnowCharacter(object):
                 ('law',50),
                 ('pharmacy',50),
                 ])
-       
+
             choice1, choice2, choice3, choice4 = sample(possible,4)
             self.d[choice1[0]] = choice1[1]
-            self.d[choice2[0]] = choice2[1]     
+            self.d[choice2[0]] = choice2[1]
             self.d[choice3[0]] = choice3[1]
-            self.d[choice4[0]] = choice4[1]  
+            self.d[choice4[0]] = choice4[1]
 
 
         if profession == 'Media Specialist':
-            
+
             self.d['art1'] = 60
             self.d['history'] = 40
             self.d['humint'] = 40
@@ -372,10 +372,10 @@ class Need2KnowCharacter(object):
                 ])
             choice1, choice2, choice3, choice4, choice5 = sample(possible,5)
             self.d[choice1[0]] = choice1[1]
-            self.d[choice2[0]] = choice2[1]     
+            self.d[choice2[0]] = choice2[1]
             self.d[choice3[0]] = choice3[1]
-            self.d[choice4[0]] = choice4[1]  
-            self.d[choice5[0]] = choice5[1]  
+            self.d[choice4[0]] = choice4[1]
+            self.d[choice5[0]] = choice5[1]
 
 
         if profession == 'Nurse' or profession == 'Paramedic':
@@ -393,7 +393,7 @@ class Need2KnowCharacter(object):
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
-    
+
             possible = set([
                 ('drive',60),
                 ('forensics',40),
@@ -439,14 +439,14 @@ class Need2KnowCharacter(object):
             self.d['craft2label'] = 'Mechanic'
             self.d['craft2value'] = 40
             self.d['navigate'] = 50
-            self.d['pilot1'] = 60        
+            self.d['pilot1'] = 60
             self.d['science1label'] = 'Meteorology'
             self.d['science1value'] = 40
             self.d['swim'] = 40
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
-    
+
             possible = set([
                 ('language1',50),
                 ('pilot2',50),
@@ -469,9 +469,9 @@ class Need2KnowCharacter(object):
             self.d['humint'] = 50
             self.d['law'] = 30
             self.d['melee weapons'] = 50
-            self.d['navigate'] = 40                
-            self.d['persuade'] = 40  
-            self.d['search'] = 50  
+            self.d['navigate'] = 40
+            self.d['persuade'] = 40
+            self.d['search'] = 50
             self.d['unarmed combat'] = 60
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
@@ -496,7 +496,7 @@ class Need2KnowCharacter(object):
             self.d['language1'] = 50
             self.d['history'] = 40
             self.d['law'] = 40
-            self.d['persuade'] = 50  
+            self.d['persuade'] = 50
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
@@ -534,7 +534,7 @@ class Need2KnowCharacter(object):
                 ])
             choice1, choice2, choice3 = sample(possible,3)
             self.d[choice1[0]] = choice1[1]
-            self.d[choice2[0]] = choice2[1]     
+            self.d[choice2[0]] = choice2[1]
             self.d[choice3[0]] = choice3[1]
 
 
@@ -556,7 +556,7 @@ class Need2KnowCharacter(object):
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
 
-    
+
             possible = set([
                 ('artillery',40),
                 ('computer science',40),
@@ -570,7 +570,7 @@ class Need2KnowCharacter(object):
                 ])
             choice1, choice2, choice3 = sample(possible,3)
             self.d[choice1[0]] = choice1[1]
-            self.d[choice2[0]] = choice2[1]     
+            self.d[choice2[0]] = choice2[1]
             self.d[choice3[0]] = choice3[1]
 
 
@@ -747,17 +747,46 @@ class Need2KnowPDF(object):
     x5_stats = ['strength','constitution','dexterity','intelligence',
             'power','charisma']
 
-    def __init__(self, filename='out.pdf'):
+    def __init__(self, filename='out.pdf', profession_list=None, count_each=None):
         self.filename = filename
         self.c = canvas.Canvas(self.filename)
         self.c.setPageSize((612, 792))
+
+        # If we're passed an optional list of professions
+        # build a clickable Table of Contents on page 1
+        if profession_list != None and count_each != None:
+            self.bookmark('Table of Contents')
+            self.c.setFillColorRGB(0,0,0)
+            self.c.setFont("Courier-Bold",12)
+            now = datetime.datetime.utcnow().isoformat() + "Z"
+            self.c.drawString(150,712,'DON DGGEN DTG ' + now)
+            self.c.drawString(150,700,'CLASSIFIED/DG/NTK//')
+            self.c.drawString(150,688,'SUBJ ROSTER/ACTIVE/NOCELL/CONUS//')
+            top = 650
+            count = 0
+            for profession in professions:
+                pagenum = (count * count_each) + 2
+                chapter = '{:.<40}'.format(profession) + '{:.>4}'.format(pagenum)
+                self.c.drawString(150,top - count * 22, chapter)
+                self.c.linkAbsolute(profession, profession,
+                    (145,(top - 6) - (count * 22),470,(top + 18)  - (count*22)))
+                count += 1
+            chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(pagenum + count_each)
+            self.c.drawString(150,top - count * 22, chapter)
+            self.c.linkAbsolute('Back Page', 'Back Page',
+                (145,(top - 6) - (count * 22),470,(top + 18)  - (count*22)))
+            self.c.showPage()
+
+    def bookmark(self,text):
+        self.c.bookmarkPage(text)
+        self.c.addOutlineEntry(text,text)
 
     def font_color(self, r,g,b):
         self.c.setFillColorRGB(r,g,b)
 
     def draw_string(self, x, y, text):
         self.c.drawString(x,y,str(text))
- 
+
     def fill_field(self,field,value):
         x,y = self.field_xy[field]
         self.c.drawString(x,y,str(value))
@@ -782,6 +811,7 @@ class Need2KnowPDF(object):
         self.c.showPage()
 
     def save_pdf(self):
+        self.bookmark('Back Page')
         self.c.drawImage('data/Character Sheet NO BACKGROUND BACK.jpg',0,0,612,792)
         self.c.showPage()
         self.c.save()
@@ -816,11 +846,10 @@ professions =  [
     'Special Operator',
     ]
 
-
-p = Need2KnowPDF('DeltaGreenPregen.pdf')
+p = Need2KnowPDF('DeltaGreenPregen.pdf',professions,40)
 
 for profession in professions:
-
+    p.bookmark(profession)
     for x in range(20):
         c=Need2KnowCharacter(gender='female',profession=profession)
         p.add_page(c.d)
