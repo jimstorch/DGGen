@@ -48,3 +48,11 @@ We do this only once, when we need to create the virtual environment. We can act
 ## Installing dependecies
 
     $ pip install -U -r requirements.txt
+    
+## License
+
+DDGen is licensed under the Apache 2.0 Open Source License.  Please see the /data folder for font licenses.  The intellectual property known as Delta Green is ™ and © the Delta Green Partnership (http://www.delta-green.com).
+
+## Contact
+
+    import codecs; codecs.encode('wvzfgbepu@tznvy.pbz', 'rot13')
