@@ -101,7 +101,7 @@ class Need2KnowCharacter(object):
         self.d['willpower'] = self.d['power']
         self.d['sanity'] = self.d['power'] * 5
         self.d['breaking point'] = self.d['power'] * 4
-
+        self.d['damage bonus'] = 'DB=%d' % (((self.d['strength'] - 1) >> 2 ) - 2)
         # Default Skills
         self.d['accounting'] = 10
         self.d['alertness'] = 20
@@ -654,6 +654,7 @@ class Need2KnowPDF(object):
 
         # Statistical Data
         'strength': (136, 604),
+        'damage bonus': (555, 200),
         'constitution': (136, 586),
         'dexterity': (136, 568),
         'intelligence': (136, 550),
@@ -743,13 +744,14 @@ class Need2KnowPDF(object):
     def __init__(self, filename='out.pdf', profession_list=None, count_each=None):
         self.filename = filename
         self.c = canvas.Canvas(self.filename)
+        # Set US Letter in points
         self.c.setPageSize((612, 792))
         self.c.setAuthor('https://github.com/jimstorch/DGGen')
         self.c.setTitle('Delta Green Agent Roster')
         self.c.setSubject('Pre-generated characters for the Delta Green RPG')
+        # Register Custom Fonts
         pdfmetrics.registerFont(TTFont('Special Elite', 'data/SpecialElite.ttf'))
         pdfmetrics.registerFont(TTFont('OCRA', 'data/OCRA.ttf'))
-
         # If we're passed an optional list of professions
         # build a clickable Table of Contents on page 1
         if profession_list != None and count_each != None:
