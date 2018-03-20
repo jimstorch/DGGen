@@ -223,7 +223,7 @@ class Need2KnowCharacter(object):
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
-            self.d['bond3'] = self.d['charisma']
+            self.d['bond4'] = self.d['charisma']
             self.d['craft1label'] = 'locksmithing'
             possible = set([
                 ('craft1value', 40),
