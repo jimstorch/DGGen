@@ -7,10 +7,12 @@ import optparse
 import os
 import sys
 import warnings
+from itertools import islice, cycle
 from random import randint, shuffle, choice, sample
-from reportlab.pdfgen import canvas
+
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
 
 script_name = os.path.basename(sys.argv[0])
 usage = script_name + ' [options] args'
@@ -27,32 +29,32 @@ DEFAULT_FONT = 'Special Elite'
 MONTHS = ('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
           'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC')
 
-PROFESSIONS = [
-    'Anthropologist',
-    'Business Executive',
-    'Computer Science',
-    'Criminal',
-    'Engineer',
-    'Federal Agent',
-    'Firefighter',
-    'Foreign Service Officer',
-    'Historian',
-    'Intelligence Analyst',
-    'Intelligence Case Officer',
-    'Lawyer',
-    'Marine',
-    'Media Specialist',
-    'Nurse',
-    'Paramedic',
-    'Physician',
-    'Pilot',
-    'Police Officer',
-    'Program Manager',
-    'Sailor',
-    'Scientist',
-    'Soldier',
-    'Special Operator',
-]
+PROFESSIONS = {
+    'Anthropologist': 10,
+    'Business Executive': 10,
+    'Computer Science': 10,
+    'Criminal': 10,
+    'Engineer': 10,
+    'Federal Agent': 40,
+    'Firefighter': 10,
+    'Foreign Service Officer': 20,
+    'Historian': 20,
+    'Intelligence Analyst': 20,
+    'Intelligence Case Officer': 20,
+    'Lawyer': 10,
+    'Marine': 20,
+    'Media Specialist': 10,
+    'Nurse': 10,
+    'Paramedic': 10,
+    'Physician': 10,
+    'Pilot': 10,
+    'Police Officer': 20,
+    'Program Manager': 5,
+    'Sailor': 10,
+    'Scientist': 20,
+    'Soldier': 20,
+    'Special Operator': 20,
+}
 
 # Read names and places
 with open('data/boys1986.txt') as f:
@@ -80,15 +82,14 @@ def main(*argv):
     init_logger(options.verbosity)
     logger.debug(options)
 
-    p = Need2KnowPDF(options.output, PROFESSIONS, 40)
-    for profession in PROFESSIONS:
+    p = Need2KnowPDF(options.output, PROFESSIONS)
+    for profession, count in PROFESSIONS.items():
         p.bookmark(profession)
-        for x in range(20):
-            c = Need2KnowCharacter(gender='female', profession=profession)
-            p.add_page(c.d)
-            c = Need2KnowCharacter(gender='male', profession=profession)
+        for sex in islice(cycle(['female', 'male']), count):
+            c = Need2KnowCharacter(gender=sex, profession=profession)
             p.add_page(c.d)
     p.save_pdf()
+    logger.info("Wrote %s", options.output)
 
 
 class Need2KnowCharacter(object):
@@ -771,7 +772,7 @@ class Need2KnowPDF(object):
     x5_stats = ['strength', 'constitution', 'dexterity', 'intelligence',
                 'power', 'charisma']
 
-    def __init__(self, filename='out.pdf', profession_list=None, count_each=None):
+    def __init__(self, filename='out.pdf', professions=None):
         self.filename = filename
         self.c = canvas.Canvas(self.filename)
         # Set US Letter in points
@@ -782,9 +783,12 @@ class Need2KnowPDF(object):
         # Register Custom Fonts
         pdfmetrics.registerFont(TTFont('Special Elite', 'data/SpecialElite.ttf'))
         pdfmetrics.registerFont(TTFont('OCRA', 'data/OCRA.ttf'))
-        # If we're passed an optional list of professions
-        # build a clickable Table of Contents on page 1
-        if profession_list != None and count_each != None:
+        self.generate_toc(professions)
+
+    def generate_toc(self, professions):
+        """If we're passed an optional list of professions,
+        build a clickable Table of Contents on page 1"""
+        if professions:
             self.bookmark('Table of Contents')
             self.c.setFillColorRGB(0, 0, 0)
             self.c.setFont("OCRA", 10)
@@ -793,21 +797,22 @@ class Need2KnowPDF(object):
             self.c.drawString(150, 700, 'CLASSIFIED/DG/NTK//')
             self.c.drawString(150, 688, 'SUBJ ROSTER/ACTIVE/NOCELL/CONUS//')
             top = 650
-            count = 0
-            for profession in profession_list:
-                pagenum = (count * count_each) + 2
-                chapter = '{:.<40}'.format(
-                    profession) + '{:.>4}'.format(pagenum)
-                self.c.drawString(150, top - count * 22, chapter)
+            pagenum = 2
+            for count, (profession, num_to_generate) in enumerate(professions.items()):
+                chapter = '{:.<40}'.format(profession) + '{:.>4}'.format(pagenum)
+                self.c.drawString(150, top - self.line_drop(count), chapter)
                 self.c.linkAbsolute(profession, profession,
-                    (145, (top - 6) - (count * 22), 470, (top + 18) - (count * 22)))
-                count += 1
-            chapter = '{:.<40}'.format('Blank Character Sheet Second Page'
-                ) + '{:.>4}'.format(pagenum + count_each)
-            self.c.drawString(150, top - count * 22, chapter)
+                                    (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
+                pagenum += num_to_generate
+            chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(pagenum + num_to_generate)
+            self.c.drawString(150, top - self.line_drop(pagenum), chapter)
             self.c.linkAbsolute('Back Page', 'Back Page',
-                (145, (top - 6) - (count * 22), 470, (top + 18) - (count * 22)))
+                                (145, (top - 6) - self.line_drop(pagenum), 470, (top + 18) - self.line_drop(pagenum)))
             self.c.showPage()
+
+    @staticmethod
+    def line_drop(count, linesize=22):
+        return count * linesize
 
     def bookmark(self, text):
         self.c.bookmarkPage(text)
