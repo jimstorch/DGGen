@@ -141,14 +141,14 @@ class Need2KnowCharacter(object):
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('archeology', 40),
                 ('humint', 50),
                 ('navigate', 50),
                 ('ride', 50),
                 ('search', 60),
                 ('survival', 50),
-            ])
+            ]
             choice1, choice2 = sample(possible, 2)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -166,14 +166,14 @@ class Need2KnowCharacter(object):
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('anthropology', 40),
                 ('humint', 50),
                 ('navigate', 50),
                 ('ride', 50),
                 ('search', 60),
                 ('survival', 50),
-            ])
+            ]
             choice1, choice2 = sample(possible, 2)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -193,7 +193,7 @@ class Need2KnowCharacter(object):
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('accounting', 50),
                 ('bureaucracy', 50),
                 ('craft4value', 40),
@@ -201,7 +201,7 @@ class Need2KnowCharacter(object):
                 ('heavy machinery', 50),
                 ('law', 40),
                 ('science3value', 40),
-            ])
+            ]
             choice1, choice2, choice3, choice4 = sample(possible, 4)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -225,7 +225,7 @@ class Need2KnowCharacter(object):
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
             self.d['craft1label'] = 'locksmithing'
-            possible = set([
+            possible = [
                 ('craft1value', 40),
                 ('demolitions', 40),
                 ('disguise', 50),
@@ -234,7 +234,7 @@ class Need2KnowCharacter(object):
                 ('navigate', 50),
                 ('occult', 50),
                 ('pharmacy', 40),
-            ])
+            ]
             choice1, choice2 = sample(possible, 2)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -255,13 +255,13 @@ class Need2KnowCharacter(object):
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('accounting', 60),
                 ('computer science', 50),
                 ('language1', 50),
                 ('heavy weapons', 50),
                 ('pharmacy', 50),
-            ])
+            ]
             choice1 = sample(possible, 1)[0]
             self.d[choice1[0]] = choice1[1]
 
@@ -343,13 +343,13 @@ class Need2KnowCharacter(object):
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('computer science', 50),
                 ('criminology', 60),
                 ('language1', 50),
                 ('law', 50),
                 ('pharmacy', 50),
-            ])
+            ]
             choice1, choice2, choice3, choice4 = sample(possible, 4)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -366,7 +366,7 @@ class Need2KnowCharacter(object):
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('anthropology', 40),
                 ('archeology', 40),
                 ('art2', 40),
@@ -378,7 +378,7 @@ class Need2KnowCharacter(object):
                 ('military science', 40),
                 ('occult', 50),
                 ('science1value', 40),
-            ])
+            ]
             choice1, choice2, choice3, choice4, choice5 = sample(possible, 5)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -401,13 +401,13 @@ class Need2KnowCharacter(object):
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('drive', 60),
                 ('forensics', 40),
                 ('navigate', 50),
                 ('psychotherapy', 50),
                 ('search', 60),
-            ])
+            ]
             choice1, choice2 = sample(possible, 2)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -425,12 +425,12 @@ class Need2KnowCharacter(object):
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('forensics', 50),
                 ('psychotherapy', 60),
                 ('science2value', 50),
                 ('surgery', 50),
-            ])
+            ]
             choice1, choice2 = sample(possible, 2)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -451,12 +451,12 @@ class Need2KnowCharacter(object):
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('language1', 50),
                 ('pilot2', 50),
                 ('heavy weapons', 50),
                 ('military science', 50),
-            ])
+            ]
             choice1, choice2 = sample(possible, 2)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -479,12 +479,12 @@ class Need2KnowCharacter(object):
             self.d['bond1'] = self.d['charisma']
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('forensics', 50),
                 ('heavy machinery', 60),
                 ('heavy weapons', 50),
                 ('ride', 60),
-            ])
+            ]
             choice1 = sample(possible, 1)[0]
             self.d[choice1[0]] = choice1[1]
 
@@ -502,12 +502,12 @@ class Need2KnowCharacter(object):
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('anthropology', 30),
                 ('art1', 30),
                 ('craft1value', 30),
                 ('science1value', 30),
-            ])
+            ]
             choice1 = sample(possible, 1)[0]
             self.d[choice1[0]] = choice1[1]
 
@@ -522,14 +522,14 @@ class Need2KnowCharacter(object):
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('accounting', 50),
                 ('craft1value', 40),
                 ('language1', 40),
                 ('forensics', 40),
                 ('law', 40),
                 ('pharmacy', 40),
-            ])
+            ]
             choice1, choice2, choice3 = sample(possible, 3)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -552,7 +552,7 @@ class Need2KnowCharacter(object):
             self.d['bond2'] = self.d['charisma']
             self.d['bond3'] = self.d['charisma']
             self.d['bond4'] = self.d['charisma']
-            possible = set([
+            possible = [
                 ('artillery', 40),
                 ('computer science', 40),
                 ('demolitions', 40),
@@ -562,7 +562,7 @@ class Need2KnowCharacter(object):
                 ('search', 60),
                 ('sigint', 40),
                 ('swim', 60),
-            ])
+            ]
             choice1, choice2, choice3 = sample(possible, 3)
             self.d[choice1[0]] = choice1[1]
             self.d[choice2[0]] = choice2[1]
@@ -587,7 +587,7 @@ class Need2KnowCharacter(object):
 
         # bonus points
 
-        possible = set([
+        possible = [
             'accounting',
             'alertness',
             'anthropology',
@@ -630,7 +630,7 @@ class Need2KnowCharacter(object):
             'swim',
             'unarmed combat',
             'language1',
-        ])
+        ]
         bonus_skills = sample(possible, 8)
         for skill in bonus_skills:
             boost = self.d.get(skill, 0) + 20
