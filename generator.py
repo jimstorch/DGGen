@@ -86,7 +86,7 @@ def main(*argv):
     for profession, count in PROFESSIONS.items():
         p.bookmark(profession)
         for sex in islice(cycle(['female', 'male']), count):
-            c = Need2KnowCharacter(gender=sex, profession=profession)
+            c = Need2KnowCharacter(sex=sex, profession=profession)
             p.add_page(c.d)
     p.save_pdf()
     logger.info("Wrote %s", options.output)
@@ -100,12 +100,12 @@ class Need2KnowCharacter(object):
         [17, 14, 13, 10, 10, 8],
     )
 
-    def __init__(self, gender='male', profession=''):
+    def __init__(self, sex='male', profession=''):
 
         # Hold all dictionary
         self.d = {}
 
-        if gender == 'male':
+        if sex == 'male':
             self.d['male'] = 'X'
             self.d['name'] = choice(SURNAMES).upper() + ', ' + choice(MALES)
         else:
