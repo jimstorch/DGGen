@@ -2,6 +2,7 @@
 
 import csv
 import datetime
+import json
 import logging
 import optparse
 import os
@@ -29,33 +30,6 @@ DEFAULT_FONT = 'Special Elite'
 MONTHS = ('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
           'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC')
 
-PROFESSIONS = {
-    'Anthropologist': 10,
-    'Business Executive': 10,
-    'Computer Science': 10,
-    'Criminal': 10,
-    'Engineer': 10,
-    'Federal Agent': 40,
-    'Firefighter': 10,
-    'Foreign Service Officer': 20,
-    'Historian': 20,
-    'Intelligence Analyst': 20,
-    'Intelligence Case Officer': 20,
-    'Lawyer': 10,
-    'Marine': 20,
-    'Media Specialist': 10,
-    'Nurse': 10,
-    'Paramedic': 10,
-    'Physician': 10,
-    'Pilot': 10,
-    'Police Officer': 20,
-    'Program Manager': 5,
-    'Sailor': 10,
-    'Scientist': 20,
-    'Soldier': 20,
-    'Special Operator': 20,
-}
-
 # Read names and places
 with open('data/boys1986.txt') as f:
     MALES = f.read().splitlines()
@@ -68,6 +42,9 @@ with open('data/surnames.txt') as f:
 
 with open('data/towns.txt') as f:
     TOWNS = f.read().splitlines()
+
+with open('data/professions.json') as f:
+    PROFESSIONS = json.load(f)
 
 DISTINGUISHING = {}
 with open('data/distinguishing-features.csv') as distinguishing:
