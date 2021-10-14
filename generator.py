@@ -60,9 +60,9 @@ def main(*argv):
     logger.debug(options)
 
     p = Need2KnowPDF(options.output, PROFESSIONS)
-    for profession, count in PROFESSIONS.items():
+    for profession, profession_options in PROFESSIONS.items():
         p.bookmark(profession)
-        for sex in islice(cycle(['female', 'male']), count):
+        for sex in islice(cycle(['female', 'male']), profession_options['number_to_generate']):
             c = Need2KnowCharacter(sex=sex, profession=profession)
             p.add_page(c.d)
     p.save_pdf()
@@ -775,13 +775,14 @@ class Need2KnowPDF(object):
             self.c.drawString(150, 688, 'SUBJ ROSTER/ACTIVE/NOCELL/CONUS//')
             top = 650
             pagenum = 2
-            for count, (profession, num_to_generate) in enumerate(professions.items()):
+            for count, (profession, profession_options) in enumerate(professions.items()):
                 chapter = '{:.<40}'.format(profession) + '{:.>4}'.format(pagenum)
                 self.c.drawString(150, top - self.line_drop(count), chapter)
                 self.c.linkAbsolute(profession, profession,
                                     (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
-                pagenum += num_to_generate
-            chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(pagenum + num_to_generate)
+                pagenum += profession_options['number_to_generate']
+            chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(
+                pagenum + profession_options['number_to_generate'])
             self.c.drawString(150, top - self.line_drop(pagenum), chapter)
             self.c.linkAbsolute('Back Page', 'Back Page',
                                 (145, (top - 6) - self.line_drop(pagenum), 470, (top + 18) - self.line_drop(pagenum)))
