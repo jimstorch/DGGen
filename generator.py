@@ -2,10 +2,24 @@
 
 import csv
 import datetime
+import logging
+import optparse
+import os
+import sys
+import warnings
 from random import randint, shuffle, choice, sample
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+
+script_name = os.path.basename(sys.argv[0])
+usage = script_name + ' [options] args'
+description = '''
+Generate characters for the Delta Green pen-and-paper roleplaying game from Arc Dream Publishing.
+'''
+__version__ = "1.0"
+
+logger = logging.getLogger(script_name)
 
 TEXT_COLOR = (0, .1, .5)
 DEFAULT_FONT = 'Special Elite'
@@ -59,6 +73,23 @@ with open('data/distinguishing-features.csv') as distinguishing:
         for value in range(int(row['from']), int(row['to']) + 1):
             DISTINGUISHING.setdefault(
                 (row['statistic'], value), []).append(row['distinguishing'])
+
+
+def main(*argv):
+    options, script, args, help = get_options(argv)
+    init_logger(options.verbosity)
+    logger.debug(options)
+
+    p = Need2KnowPDF(options.output, PROFESSIONS, 40)
+    for profession in PROFESSIONS:
+        p.bookmark(profession)
+        for x in range(20):
+            c = Need2KnowCharacter(gender='female', profession=profession)
+            p.add_page(c.d)
+            c = Need2KnowCharacter(gender='male', profession=profession)
+            p.add_page(c.d)
+    p.save_pdf()
+
 
 class Need2KnowCharacter(object):
 
@@ -820,14 +851,32 @@ class Need2KnowPDF(object):
         self.c.save()
 
 
-if __name__ == '__main__':
+def get_options(argv):
+    """Get options and arguments from argv string."""
+    parser = optparse.OptionParser(usage=usage, version=__version__)
+    parser.description = description
+    parser.add_option("-v", "--verbosity", action="count", default=0,
+                      help="Specify up to three times to increase verbosity, i.e. -v to see warnings, -vv for "
+                           "information messages, or -vvv for debug messages.")
+    parser.add_option("-o", "--output", action="store",
+                      default=f'DeltaGreenPregen-{datetime.datetime.now() :%Y-%m-%d-%H:%M}.pdf',
+                      help="Output PDF file. Defaults to %default.")
 
-    p = Need2KnowPDF('DeltaGreenPregen.pdf', PROFESSIONS, 40)
-    for profession in PROFESSIONS:
-        p.bookmark(profession)
-        for x in range(20):
-            c = Need2KnowCharacter(gender='female', profession=profession)
-            p.add_page(c.d)
-            c = Need2KnowCharacter(gender='male', profession=profession)
-            p.add_page(c.d)
-    p.save_pdf()
+    options, args = parser.parse_args(list(argv))
+    script, args = args[0], args[1:]
+    return options, script, args, parser.format_help()
+
+
+def init_logger(verbosity, stream=sys.stdout):
+    """Initialize logger and warnings according to verbosity argument.
+    Verbosity levels of 0-3 supported."""
+    is_not_debug = verbosity <= 2
+    level = [logging.ERROR, logging.WARNING, logging.INFO][verbosity] if is_not_debug else logging.DEBUG
+    log_format = '%(message)s' if is_not_debug \
+        else '%(asctime)s %(levelname)-8s %(name)s %(module)s.py:%(funcName)s():%(lineno)d %(message)s'
+    logging.basicConfig(level=level, format=log_format, stream=stream)
+    if is_not_debug: warnings.filterwarnings('ignore')
+
+
+if __name__ == '__main__':
+    sys.exit(main(*sys.argv))
