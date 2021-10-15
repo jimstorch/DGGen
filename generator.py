@@ -61,8 +61,9 @@ def main():
     p = Need2KnowPDF(options.output, professions)
     for profession in professions:
         p.bookmark(profession["label"])
-        for sex in islice(cycle(['female', 'male']), profession['number_to_generate']):
-            c = Need2KnowCharacter(sex=sex, profession=profession)
+        for sex in islice(cycle(['female', 'male']), options.count or profession['number_to_generate']):
+            c = Need2KnowCharacter(sex=sex, profession=profession, label_override=options.label,
+                                   employer=options.employer)
             p.add_page(c.d)
     p.save_pdf()
     logger.info("Wrote %s", options.output)
@@ -147,7 +148,7 @@ class Need2KnowCharacter(object):
         'language1',
     ]
 
-    def __init__(self, sex, profession):
+    def __init__(self, sex, profession, label_override=None, employer=None):
 
         # Hold all dictionary
         self.d = {}
@@ -158,7 +159,9 @@ class Need2KnowCharacter(object):
         else:
             self.d['female'] = 'X'
             self.d['name'] = choice(SURNAMES).upper() + ', ' + choice(FEMALES)
-        self.d['profession'] = profession['label']
+        self.d['profession'] = label_override or profession['label']
+        if employer:
+            self.d['employer'] = employer
         self.d['nationality'] = '(U.S.A.) ' + choice(TOWNS)
         self.d['age'] = '%d    (%s %d)' % (randint(24, 55), choice(MONTHS),
             (randint(1, 28)))
@@ -208,6 +211,7 @@ class Need2KnowPDF(object):
         # Personal Data
         'name': (75, 693),
         'profession': (343, 693),
+        'employer': (75, 665),
         'nationality': (343, 665),
         'age': (185, 640),
         'birthday': (200, 640),
@@ -406,6 +410,10 @@ def get_options():
                         help="Output PDF file. Defaults to %(default)s.")
     parser.add_argument("-t", "--type", action="store",
                         help=f"Select single profession to generate - any one of {', '.join(p for p in PROFESSIONS.keys())}.")
+    parser.add_argument("-l", "--label", action="store", help="Override profession label.")
+    parser.add_argument("-c", "--count", type=int, action="store",
+                        help="Generate this many characters of each profession.")
+    parser.add_argument("-e", "--employer", action="store", help="Set employer for all generated characters.")
 
     return parser.parse_args()
 

@@ -57,6 +57,10 @@ To generate characters, run:
 
     $ ./generator.py
 
+If you need a more targeted set of characters, all of a specific profession, you can generate one like so:
+
+    $ ./generator.py --type soldier --label "Green Beret" --employer "United States Army" --count 24 --output "Bravo Company.pdf"
+
 To see what options you have available, run:
 
     $ ./generator.py -h
