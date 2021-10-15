@@ -2,7 +2,10 @@
   "kits": {
     "agent": {
       "weapons": [
-        "medium-pistol"
+        "medium-pistol",
+        "shotgun",
+        "shotgun-slug",
+        "light-carbine"
       ],
       "armour": [
         "kevlar-vest"
@@ -30,27 +33,109 @@
         "dice": 1,
         "die-type": 4,
         "modifier": -1,
-        "db-applies": true
+        "db-applies": true,
+        "special": ""
       },
       "lethality": 0,
       "kill-radius": "",
       "ammo": 0,
       "ap": 0
     },
+    "combat-knife": {
+      "name": "Combat Knife",
+      "skill": "melee weapons",
+      "base-range": "",
+      "damage": {
+        "dice": 1,
+        "die-type": 6,
+        "modifier": 0,
+        "db-applies": true,
+        "special": ""
+      },
+      "lethality": 0,
+      "kill-radius": "",
+      "ammo": 0,
+      "ap": 3
+    },
     "medium-pistol": {
       "name": "9mm pistol",
       "skill": "firearms",
-      "base-range": "10m",
+      "base-range": "15m",
       "damage": {
         "dice": 1,
         "die-type": 10,
         "modifier": 0,
-        "db-applies": false
+        "db-applies": false,
+        "special": ""
       },
       "lethality": 0,
       "kill-radius": "",
-      "ammo": 7,
+      "ammo": 15,
       "ap": 0
+    },
+    "heavy-pistol": {
+      "name": "Heavy Pistol",
+      "skill": "firearms",
+      "base-range": "20m",
+      "damage": {
+        "dice": 1,
+        "die-type": 12,
+        "modifier": 0,
+        "db-applies": false,
+        "special": ""
+      },
+      "lethality": 0,
+      "kill-radius": "",
+      "ammo": 10,
+      "ap": 0
+    },
+    "shotgun-slug": {
+      "name": "Shotgun (slug)",
+      "skill": "firearms",
+      "base-range": "75m",
+      "damage": {
+        "dice": 2,
+        "die-type": 8,
+        "modifier": 0,
+        "db-applies": false,
+        "special": "Damage reduced to 2D6 beyond base range"
+      },
+      "lethality": 0,
+      "kill-radius": "",
+      "ammo": 5,
+      "ap": 0
+    },
+    "shotgun": {
+      "name": "Shotgun (shot)",
+      "skill": "firearms",
+      "base-range": "75m",
+      "damage": {
+        "dice": 2,
+        "die-type": 8,
+        "modifier": 0,
+        "db-applies": false,
+        "special": "Half damage beyond base range"
+      },
+      "lethality": 0,
+      "kill-radius": "",
+      "ammo": 5,
+      "ap": 0
+    },
+    "light-carbine": {
+      "name": "Light Carbine",
+      "skill": "firearms",
+      "base-range": "100m",
+      "damage": {
+        "dice": 1,
+        "die-type": 12,
+        "modifier": 0,
+        "db-applies": false,
+        "special": "Use Lethality rating if firing bursts"
+      },
+      "lethality": 10,
+      "kill-radius": "",
+      "ammo": 30,
+      "ap": 3
     }
   },
   "armour": {
