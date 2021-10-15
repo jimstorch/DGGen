@@ -318,6 +318,7 @@ class Need2KnowPDF(object):
 
     def __init__(self, filename, professions, pages_per_sheet=1):
         self.filename = filename
+        self.pages_per_sheet = pages_per_sheet
         self.c = canvas.Canvas(self.filename)
         # Set US Letter in points
         self.c.setPageSize((612, 792))
@@ -409,10 +410,11 @@ class Need2KnowPDF(object):
         self.c.showPage()
 
     def save_pdf(self):
-        self.bookmark('Back Page')
-        self.c.drawImage(
-            'data/Character Sheet NO BACKGROUND BACK.jpg', 0, 0, 612, 792)
-        self.c.showPage()
+        if self.pages_per_sheet == 1:
+            self.bookmark('Back Page')
+            self.c.drawImage(
+                'data/Character Sheet NO BACKGROUND BACK.jpg', 0, 0, 612, 792)
+            self.c.showPage()
         self.c.save()
 
 
