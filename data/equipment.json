@@ -136,6 +136,22 @@
       "kill-radius": "",
       "ammo": 30,
       "ap": 3
+    },
+    "heavy-rifle": {
+      "name": "Heavy Rifle",
+      "skill": "firearms",
+      "base-range": "150m",
+      "damage": {
+        "dice": 1,
+        "die-type": 12,
+        "modifier": 2,
+        "db-applies": false,
+        "special": "Use Lethality rating if firing bursts"
+      },
+      "lethality": 10,
+      "kill-radius": "",
+      "ammo": 20,
+      "ap": 5
     }
   },
   "armour": {

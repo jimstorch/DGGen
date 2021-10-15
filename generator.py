@@ -7,6 +7,7 @@ import logging
 import os
 import sys
 import warnings
+from collections import defaultdict
 from itertools import islice, cycle
 from random import randint, shuffle, choice, sample
 from textwrap import shorten
@@ -221,17 +222,22 @@ class Need2KnowCharacter(object):
             self.d[skill] = boost
 
     def equip(self, kit_name=None):
-        self.equip_weapon(0, WEAPONS['unarmed'])
+        notes = defaultdict(iter(["*", "†", "‡", "§", "‖", "¶"]).__next__)
+
+        self.equip_weapon(0, WEAPONS['unarmed'], notes)
         if kit_name:
             kit = KITS[kit_name]
             for i, weapon_type in enumerate(kit['weapons']):
                 weapon = WEAPONS[weapon_type]
-                self.equip_weapon(i + 1, weapon)
+                self.equip_weapon(i + 1, weapon, notes)
 
             for i, gear in enumerate([ARMOUR[a] for a in kit['armour']] + kit['gear']):
                 self.e[f'gear{i}'] = shorten(gear, 41, placeholder="…")
 
-    def equip_weapon(self, i, weapon):
+        for i, (note, pointer) in enumerate(notes.items()):
+            self.e[f'note{i}'] = f"{pointer} {note}"
+
+    def equip_weapon(self, i, weapon, notes):
         self.e[f'weapon{i}'] = shorten(weapon['name'], 14, placeholder="…")
         self.e[f'weapon{i}_roll'] = f"{self.d[weapon['skill']]}%"
         self.e[f'weapon{i}_range'] = weapon['base-range']
@@ -246,8 +252,10 @@ class Need2KnowCharacter(object):
 
         damage = weapon['damage']
         damage_modifier = damage['modifier'] + (self.damage_bonus if damage['modifier'] else 0)
+        pointer = notes[damage['special']] if damage['special'] else None
+
         self.e[f'weapon{i}_damage'] = f"{damage['dice']}D{damage['die-type']}" + (
-            f"{damage_modifier:+d}" if damage_modifier else "")
+            f"{damage_modifier:+d}" if damage_modifier else "") + (f" {pointer}" if pointer else "")
 
 
 class Need2KnowPDF(object):
@@ -426,6 +434,13 @@ class Need2KnowPDF(object):
         'gear11': (323, 565),
         'gear12': (323, 550),
         'gear13': (323, 535),
+
+        'note0': (40, 40),
+        'note1': (40, 25),
+        'note2': (40, 10),
+        'note3': (300, 40),
+        'note4': (300, 25),
+        'note5': (300, 10),
     }
 
     # Fields that also get a multiplier
