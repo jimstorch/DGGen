@@ -4,8 +4,21 @@
       "weapons": [
         "medium-pistol"
       ],
-      "armour": [],
-      "general": []
+      "armour": [
+        "kevlar-vest"
+      ],
+      "gear": [
+        "Agency badge and ID card",
+        "Pistol holster (belt)",
+        "2 spare pistol mags (belt pouch)",
+        "Tactical light",
+        "Handcuffs (belt pouch)",
+        "Agency marked windbreaker jacket",
+        "Encrypted smartphone",
+        "Police-band radio,",
+        "with earpiece & throat mic",
+        "Small evidence-collection kit"
+      ]
     }
   },
   "weapons": {
@@ -41,7 +54,6 @@
     }
   },
   "armour": {
-  },
-  "general": {
+    "kevlar-vest": "Reinforced Kevlar vest - Armour Rating 4"
   }
 }

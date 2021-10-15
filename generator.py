@@ -9,6 +9,7 @@ import sys
 import warnings
 from itertools import islice, cycle
 from random import randint, shuffle, choice, sample
+from textwrap import shorten
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -49,7 +50,6 @@ with open('data/equipment.json') as f:
     KITS = equipment['kits']
     WEAPONS = equipment['weapons']
     ARMOUR = equipment['armour']
-    GENERAL_EQUIPMENT = equipment['general']
 
 DISTINGUISHING = {}
 with open('data/distinguishing-features.csv') as distinguishing:
@@ -228,6 +228,9 @@ class Need2KnowCharacter(object):
                 weapon = WEAPONS[weapon_type]
                 self.equip_weapon(i + 1, weapon)
 
+            for i, gear in enumerate([ARMOUR[a] for a in kit['armour']] + kit['gear']):
+                self.e[f'gear{i}'] = shorten(gear, 41, placeholder="...")
+
     def equip_weapon(self, i, weapon):
         self.e[f'weapon{i}'] = weapon['name']
         self.e[f'weapon{i}_roll'] = f"{self.d[weapon['skill']]}%"
@@ -345,6 +348,7 @@ class Need2KnowPDF(object):
         'skill2': (521, 73),
         'skill3': (521, 54),
 
+        # 2nd page
         'weapon0': (95, 480),
         'weapon0_roll': (175, 480),
         'weapon0_range': (215, 480),
@@ -407,6 +411,21 @@ class Need2KnowPDF(object):
         'weapon6_lethality': (410, 360),
         'weapon6_kill_radius': (465, 360),
         'weapon6_ammo': (525, 360),
+
+        'gear0': (75, 625),
+        'gear1': (75, 610),
+        'gear2': (75, 595),
+        'gear3': (75, 580),
+        'gear4': (75, 565),
+        'gear5': (75, 550),
+        'gear6': (75, 535),
+        'gear7': (323, 625),
+        'gear8': (323, 610),
+        'gear9': (323, 595),
+        'gear10': (323, 580),
+        'gear11': (323, 565),
+        'gear12': (323, 550),
+        'gear13': (323, 535),
     }
 
     # Fields that also get a multiplier
