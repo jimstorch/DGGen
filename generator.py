@@ -70,11 +70,11 @@ def main(*argv):
 
 
 class Need2KnowCharacter(object):
-    statpools = (
+    statpools = [
         [13, 13, 12, 12, 11, 11],
         [15, 14, 12, 11, 10, 10],
         [17, 14, 13, 10, 10, 8],
-    )
+    ]
 
     DEFAULT_SKILLS = {
         'accounting': 10,
@@ -164,8 +164,9 @@ class Need2KnowCharacter(object):
         self.d['age'] = '%d    (%s %d)' % (randint(24, 55), choice(MONTHS),
             (randint(1, 28)))
 
-        # Spend the Point Pool
-        pool = choice(self.statpools)
+        # Stats
+        rolled = [[sum(sorted([randint(1, 6) for _ in range(4)])[1:]) for _ in range(6)]]
+        pool = choice(self.statpools + rolled)
         shuffle(pool)
         self.d['strength'] = pool[0]
         self.d['constitution'] = pool[1]
@@ -174,7 +175,7 @@ class Need2KnowCharacter(object):
         self.d['power'] = pool[4]
         self.d['charisma'] = pool[5]
 
-        # Derived Stats
+        # Derived attributes
         self.d['hitpoints'] = int(round((self.d['strength'] +
                                          self.d['constitution']) / 2.0))
         self.d['willpower'] = self.d['power']
