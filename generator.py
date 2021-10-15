@@ -44,6 +44,13 @@ with open('data/towns.txt') as f:
 with open('data/professions.json') as f:
     PROFESSIONS = json.load(f)
 
+with open('data/equipment.json') as f:
+    equipment = json.load(f)
+    KITS = equipment['kits']
+    WEAPONS = equipment['weapons']
+    ARMOUR = equipment['armour']
+    GENERAL_EQUIPMENT = equipment['general']
+
 DISTINGUISHING = {}
 with open('data/distinguishing-features.csv') as distinguishing:
     for row in csv.DictReader(distinguishing):
@@ -65,6 +72,9 @@ def main():
         for sex in islice(cycle(['female', 'male']), options.count or profession['number_to_generate']):
             c = Need2KnowCharacter(sex=sex, profession=profession, label_override=options.label,
                                    employer=options.employer)
+            if options.equip:
+                c.equip(profession.get("equipment-kit", None))
+
             p.add_page(c.d)
             if pages_per_sheet >= 2: p.add_page_2(c.e)
 
@@ -187,7 +197,8 @@ class Need2KnowCharacter(object):
         self.d['willpower'] = self.d['power']
         self.d['sanity'] = self.d['power'] * 5
         self.d['breaking point'] = self.d['power'] * 4
-        self.d['damage bonus'] = 'DB=%d' % (((self.d['strength'] - 1) >> 2) - 2)
+        self.damage_bonus = (((self.d['strength'] - 1) >> 2) - 2)
+        self.d['damage bonus'] = 'DB=%d' % self.damage_bonus
 
         # Default skills
         self.d.update(self.DEFAULT_SKILLS)
@@ -209,8 +220,31 @@ class Need2KnowCharacter(object):
                 boost = 80
             self.d[skill] = boost
 
-    def equip(self, kit):
-        pass
+    def equip(self, kit_name=None):
+        self.equip_weapon(0, WEAPONS['unarmed'])
+        if kit_name:
+            kit = KITS[kit_name]
+            for i, weapon_type in enumerate(kit['weapons']):
+                weapon = WEAPONS[weapon_type]
+                self.equip_weapon(i + 1, weapon)
+
+    def equip_weapon(self, i, weapon):
+        self.e[f'weapon{i}'] = weapon['name']
+        self.e[f'weapon{i}_roll'] = f"{self.d[weapon['skill']]}%"
+        self.e[f'weapon{i}_range'] = weapon['base-range']
+        if weapon['ap']:
+            self.e[f'weapon{i}_ap'] = f"{weapon['ap']}"
+        if weapon['lethality']:
+            self.e[f'weapon{i}_lethality'] = f"{weapon['lethality']}%"
+        if weapon['ammo']:
+            self.e[f'weapon{i}_ammo'] = f"{weapon['ammo']}"
+        if weapon['kill-radius']:
+            self.e[f'weapon{i}_kill_radius'] = f"{weapon['kill-radius']}"
+
+        damage = weapon['damage']
+        damage_modifier = damage['modifier'] + (self.damage_bonus if damage['modifier'] else 0)
+        self.e[f'weapon{i}_damage'] = f"{damage['dice']}D{damage['die-type']}" + (
+            f"{damage_modifier:+d}" if damage_modifier else "")
 
 
 class Need2KnowPDF(object):
@@ -310,6 +344,69 @@ class Need2KnowPDF(object):
         'skill1': (521, 91),
         'skill2': (521, 73),
         'skill3': (521, 54),
+
+        'weapon0': (95, 480),
+        'weapon0_roll': (175, 480),
+        'weapon0_range': (215, 480),
+        'weapon0_damage': (270, 480),
+        'weapon0_ap': (345, 480),
+        'weapon0_lethality': (410, 480),
+        'weapon0_kill_radius': (465, 480),
+        'weapon0_ammo': (525, 480),
+
+        'weapon1': (95, 460),
+        'weapon1_roll': (175, 460),
+        'weapon1_range': (215, 460),
+        'weapon1_damage': (270, 460),
+        'weapon1_ap': (345, 460),
+        'weapon1_lethality': (410, 460),
+        'weapon1_kill_radius': (465, 460),
+        'weapon1_ammo': (525, 460),
+
+        'weapon2': (95, 440),
+        'weapon2_roll': (175, 440),
+        'weapon2_range': (215, 440),
+        'weapon2_damage': (270, 440),
+        'weapon2_ap': (345, 440),
+        'weapon2_lethality': (410, 440),
+        'weapon2_kill_radius': (465, 440),
+        'weapon2_ammo': (525, 440),
+
+        'weapon3': (95, 420),
+        'weapon3_roll': (175, 420),
+        'weapon3_range': (215, 420),
+        'weapon3_damage': (270, 420),
+        'weapon3_ap': (345, 420),
+        'weapon3_lethality': (410, 420),
+        'weapon3_kill_radius': (465, 420),
+        'weapon3_ammo': (525, 420),
+
+        'weapon4': (95, 460),
+        'weapon4_roll': (175, 400),
+        'weapon4_range': (215, 400),
+        'weapon4_damage': (270, 400),
+        'weapon4_ap': (345, 400),
+        'weapon4_lethality': (410, 400),
+        'weapon4_kill_radius': (465, 400),
+        'weapon4_ammo': (525, 400),
+
+        'weapon5': (95, 380),
+        'weapon5_roll': (175, 380),
+        'weapon5_range': (215, 380),
+        'weapon5_damage': (270, 380),
+        'weapon5_ap': (345, 380),
+        'weapon5_lethality': (410, 380),
+        'weapon5_kill_radius': (465, 380),
+        'weapon5_ammo': (525, 380),
+
+        'weapon6': (95, 360),
+        'weapon6_roll': (175, 360),
+        'weapon6_range': (215, 360),
+        'weapon6_damage': (270, 360),
+        'weapon6_ap': (345, 360),
+        'weapon6_lethality': (410, 360),
+        'weapon6_kill_radius': (465, 360),
+        'weapon6_ammo': (525, 360),
     }
 
     # Fields that also get a multiplier

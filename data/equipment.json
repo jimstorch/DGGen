@@ -1,0 +1,47 @@
+{
+  "kits": {
+    "agent": {
+      "weapons": [
+        "medium-pistol"
+      ],
+      "armour": [],
+      "general": []
+    }
+  },
+  "weapons": {
+    "unarmed": {
+      "name": "Unarmed",
+      "skill": "unarmed combat",
+      "base-range": "",
+      "damage": {
+        "dice": 1,
+        "die-type": 4,
+        "modifier": -1,
+        "db-applies": true
+      },
+      "lethality": 0,
+      "kill-radius": "",
+      "ammo": 0,
+      "ap": 0
+    },
+    "medium-pistol": {
+      "name": "9mm pistol",
+      "skill": "firearms",
+      "base-range": "10m",
+      "damage": {
+        "dice": 1,
+        "die-type": 10,
+        "modifier": 0,
+        "db-applies": false
+      },
+      "lethality": 0,
+      "kill-radius": "",
+      "ammo": 7,
+      "ap": 0
+    }
+  },
+  "armour": {
+  },
+  "general": {
+  }
+}

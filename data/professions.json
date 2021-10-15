@@ -159,7 +159,8 @@
         "pharmacy": 50
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "agent"
   },
   "firefighter": {
     "label": "Firefighter",
