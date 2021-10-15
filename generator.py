@@ -18,7 +18,7 @@ script_name = os.path.basename(sys.argv[0])
 description = '''
 Generate characters for the Delta Green pen-and-paper roleplaying game from Arc Dream Publishing.
 '''
-__version__ = "1.1"
+__version__ = "1.2"
 
 logger = logging.getLogger(script_name)
 
@@ -57,14 +57,17 @@ def main():
     init_logger(options.verbosity)
     logger.debug(options)
 
+    pages_per_sheet = 2 if options.equip else 1
     professions = [PROFESSIONS[options.type]] if options.type else PROFESSIONS.values()
-    p = Need2KnowPDF(options.output, professions)
+    p = Need2KnowPDF(options.output, professions, pages_per_sheet=pages_per_sheet)
     for profession in professions:
         p.bookmark(profession["label"])
         for sex in islice(cycle(['female', 'male']), options.count or profession['number_to_generate']):
             c = Need2KnowCharacter(sex=sex, profession=profession, label_override=options.label,
                                    employer=options.employer)
             p.add_page(c.d)
+            if pages_per_sheet >= 2: p.add_page_2(c.e)
+
     p.save_pdf()
     logger.info("Wrote %s", options.output)
 
@@ -150,8 +153,9 @@ class Need2KnowCharacter(object):
 
     def __init__(self, sex, profession, label_override=None, employer=None):
 
-        # Hold all dictionary
+        # Hold all dictionaries
         self.d = {}
+        self.e = {}
 
         if sex == 'male':
             self.d['male'] = 'X'
@@ -201,8 +205,12 @@ class Need2KnowCharacter(object):
         for skill in bonus_skills:
             boost = self.d.get(skill, 0) + 20
             if boost > 80:
+                logger.warning("Lost boost - %s already at %s", skill, self.d.get(skill, 0))
                 boost = 80
             self.d[skill] = boost
+
+    def equip(self, kit):
+        pass
 
 
 class Need2KnowPDF(object):
@@ -308,7 +316,7 @@ class Need2KnowPDF(object):
     x5_stats = ['strength', 'constitution', 'dexterity', 'intelligence',
                 'power', 'charisma']
 
-    def __init__(self, filename, professions):
+    def __init__(self, filename, professions, pages_per_sheet=1):
         self.filename = filename
         self.c = canvas.Canvas(self.filename)
         # Set US Letter in points
@@ -320,9 +328,9 @@ class Need2KnowPDF(object):
         pdfmetrics.registerFont(TTFont('Special Elite', 'data/SpecialElite.ttf'))
         pdfmetrics.registerFont(TTFont('OCRA', 'data/OCRA.ttf'))
         if len(professions) > 1:
-            self.generate_toc(professions)
+            self.generate_toc(professions, pages_per_sheet)
 
-    def generate_toc(self, professions):
+    def generate_toc(self, professions, pages_per_sheet):
         """Build a clickable Table of Contents on page 1"""
         self.bookmark('Table of Contents')
         self.c.setFillColorRGB(0, 0, 0)
@@ -338,12 +346,14 @@ class Need2KnowPDF(object):
             self.c.drawString(150, top - self.line_drop(count), chapter)
             self.c.linkAbsolute(profession['label'], profession['label'],
                                 (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
-            pagenum += profession['number_to_generate']
-        chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(
-            pagenum + profession['number_to_generate'])
-        self.c.drawString(150, top - self.line_drop(pagenum), chapter)
-        self.c.linkAbsolute('Back Page', 'Back Page',
-                            (145, (top - 6) - self.line_drop(pagenum), 470, (top + 18) - self.line_drop(pagenum)))
+            pagenum += profession['number_to_generate'] * pages_per_sheet
+        if pages_per_sheet == 1:
+            chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(
+                pagenum + profession['number_to_generate'])
+            self.c.drawString(150, top - self.line_drop(pagenum), chapter)
+            self.c.linkAbsolute('Back Page', 'Back Page',
+                                (145, (top - 6) - self.line_drop(pagenum), 470,
+                                 (top + 18) - self.line_drop(pagenum)))
         self.c.showPage()
 
     @staticmethod
@@ -385,6 +395,19 @@ class Need2KnowPDF(object):
         # Tell ReportLab we're done with current page
         self.c.showPage()
 
+    def add_page_2(self, e):
+        # Add background.  ReportLab will cache it for repeat
+        self.c.setFont(DEFAULT_FONT, 11)
+        self.font_color(*TEXT_COLOR)
+        self.c.drawImage(
+            'data/Character Sheet NO BACKGROUND BACK.jpg', 0, 0, 612, 792)
+
+        for key in e:
+            self.fill_field(key, e[key])
+
+        # Tell ReportLab we're done with current page
+        self.c.showPage()
+
     def save_pdf(self):
         self.bookmark('Back Page')
         self.c.drawImage(
@@ -415,6 +438,8 @@ def get_options():
     parser.add_argument("-c", "--count", type=int, action="store",
                         help="Generate this many characters of each profession.")
     parser.add_argument("-e", "--employer", action="store", help="Set employer for all generated characters.")
+    parser.add_argument("-u", "--unequipped", action="store_false", dest="equip", help="Don't generate equipment.",
+                        default=True)
 
     return parser.parse_args()
 
