@@ -232,12 +232,12 @@ class Need2KnowCharacter(object):
             kit = KITS[kit_name]
             weapons += self.build_weapon_list(kit["weapons"])
 
-            for i, gear in enumerate(kit['armour'] + kit['gear']):
+            for i, gear in enumerate((kit['armour'] + kit['gear'])[:20]):
                 text = (f"{self.store_footnote(gear['note'])} " if "note" in gear else "") + (
                     ARMOUR[gear["type"]] if "type" in gear else gear["text"])
                 self.e[f'gear{i}'] = shorten(text, 55, placeholder="…")
 
-        for i, weapon in enumerate(weapons):
+        for i, weapon in enumerate(weapons[:7]):
             self.equip_weapon(i, weapon)
 
     def build_weapon_list(self, weapons_to_add):
@@ -281,7 +281,7 @@ class Need2KnowCharacter(object):
                                              f" {damage_note_indicator}" if damage_note_indicator else "")
 
     def footnotes(self):
-        for i, (note, pointer) in enumerate(self.notes.items()):
+        for i, (note, pointer) in enumerate(list(self.notes.items())[:8]):
             self.e[f'note{i}'] = f"{pointer} {note}"
 
     def store_footnote(self, note):
