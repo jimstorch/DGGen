@@ -235,7 +235,7 @@ class Need2KnowCharacter(object):
             for i, gear in enumerate(kit['armour'] + kit['gear']):
                 text = (f"{self.store_footnote(gear['note'])} " if "note" in gear else "") + (
                     ARMOUR[gear["type"]] if "type" in gear else gear["text"])
-                self.e[f'gear{i}'] = shorten(text, 41, placeholder="…")
+                self.e[f'gear{i}'] = shorten(text, 55, placeholder="…")
 
         for i, weapon in enumerate(weapons):
             self.equip_weapon(i, weapon)
@@ -458,20 +458,26 @@ class Need2KnowPDF(object):
         'weapon6_ammo': (525, 366, 11),
         'weapon6_note': (560, 366, 11),
 
-        'gear0': (75, 625, 11),
-        'gear1': (75, 610, 11),
-        'gear2': (75, 595, 11),
-        'gear3': (75, 580, 11),
-        'gear4': (75, 565, 11),
-        'gear5': (75, 550, 11),
-        'gear6': (75, 535, 11),
-        'gear7': (323, 625, 11),
-        'gear8': (323, 610, 11),
-        'gear9': (323, 595, 11),
-        'gear10': (323, 580, 11),
-        'gear11': (323, 565, 11),
-        'gear12': (323, 550, 11),
-        'gear13': (323, 535, 11),
+        'gear0': (75, 625, 8),
+        'gear1': (75, 615, 8),
+        'gear2': (75, 605, 8),
+        'gear3': (75, 595, 8),
+        'gear4': (75, 585, 8),
+        'gear5': (75, 575, 8),
+        'gear6': (75, 565, 8),
+        'gear7': (75, 555, 8),
+        'gear8': (75, 545, 8),
+        'gear9': (75, 535, 8),
+        'gear10': (323, 625, 8),
+        'gear11': (323, 615, 8),
+        'gear12': (323, 605, 8),
+        'gear13': (323, 595, 8),
+        'gear14': (323, 585, 8),
+        'gear15': (323, 575, 8),
+        'gear16': (323, 565, 8),
+        'gear17': (323, 555, 8),
+        'gear18': (323, 545, 8),
+        'gear19': (323, 535, 8),
 
         'note0': (50, 40, 8),
         'note1': (50, 30, 8),

@@ -67,16 +67,21 @@
           "text": "Encrypted smartphone"
         },
         {
-          "text": "Police-band radio,"
-        },
-        {
-          "text": "with earpiece & throat mic"
+          "text": "Police-band radio, with earpiece & throat mic"
         },
         {
           "text": "Small evidence-collection kit"
         },
         {
-          "text": "Encrypted laptop",
+          "text": "Encrypted laptop with access to agency networks",
+          "note": "In car boot"
+        },
+        {
+          "text": "First aid kit",
+          "note": "In car boot"
+        },
+        {
+          "text": "Portable fire extinguisher",
           "note": "In car boot"
         }
       ]
