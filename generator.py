@@ -244,10 +244,14 @@ class Need2KnowCharacter(object):
         result = []
         for weapon_to_add in weapons_to_add:
             if "type" in weapon_to_add:
-                weapon = copy(WEAPONS[weapon_to_add["type"]])
-                if "note" in weapon_to_add: weapon["note"] = weapon_to_add["note"]
-                result += [weapon] if "chance" not in weapon_to_add or weapon_to_add[
-                    "chance"] >= randint(1, 100) else []
+                weapon = copy(WEAPONS.get(weapon_to_add["type"], None))
+                if weapon:
+                    if "note" in weapon_to_add: weapon["note"] = weapon_to_add["note"]
+                    result += [weapon] if "chance" not in weapon_to_add or weapon_to_add[
+                        "chance"] >= randint(1, 100) else []
+                else:
+                    logger.error("Unknown weapon type %s", weapon_to_add["type"])
+                    return []
             elif "one-of" in weapon_to_add:
                 result += self.build_weapon_list([choice(weapon_to_add["one-of"])])
             elif "both" in weapon_to_add:
@@ -257,13 +261,16 @@ class Need2KnowCharacter(object):
         return result
 
     def equip_weapon(self, slot, weapon):
-        self.e[f'weapon{slot}'] = shorten(weapon['name'], 14, placeholder="…")
-        self.e[f'weapon{slot}_roll'] = f"{self.d[weapon['skill']]}%"
+        self.e[f'weapon{slot}'] = shorten(weapon['name'], 15, placeholder="…")
+        self.e[f'weapon{slot}_roll'] = f"{self.d.get(weapon['skill'], 0)}%"
         self.e[f'weapon{slot}_range'] = weapon['base-range']
         if weapon['ap']:
             self.e[f'weapon{slot}_ap'] = f"{weapon['ap']}"
         if weapon['lethality']:
-            self.e[f'weapon{slot}_lethality'] = f"{weapon['lethality']}%"
+            lethality = weapon['lethality']
+            lethality_note_indicator = self.store_footnote(lethality['special']) if "special" in lethality else None
+            self.e[f'weapon{slot}_lethality'] = f"{lethality['rating']}%" +( f" {lethality_note_indicator}" if lethality_note_indicator else "")
+
         if weapon['ammo']:
             self.e[f'weapon{slot}_ammo'] = f"{weapon['ammo']}"
         if weapon['kill-radius']:
@@ -272,13 +279,14 @@ class Need2KnowCharacter(object):
         if "note" in weapon:
             self.e[f'weapon{slot}_note'] = self.store_footnote(weapon['note'])
 
-        damage = weapon['damage']
-        damage_modifier = damage['modifier'] + (self.damage_bonus if damage['db-applies'] else 0)
-        damage_note_indicator = self.store_footnote(damage['special'])
+        if "damage" in weapon:
+            damage = weapon['damage']
+            damage_modifier = damage['modifier'] + (self.damage_bonus if damage['db-applies'] else 0)
+            damage_note_indicator = self.store_footnote(damage['special'])
 
-        self.e[f'weapon{slot}_damage'] = f"{damage['dice']}D{damage['die-type']}" + (
-            f"{damage_modifier:+d}" if damage_modifier else "") + (
-                                             f" {damage_note_indicator}" if damage_note_indicator else "")
+            self.e[f'weapon{slot}_damage'] = f"{damage['dice']}D{damage['die-type']}" + (
+                f"{damage_modifier:+d}" if damage_modifier else "") + (
+                                                 f" {damage_note_indicator}" if damage_note_indicator else "")
 
     def footnotes(self):
         for i, (note, pointer) in enumerate(list(self.notes.items())[:8]):

@@ -570,7 +570,7 @@
   },
   "soldier": {
     "label": "Soldier",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "alertness": 50,

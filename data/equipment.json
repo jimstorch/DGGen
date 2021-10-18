@@ -208,9 +208,72 @@
       ]
     },
     "soldier": {
-      "weapons": [],
-      "armour": [],
-      "gear": []
+      "weapons": [
+        {
+          "one-of": [
+            {
+              "type": "heavy-rifle"
+            },
+            {
+              "type": "smg"
+            },
+            {
+              "both": [
+                {
+                  "type": "medium-pistol"
+                },
+                {
+                  "one-of": [
+                    {
+                      "type": "very-heavy-rifle"
+                    },
+                    {
+                      "type": "rpg"
+                    },
+                    {
+                      "type": "flamethrower"
+                    },
+                    {
+                      "type": "gpmg"
+                    },
+                    {
+                      "type": "gl"
+                    },
+                    {
+                      "type": "gmg"
+                    },
+                    {
+                      "type": "lmg"
+                    },
+                    {
+                      "type": "gmg"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "combat-knife"
+        },
+        {
+          "type": "grenade"
+        }
+      ],
+      "armour": [
+        {
+          "type": "tactical-body"
+        },
+        {
+          "type": "kevlar-helmet"
+        }
+      ],
+      "gear": [
+        {
+          "text": "Night vision goggles"
+        }
+      ]
     },
     "spec-ops": {
       "weapons": [],
@@ -235,7 +298,9 @@
         "db-applies": true,
         "special": ""
       },
-      "lethality": 0,
+      "lethality": {
+        "rating": 0
+      },
       "kill-radius": "",
       "ammo": 0,
       "ap": 0
@@ -251,7 +316,9 @@
         "db-applies": true,
         "special": ""
       },
-      "lethality": 0,
+      "lethality": {
+        "rating": 0
+      },
       "kill-radius": "",
       "ammo": 0,
       "ap": 3
@@ -267,7 +334,9 @@
         "db-applies": true,
         "special": ""
       },
-      "lethality": 0,
+      "lethality": {
+        "rating": 0
+      },
       "kill-radius": "",
       "ammo": 0,
       "ap": 3
@@ -283,7 +352,9 @@
         "db-applies": true,
         "special": ""
       },
-      "lethality": 0,
+      "lethality": {
+        "rating": 0
+      },
       "kill-radius": "",
       "ammo": 0,
       "ap": 0
@@ -299,7 +370,9 @@
         "db-applies": false,
         "special": ""
       },
-      "lethality": 0,
+      "lethality": {
+        "rating": 0
+      },
       "kill-radius": "",
       "ammo": 7,
       "ap": 0
@@ -315,7 +388,9 @@
         "db-applies": false,
         "special": ""
       },
-      "lethality": 0,
+      "lethality": {
+        "rating": 0
+      },
       "kill-radius": "",
       "ammo": 15,
       "ap": 0
@@ -331,7 +406,9 @@
         "db-applies": false,
         "special": ""
       },
-      "lethality": 0,
+      "lethality": {
+        "rating": 0
+      },
       "kill-radius": "",
       "ammo": 10,
       "ap": 0
@@ -347,7 +424,9 @@
         "db-applies": false,
         "special": "Damage reduced to 2D6 beyond base range"
       },
-      "lethality": 0,
+      "lethality": {
+        "rating": 0
+      },
       "kill-radius": "",
       "ammo": 5,
       "ap": 0
@@ -363,7 +442,9 @@
         "db-applies": false,
         "special": "Half damage beyond base range"
       },
-      "lethality": 0,
+      "lethality": {
+        "rating": 0
+      },
       "kill-radius": "",
       "ammo": 5,
       "ap": 0
@@ -379,7 +460,9 @@
         "db-applies": false,
         "special": "Use Lethality rating if firing bursts"
       },
-      "lethality": 10,
+      "lethality": {
+        "rating": 10
+      },
       "kill-radius": "",
       "ammo": 30,
       "ap": 3
@@ -395,9 +478,151 @@
         "db-applies": false,
         "special": "Use Lethality rating if firing bursts"
       },
-      "lethality": 10,
+      "lethality": {
+        "rating": 10
+      },
       "kill-radius": "",
       "ammo": 20,
+      "ap": 5
+    },
+    "smg": {
+      "name": "Submachine Gun",
+      "skill": "firearms",
+      "base-range": "50m",
+      "damage": {
+        "dice": 1,
+        "die-type": 10,
+        "modifier": 0,
+        "db-applies": false,
+        "special": "Use Lethality rating if firing bursts"
+      },
+      "lethality": {
+        "rating": 10
+      },
+      "kill-radius": "",
+      "ammo": 20,
+      "ap": 5
+    },
+    "grenade": {
+      "name": "Hand Grenade",
+      "skill": "athletics",
+      "base-range": "20m",
+      "lethality": {
+        "rating": 15
+      },
+      "kill-radius": "10m",
+      "ammo": 2,
+      "ap": 0
+    },
+    "very-heavy-rifle": {
+      "name": "Very Heavy Rifle",
+      "skill": "firearms",
+      "base-range": "250m",
+      "lethality": {
+        "rating": 20
+      },
+      "kill-radius": "",
+      "ammo": 10,
+      "ap": 5
+    },
+    "rpg": {
+      "name": "RPG launcher",
+      "skill": "heavy weapons",
+      "base-range": "200m",
+      "lethality": {
+        "rating": 30
+      },
+      "kill-radius": "10m",
+      "ammo": 20,
+      "ap": 20
+    },
+    "flamethrower": {
+      "name": "Flamethrower",
+      "skill": "heavy weapons",
+      "base-range": "5m",
+      "lethality": {
+        "rating": 10
+      },
+      "kill-radius": "1m",
+      "ammo": 20,
+      "ap": 0
+    },
+    "gpmg": {
+      "name": "GP Machine Gun",
+      "skill": "heavy weapons",
+      "base-range": "300m",
+      "lethality": {
+        "rating": 15
+      },
+      "kill-radius": "Per burst",
+      "ammo": 100,
+      "ap": 3
+    },
+    "gl": {
+      "name": "Grenade launcher",
+      "skill": "heavy weapons",
+      "base-range": "150m",
+      "lethality": {
+        "rating": 15
+      },
+      "kill-radius": "10m",
+      "ammo": 1,
+      "ap": 0
+    },
+    "gmg": {
+      "name": "Grenade machine gun",
+      "skill": "heavy weapons",
+      "base-range": "300m",
+      "lethality": {
+        "rating": 15,
+        "special": "If firing a burst (5 grenades), Lethality is 20%"
+      },
+      "kill-radius": "Per burst",
+      "ammo": 100,
+      "ap": 3
+    },
+    "hmg": {
+      "name": "Heavy Machine Gun",
+      "skill": "heavy weapons",
+      "base-range": "400m",
+      "lethality": {
+        "rating": 20
+      },
+      "kill-radius": "Per burst",
+      "ammo": 100,
+      "ap": 5
+    },
+    "lmg": {
+      "name": "Light Machine Gun",
+      "skill": "heavy weapons",
+      "base-range": "200m",
+      "lethality": {
+        "rating": 10
+      },
+      "kill-radius": "Per burst",
+      "ammo": 200,
+      "ap": 3
+    },
+    "autocannon": {
+      "name": "Autocannon",
+      "skill": "heavy weapons",
+      "base-range": "400m",
+      "lethality": {
+        "rating": 30
+      },
+      "kill-radius": "3m",
+      "ammo": 100,
+      "ap": 5
+    },
+    "minigun": {
+      "name": "Minigun",
+      "skill": "heavy weapons",
+      "base-range": "300m",
+      "lethality": {
+        "rating": 20
+      },
+      "kill-radius": "3m (long spray)",
+      "ammo": 4000,
       "ap": 5
     }
   },
