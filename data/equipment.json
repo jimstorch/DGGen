@@ -2,25 +2,83 @@
   "kits": {
     "agent": {
       "weapons": [
-        "medium-pistol",
-        "shotgun",
-        "shotgun-slug",
-        "light-carbine"
+        {
+          "type": "medium-pistol"
+        },
+        {
+          "type": "light-pistol",
+          "chance": 50,
+          "note": "Ankle holster"
+        },
+        {
+          "one-of": [
+            {
+              "both": [
+                {
+                  "type": "shotgun",
+                  "note": "In car boot"
+                },
+                {
+                  "type": "shotgun-slug",
+                  "note": "In car boot"
+                }
+              ]
+            },
+            {
+              "type": "light-carbine",
+              "note": "In car boot"
+            }
+          ]
+        }
       ],
       "armour": [
-        "kevlar-vest"
+        {
+          "type": "kevlar-vest"
+        },
+        {
+          "type": "tactical-body",
+          "note": "In car boot"
+        },
+        {
+          "type": "kevlar-helmet",
+          "note": "In car boot"
+        }
       ],
       "gear": [
-        "Agency badge and ID card",
-        "Pistol holster (belt)",
-        "2 spare pistol mags (belt pouch)",
-        "Tactical light",
-        "Handcuffs (belt pouch)",
-        "Agency marked windbreaker jacket",
-        "Encrypted smartphone",
-        "Police-band radio,",
-        "with earpiece & throat mic",
-        "Small evidence-collection kit"
+        {
+          "text": "Agency badge and ID card"
+        },
+        {
+          "text": "Pistol holster (belt)"
+        },
+        {
+          "text": "2 spare pistol mags (belt pouch)"
+        },
+        {
+          "text": "Tactical light"
+        },
+        {
+          "text": "Handcuffs (belt pouch)"
+        },
+        {
+          "text": "Agency marked windbreaker jacket"
+        },
+        {
+          "text": "Encrypted smartphone"
+        },
+        {
+          "text": "Police-band radio,"
+        },
+        {
+          "text": "with earpiece & throat mic"
+        },
+        {
+          "text": "Small evidence-collection kit"
+        },
+        {
+          "text": "Encrypted laptop",
+          "note": "In car boot"
+        }
       ]
     }
   },
@@ -57,8 +115,24 @@
       "ammo": 0,
       "ap": 3
     },
+    "light-pistol": {
+      "name": "Light Pistol",
+      "skill": "firearms",
+      "base-range": "10m",
+      "damage": {
+        "dice": 1,
+        "die-type": 8,
+        "modifier": 0,
+        "db-applies": false,
+        "special": ""
+      },
+      "lethality": 0,
+      "kill-radius": "",
+      "ammo": 7,
+      "ap": 0
+    },
     "medium-pistol": {
-      "name": "9mm pistol",
+      "name": "Medium Pistol",
       "skill": "firearms",
       "base-range": "15m",
       "damage": {
@@ -155,6 +229,8 @@
     }
   },
   "armour": {
-    "kevlar-vest": "Reinforced Kevlar vest - Armour Rating 4"
+    "kevlar-vest": "Reinforced Kevlar vest - Armour Rating 4",
+    "tactical-body": "Tactical body armor - Armour Rating 5",
+    "kevlar-helmet": "Kevlar helmet - Armour Rating +1"
   }
 }

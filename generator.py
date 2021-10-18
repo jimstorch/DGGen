@@ -8,6 +8,7 @@ import os
 import sys
 import warnings
 from collections import defaultdict
+from copy import copy
 from itertools import islice, cycle
 from random import randint, shuffle, choice, sample
 from textwrap import shorten
@@ -226,15 +227,34 @@ class Need2KnowCharacter(object):
             self.d[skill] = boost
 
     def equip(self, kit_name=None):
-        self.equip_weapon(0, WEAPONS['unarmed'])
+        weapons = [WEAPONS["unarmed"]]
         if kit_name:
             kit = KITS[kit_name]
-            for i, weapon_type in enumerate(kit['weapons']):
-                weapon = WEAPONS[weapon_type]
-                self.equip_weapon(i + 1, weapon)
+            weapons += self.build_weapon_list(kit["weapons"])
 
-            for i, gear in enumerate([ARMOUR[a] for a in kit['armour']] + kit['gear']):
-                self.e[f'gear{i}'] = shorten(gear, 41, placeholder="…")
+            for i, gear in enumerate(kit['armour'] + kit['gear']):
+                text = (f"{self.store_footnote(gear['note'])} " if "note" in gear else "") + (
+                    ARMOUR[gear["type"]] if "type" in gear else gear["text"])
+                self.e[f'gear{i}'] = shorten(text, 41, placeholder="…")
+
+        for i, weapon in enumerate(weapons):
+            self.equip_weapon(i, weapon)
+
+    def build_weapon_list(self, weapons_to_add):
+        result = []
+        for weapon_to_add in weapons_to_add:
+            if "type" in weapon_to_add:
+                weapon = copy(WEAPONS[weapon_to_add["type"]])
+                if "note" in weapon_to_add: weapon["note"] = weapon_to_add["note"]
+                result += [weapon] if "chance" not in weapon_to_add or weapon_to_add[
+                    "chance"] >= randint(1, 100) else []
+            elif "one-of" in weapon_to_add:
+                result += self.build_weapon_list([choice(weapon_to_add["one-of"])])
+            elif "both" in weapon_to_add:
+                result += self.build_weapon_list(w for w in weapon_to_add["both"])
+            else:
+                logger.error("Don't understand weapon %r", weapon_to_add)
+        return result
 
     def equip_weapon(self, slot, weapon):
         self.e[f'weapon{slot}'] = shorten(weapon['name'], 14, placeholder="…")
@@ -249,12 +269,16 @@ class Need2KnowCharacter(object):
         if weapon['kill-radius']:
             self.e[f'weapon{slot}_kill_radius'] = f"{weapon['kill-radius']}"
 
+        if "note" in weapon:
+            self.e[f'weapon{slot}_note'] = self.store_footnote(weapon['note'])
+
         damage = weapon['damage']
         damage_modifier = damage['modifier'] + (self.damage_bonus if damage['modifier'] else 0)
-        note_indicator = self.store_footnote(damage['special'])
+        damage_note_indicator = self.store_footnote(damage['special'])
 
         self.e[f'weapon{slot}_damage'] = f"{damage['dice']}D{damage['die-type']}" + (
-            f"{damage_modifier:+d}" if damage_modifier else "") + (f" {note_indicator}" if note_indicator else "")
+            f"{damage_modifier:+d}" if damage_modifier else "") + (
+                                             f" {damage_note_indicator}" if damage_note_indicator else "")
 
     def footnotes(self):
         for i, (note, pointer) in enumerate(self.notes.items()):
@@ -372,6 +396,7 @@ class Need2KnowPDF(object):
         'weapon0_lethality': (410, 480, 11),
         'weapon0_kill_radius': (465, 480, 11),
         'weapon0_ammo': (525, 480, 11),
+        'weapon0_note': (560, 480, 11),
 
         'weapon1': (85, 461, 11),
         'weapon1_roll': (175, 461, 11),
@@ -381,6 +406,7 @@ class Need2KnowPDF(object):
         'weapon1_lethality': (410, 461, 11),
         'weapon1_kill_radius': (465, 461, 11),
         'weapon1_ammo': (525, 461, 11),
+        'weapon1_note': (560, 461, 11),
 
         'weapon2': (85, 442, 11),
         'weapon2_roll': (175, 442, 11),
@@ -390,6 +416,7 @@ class Need2KnowPDF(object):
         'weapon2_lethality': (410, 442, 11),
         'weapon2_kill_radius': (465, 442, 11),
         'weapon2_ammo': (525, 442, 11),
+        'weapon2_note': (560, 442, 11),
 
         'weapon3': (85, 423, 11),
         'weapon3_roll': (175, 423, 11),
@@ -399,6 +426,7 @@ class Need2KnowPDF(object):
         'weapon3_lethality': (410, 423, 11),
         'weapon3_kill_radius': (465, 423, 11),
         'weapon3_ammo': (525, 423, 11),
+        'weapon3_note': (560, 423, 11),
 
         'weapon4': (85, 404, 11),
         'weapon4_roll': (175, 404, 11),
@@ -408,6 +436,7 @@ class Need2KnowPDF(object):
         'weapon4_lethality': (410, 404, 11),
         'weapon4_kill_radius': (465, 404, 11),
         'weapon4_ammo': (525, 404, 11),
+        'weapon4_note': (560, 404, 11),
 
         'weapon5': (85, 385, 11),
         'weapon5_roll': (175, 385, 11),
@@ -417,6 +446,7 @@ class Need2KnowPDF(object):
         'weapon5_lethality': (410, 385, 11),
         'weapon5_kill_radius': (465, 385, 11),
         'weapon5_ammo': (525, 385, 11),
+        'weapon5_note': (560, 385, 11),
 
         'weapon6': (85, 366, 11),
         'weapon6_roll': (175, 366, 11),
@@ -426,6 +456,7 @@ class Need2KnowPDF(object):
         'weapon6_lethality': (410, 366, 11),
         'weapon6_kill_radius': (465, 366, 11),
         'weapon6_ammo': (525, 366, 11),
+        'weapon6_note': (560, 366, 11),
 
         'gear0': (75, 625, 11),
         'gear1': (75, 610, 11),
