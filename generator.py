@@ -75,9 +75,11 @@ def main():
                                    employer=options.employer)
             if options.equip:
                 c.equip(profession.get("equipment-kit", None))
+            c.footnotes()
 
             p.add_page(c.d)
-            if pages_per_sheet >= 2: p.add_page_2(c.e)
+            if pages_per_sheet >= 2:
+                p.add_page_2(c.e)
 
     p.save_pdf()
     logger.info("Wrote %s", options.output)
@@ -168,6 +170,8 @@ class Need2KnowCharacter(object):
         self.d = {}
         self.e = {}
 
+        self.notes = defaultdict(iter(["*", "†", "‡", "§", "‖", "¶", "**", "††", "‡‡", "§§", "‖‖", "¶¶"]).__next__)
+
         if sex == 'male':
             self.d['male'] = 'X'
             self.d['name'] = choice(SURNAMES).upper() + ', ' + choice(MALES)
@@ -222,40 +226,43 @@ class Need2KnowCharacter(object):
             self.d[skill] = boost
 
     def equip(self, kit_name=None):
-        notes = defaultdict(iter(["*", "†", "‡", "§", "‖", "¶"]).__next__)
-
-        self.equip_weapon(0, WEAPONS['unarmed'], notes)
+        self.equip_weapon(0, WEAPONS['unarmed'])
         if kit_name:
             kit = KITS[kit_name]
             for i, weapon_type in enumerate(kit['weapons']):
                 weapon = WEAPONS[weapon_type]
-                self.equip_weapon(i + 1, weapon, notes)
+                self.equip_weapon(i + 1, weapon)
 
             for i, gear in enumerate([ARMOUR[a] for a in kit['armour']] + kit['gear']):
                 self.e[f'gear{i}'] = shorten(gear, 41, placeholder="…")
 
-        for i, (note, pointer) in enumerate(notes.items()):
-            self.e[f'note{i}'] = f"{pointer} {note}"
-
-    def equip_weapon(self, i, weapon, notes):
-        self.e[f'weapon{i}'] = shorten(weapon['name'], 14, placeholder="…")
-        self.e[f'weapon{i}_roll'] = f"{self.d[weapon['skill']]}%"
-        self.e[f'weapon{i}_range'] = weapon['base-range']
+    def equip_weapon(self, slot, weapon):
+        self.e[f'weapon{slot}'] = shorten(weapon['name'], 14, placeholder="…")
+        self.e[f'weapon{slot}_roll'] = f"{self.d[weapon['skill']]}%"
+        self.e[f'weapon{slot}_range'] = weapon['base-range']
         if weapon['ap']:
-            self.e[f'weapon{i}_ap'] = f"{weapon['ap']}"
+            self.e[f'weapon{slot}_ap'] = f"{weapon['ap']}"
         if weapon['lethality']:
-            self.e[f'weapon{i}_lethality'] = f"{weapon['lethality']}%"
+            self.e[f'weapon{slot}_lethality'] = f"{weapon['lethality']}%"
         if weapon['ammo']:
-            self.e[f'weapon{i}_ammo'] = f"{weapon['ammo']}"
+            self.e[f'weapon{slot}_ammo'] = f"{weapon['ammo']}"
         if weapon['kill-radius']:
-            self.e[f'weapon{i}_kill_radius'] = f"{weapon['kill-radius']}"
+            self.e[f'weapon{slot}_kill_radius'] = f"{weapon['kill-radius']}"
 
         damage = weapon['damage']
         damage_modifier = damage['modifier'] + (self.damage_bonus if damage['modifier'] else 0)
-        pointer = notes[damage['special']] if damage['special'] else None
+        note_indicator = self.store_footnote(damage['special'])
 
-        self.e[f'weapon{i}_damage'] = f"{damage['dice']}D{damage['die-type']}" + (
-            f"{damage_modifier:+d}" if damage_modifier else "") + (f" {pointer}" if pointer else "")
+        self.e[f'weapon{slot}_damage'] = f"{damage['dice']}D{damage['die-type']}" + (
+            f"{damage_modifier:+d}" if damage_modifier else "") + (f" {note_indicator}" if note_indicator else "")
+
+    def footnotes(self):
+        for i, (note, pointer) in enumerate(self.notes.items()):
+            self.e[f'note{i}'] = f"{pointer} {note}"
+
+    def store_footnote(self, note):
+        """Returns indicator character"""
+        return self.notes[note] if note else None
 
 
 class Need2KnowPDF(object):
@@ -503,9 +510,11 @@ class Need2KnowPDF(object):
         self.c.drawString(x, y, str(text))
 
     def fill_field(self, field, value):
+        # TODO Font size here as 3rd item in tuple.
         x, y = self.field_xy[field]
         self.c.drawString(x, y, str(value))
 
+        # TODO: Make these just like normal fields - i.e. part of the chatacter Class
         if field in self.x5_stats:
             self.draw_string(x + 36, y, str(value * 5))
             self.draw_string(x + 72, y, self.distinguishing(field, value))
