@@ -83,8 +83,144 @@
         {
           "text": "Portable fire extinguisher",
           "note": "In car boot"
+        },
+        {
+          "text": "Spare ammunition",
+          "note": "In car boot"
         }
       ]
+    },
+    "police": {
+      "weapons": [
+        {
+          "type": "medium-pistol"
+        },
+        {
+          "type": "light-pistol",
+          "chance": 50,
+          "note": "Ankle holster"
+        },
+        {
+          "one-of": [
+            {
+              "both": [
+                {
+                  "type": "shotgun",
+                  "note": "In car boot"
+                },
+                {
+                  "type": "shotgun-slug",
+                  "note": "In car boot"
+                }
+              ]
+            },
+            {
+              "type": "light-carbine",
+              "note": "In car boot"
+            }
+          ]
+        },
+        {
+          "type": "baton"
+        },
+        {
+          "type": "pocket-knife"
+        }
+      ],
+      "armour": [
+        {
+          "type": "kevlar-vest"
+        },
+        {
+          "type": "riot-helmet",
+          "note": "In car boot"
+        }
+      ],
+      "gear": [
+        {
+          "text": "Badge and ID card"
+        },
+        {
+          "text": "Pistol holster (belt)"
+        },
+        {
+          "text": "2 spare pistol mags (belt pouch)"
+        },
+        {
+          "text": "Flashlight"
+        },
+        {
+          "text": "Handcuffs (belt pouch)"
+        },
+        {
+          "text": "Handheld radio"
+        },
+        {
+          "text": "Pen and pocket notebook"
+        },
+        {
+          "text": "Multitool"
+        },
+        {
+          "text": "Police radio",
+          "note": "In car boot"
+        },
+        {
+          "text": "Spare ammunition",
+          "note": "In car boot"
+        },
+        {
+          "text": "Mounted laptop computer",
+          "note": "In car boot"
+        },
+        {
+          "text": "Driver’s-license scanner",
+          "note": "In car boot"
+        },
+        {
+          "text": "Spike strips",
+          "note": "In car boot"
+        },
+        {
+          "text": "Flares",
+          "note": "In car boot"
+        },
+        {
+          "text": "Reflective vest to wear in traffic",
+          "note": "In car boot"
+        },
+        {
+          "text": "Evidence bags",
+          "note": "In car boot"
+        },
+        {
+          "text": "Traffic cones",
+          "note": "In car boot"
+        },
+        {
+          "text": "Blood-borne pathogen kit",
+          "note": "In car boot"
+        },
+        {
+          "text": "Fire extinguisher",
+          "note": "In car boot"
+        }
+      ]
+    },
+    "soldier": {
+      "weapons": [],
+      "armour": [],
+      "gear": []
+    },
+    "spec-ops": {
+      "weapons": [],
+      "armour": [],
+      "gear": []
+    },
+    "swat": {
+      "weapons": [],
+      "armour": [],
+      "gear": []
     }
   },
   "weapons": {
@@ -119,6 +255,38 @@
       "kill-radius": "",
       "ammo": 0,
       "ap": 3
+    },
+    "pocket-knife": {
+      "name": "Pocket Knife",
+      "skill": "melee weapons",
+      "base-range": "",
+      "damage": {
+        "dice": 1,
+        "die-type": 4,
+        "modifier": 0,
+        "db-applies": true,
+        "special": ""
+      },
+      "lethality": 0,
+      "kill-radius": "",
+      "ammo": 0,
+      "ap": 3
+    },
+    "baton": {
+      "name": "Baton",
+      "skill": "melee weapons",
+      "base-range": "",
+      "damage": {
+        "dice": 1,
+        "die-type": 4,
+        "modifier": 0,
+        "db-applies": true,
+        "special": ""
+      },
+      "lethality": 0,
+      "kill-radius": "",
+      "ammo": 0,
+      "ap": 0
     },
     "light-pistol": {
       "name": "Light Pistol",
@@ -236,6 +404,7 @@
   "armour": {
     "kevlar-vest": "Reinforced Kevlar vest - Armour Rating 4",
     "tactical-body": "Tactical body armor - Armour Rating 5",
-    "kevlar-helmet": "Kevlar helmet - Armour Rating +1"
+    "kevlar-helmet": "Kevlar helmet - Armour Rating +1",
+    "riot-helmet": "Riot helmet - Armour Rating +1"
   }
 }

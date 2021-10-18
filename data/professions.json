@@ -331,7 +331,8 @@
         "swim": 60
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "soldier"
   },
   "media": {
     "label": "Media Specialist",
@@ -490,7 +491,8 @@
         "ride": 60
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "police"
   },
   "manager": {
     "label": "Program Manager",
@@ -596,7 +598,8 @@
         "swim": 60
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "soldier"
   },
   "spec-ops": {
     "label": "Special Operator",
@@ -620,6 +623,7 @@
       "possible": {
       }
     },
-    "bonds": 2
+    "bonds": 2,
+    "equipment-kit": "spec-ops"
   }
 }

@@ -232,7 +232,7 @@ class Need2KnowCharacter(object):
             kit = KITS[kit_name]
             weapons += self.build_weapon_list(kit["weapons"])
 
-            for i, gear in enumerate((kit['armour'] + kit['gear'])[:20]):
+            for i, gear in enumerate((kit['armour'] + kit['gear'])[:22]):
                 text = (f"{self.store_footnote(gear['note'])} " if "note" in gear else "") + (
                     ARMOUR[gear["type"]] if "type" in gear else gear["text"])
                 self.e[f'gear{i}'] = shorten(text, 55, placeholder="…")
@@ -458,26 +458,28 @@ class Need2KnowPDF(object):
         'weapon6_ammo': (525, 366, 11),
         'weapon6_note': (560, 366, 11),
 
-        'gear0': (75, 625, 8),
-        'gear1': (75, 615, 8),
-        'gear2': (75, 605, 8),
-        'gear3': (75, 595, 8),
-        'gear4': (75, 585, 8),
-        'gear5': (75, 575, 8),
-        'gear6': (75, 565, 8),
-        'gear7': (75, 555, 8),
-        'gear8': (75, 545, 8),
-        'gear9': (75, 535, 8),
-        'gear10': (323, 625, 8),
-        'gear11': (323, 615, 8),
-        'gear12': (323, 605, 8),
-        'gear13': (323, 595, 8),
-        'gear14': (323, 585, 8),
-        'gear15': (323, 575, 8),
-        'gear16': (323, 565, 8),
-        'gear17': (323, 555, 8),
-        'gear18': (323, 545, 8),
-        'gear19': (323, 535, 8),
+        'gear0': (75,   628, 8),
+        'gear1': (75,   618, 8),
+        'gear2': (75,   608, 8),
+        'gear3': (75,   598, 8),
+        'gear4': (75,   588, 8),
+        'gear5': (75,   578, 8),
+        'gear6': (75,   568, 8),
+        'gear7': (75,   558, 8),
+        'gear8': (75,   548, 8),
+        'gear9': (75,   538, 8),
+        'gear10': (75,  528, 8),
+        'gear11': (323, 628, 8),
+        'gear12': (323, 618, 8),
+        'gear13': (323, 608, 8),
+        'gear14': (323, 598, 8),
+        'gear15': (323, 588, 8),
+        'gear16': (323, 578, 8),
+        'gear17': (323, 568, 8),
+        'gear18': (323, 558, 8),
+        'gear19': (323, 548, 8),
+        'gear20': (323, 538, 8),
+        'gear21': (323, 528, 8),
 
         'note0': (50, 40, 8),
         'note1': (50, 30, 8),
