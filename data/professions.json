@@ -1,5 +1,6 @@
 {
-  "Anthropologist": {
+  "anthropologist": {
+    "label": "Anthropologist",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -23,7 +24,8 @@
     },
     "bonds": 4
   },
-  "Business Executive": {
+  "business": {
+    "label": "Business Executive",
     "number_to_generate": 5,
     "skills": {
       "fixed": {
@@ -43,7 +45,8 @@
     },
     "bonds": 4
   },
-  "Computer Science": {
+  "compsci": {
+    "label": "Computer Scientist",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -71,7 +74,8 @@
     },
     "bonds": 3
   },
-  "Criminal": {
+  "criminal": {
+    "label": "Criminal",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -100,7 +104,8 @@
     },
     "bonds": 4
   },
-  "Engineer": {
+  "engineer": {
+    "label": "Engineer",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -128,7 +133,8 @@
     },
     "bonds": 3
   },
-  "Federal Agent": {
+  "agent": {
+    "label": "Federal Agent",
     "number_to_generate": 40,
     "skills": {
       "fixed": {
@@ -155,7 +161,8 @@
     },
     "bonds": 3
   },
-  "Firefighter": {
+  "firefighter": {
+    "label": "Firefighter",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -179,7 +186,8 @@
     },
     "bonds": 3
   },
-  "Foreign Service Officer": {
+  "foreign-service": {
+    "label": "Foreign Service Officer",
     "number_to_generate": 20,
     "skills": {
       "fixed": {
@@ -200,7 +208,8 @@
     },
     "bonds": 3
   },
-  "Historian": {
+  "historian": {
+    "label": "Historian",
     "number_to_generate": 20,
     "skills": {
       "fixed": {
@@ -224,7 +233,8 @@
     },
     "bonds": 4
   },
-  "Intelligence Analyst": {
+  "analyst": {
+    "label": "Intelligence Analyst",
     "number_to_generate": 20,
     "skills": {
       "fixed": {
@@ -245,7 +255,8 @@
     },
     "bonds": 3
   },
-  "Intelligence Case Officer": {
+  "case-officer": {
+    "label": "Intelligence Case Officer",
     "number_to_generate": 20,
     "skills": {
       "fixed": {
@@ -268,7 +279,8 @@
     },
     "bonds": 2
   },
-  "Lawyer": {
+  "lawyer": {
+    "label": "Lawyer",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -288,7 +300,8 @@
     },
     "bonds": 4
   },
-  "Marine": {
+  "marine": {
+    "label": "Marine",
     "number_to_generate": 20,
     "skills": {
       "fixed": {
@@ -319,7 +332,8 @@
     },
     "bonds": 4
   },
-  "Media Specialist": {
+  "media": {
+    "label": "Media Specialist",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -345,7 +359,8 @@
     },
     "bonds": 4
   },
-  "Nurse": {
+  "nurse": {
+    "label": "Nurse",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -370,7 +385,8 @@
     },
     "bonds": 2
   },
-  "Paramedic": {
+  "paramedic": {
+    "label": "Paramedic",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -395,7 +411,8 @@
     },
     "bonds": 2
   },
-  "Physician": {
+  "physician": {
+    "label": "Physician",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -418,7 +435,8 @@
     },
     "bonds": 2
   },
-  "Pilot": {
+  "pilot": {
+    "label": "Pilot",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -444,7 +462,8 @@
     },
     "bonds": 1
   },
-  "Police Officer": {
+  "police": {
+    "label": "Police Officer",
     "number_to_generate": 20,
     "skills": {
       "fixed": {
@@ -472,7 +491,8 @@
     },
     "bonds": 3
   },
-  "Program Manager": {
+  "manager": {
+    "label": "Program Manager",
     "number_to_generate": 5,
     "skills": {
       "fixed": {
@@ -495,7 +515,8 @@
     },
     "bonds": 4
   },
-  "Sailor": {
+  "sailor": {
+    "label": "Sailor",
     "number_to_generate": 10,
     "skills": {
       "fixed": {
@@ -521,7 +542,8 @@
     },
     "bonds": 1
   },
-  "Scientist": {
+  "scientist": {
+    "label": "Scientist",
     "number_to_generate": 20,
     "skills": {
       "fixed": {
@@ -543,7 +565,8 @@
     },
     "bonds": 3
   },
-  "Soldier": {
+  "soldier": {
+    "label": "Soldier",
     "number_to_generate": 20,
     "skills": {
       "fixed": {
@@ -574,7 +597,8 @@
     },
     "bonds": 4
   },
-  "Special Operator": {
+  "spec-ops": {
+    "label": "Special Operator",
     "number_to_generate": 20,
     "skills": {
       "fixed": {

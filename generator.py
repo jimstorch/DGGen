@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-
+import argparse
 import csv
 import datetime
 import json
 import logging
-import optparse
 import os
 import sys
 import warnings
@@ -16,11 +15,10 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
 script_name = os.path.basename(sys.argv[0])
-usage = script_name + ' [options] args'
 description = '''
 Generate characters for the Delta Green pen-and-paper roleplaying game from Arc Dream Publishing.
 '''
-__version__ = "1.0"
+__version__ = "1.1"
 
 logger = logging.getLogger(script_name)
 
@@ -54,16 +52,18 @@ with open('data/distinguishing-features.csv') as distinguishing:
                 (row['statistic'], value), []).append(row['distinguishing'])
 
 
-def main(*argv):
-    options, script, args, help = get_options(argv)
+def main():
+    options = get_options()
     init_logger(options.verbosity)
     logger.debug(options)
 
-    p = Need2KnowPDF(options.output, PROFESSIONS)
-    for profession, profession_options in PROFESSIONS.items():
-        p.bookmark(profession)
-        for sex in islice(cycle(['female', 'male']), profession_options['number_to_generate']):
-            c = Need2KnowCharacter(sex=sex, profession=profession, profession_options=profession_options)
+    professions = [PROFESSIONS[options.type]] if options.type else PROFESSIONS.values()
+    p = Need2KnowPDF(options.output, professions)
+    for profession in professions:
+        p.bookmark(profession["label"])
+        for sex in islice(cycle(['female', 'male']), options.count or profession['number_to_generate']):
+            c = Need2KnowCharacter(sex=sex, profession=profession, label_override=options.label,
+                                   employer=options.employer)
             p.add_page(c.d)
     p.save_pdf()
     logger.info("Wrote %s", options.output)
@@ -148,7 +148,7 @@ class Need2KnowCharacter(object):
         'language1',
     ]
 
-    def __init__(self, sex, profession, profession_options):
+    def __init__(self, sex, profession, label_override=None, employer=None):
 
         # Hold all dictionary
         self.d = {}
@@ -159,7 +159,9 @@ class Need2KnowCharacter(object):
         else:
             self.d['female'] = 'X'
             self.d['name'] = choice(SURNAMES).upper() + ', ' + choice(FEMALES)
-        self.d['profession'] = profession
+        self.d['profession'] = label_override or profession['label']
+        if employer:
+            self.d['employer'] = employer
         self.d['nationality'] = '(U.S.A.) ' + choice(TOWNS)
         self.d['age'] = '%d    (%s %d)' % (randint(24, 55), choice(MONTHS),
             (randint(1, 28)))
@@ -186,11 +188,11 @@ class Need2KnowCharacter(object):
         self.d.update(self.DEFAULT_SKILLS)
 
         # Professional skills
-        self.d.update(profession_options['skills']['fixed'])
-        for skill, score in sample(profession_options['skills']['possible'].items(),
-                                   profession_options['skills']['possible-count']):
+        self.d.update(profession['skills']['fixed'])
+        for skill, score in sample(profession['skills']['possible'].items(),
+                                   profession['skills']['possible-count']):
             self.d[skill] = score
-        for i in range(profession_options['bonds']):
+        for i in range(profession['bonds']):
             self.d[f'bond{i}'] = self.d['charisma']
 
         # Bonus skills
@@ -209,6 +211,7 @@ class Need2KnowPDF(object):
         # Personal Data
         'name': (75, 693),
         'profession': (343, 693),
+        'employer': (75, 665),
         'nationality': (343, 665),
         'age': (185, 640),
         'birthday': (200, 640),
@@ -304,7 +307,7 @@ class Need2KnowPDF(object):
     x5_stats = ['strength', 'constitution', 'dexterity', 'intelligence',
                 'power', 'charisma']
 
-    def __init__(self, filename='out.pdf', professions=None):
+    def __init__(self, filename, professions):
         self.filename = filename
         self.c = canvas.Canvas(self.filename)
         # Set US Letter in points
@@ -315,33 +318,32 @@ class Need2KnowPDF(object):
         # Register Custom Fonts
         pdfmetrics.registerFont(TTFont('Special Elite', 'data/SpecialElite.ttf'))
         pdfmetrics.registerFont(TTFont('OCRA', 'data/OCRA.ttf'))
-        self.generate_toc(professions)
+        if len(professions) > 1:
+            self.generate_toc(professions)
 
     def generate_toc(self, professions):
-        """If we're passed an optional list of professions,
-        build a clickable Table of Contents on page 1"""
-        if professions:
-            self.bookmark('Table of Contents')
-            self.c.setFillColorRGB(0, 0, 0)
-            self.c.setFont("OCRA", 10)
-            now = datetime.datetime.utcnow().isoformat() + "Z"
-            self.c.drawString(150, 712, 'DGGEN DTG ' + now)
-            self.c.drawString(150, 700, 'CLASSIFIED/DG/NTK//')
-            self.c.drawString(150, 688, 'SUBJ ROSTER/ACTIVE/NOCELL/CONUS//')
-            top = 650
-            pagenum = 2
-            for count, (profession, profession_options) in enumerate(professions.items()):
-                chapter = '{:.<40}'.format(profession) + '{:.>4}'.format(pagenum)
-                self.c.drawString(150, top - self.line_drop(count), chapter)
-                self.c.linkAbsolute(profession, profession,
-                                    (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
-                pagenum += profession_options['number_to_generate']
-            chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(
-                pagenum + profession_options['number_to_generate'])
-            self.c.drawString(150, top - self.line_drop(pagenum), chapter)
-            self.c.linkAbsolute('Back Page', 'Back Page',
-                                (145, (top - 6) - self.line_drop(pagenum), 470, (top + 18) - self.line_drop(pagenum)))
-            self.c.showPage()
+        """Build a clickable Table of Contents on page 1"""
+        self.bookmark('Table of Contents')
+        self.c.setFillColorRGB(0, 0, 0)
+        self.c.setFont("OCRA", 10)
+        now = datetime.datetime.utcnow().isoformat() + "Z"
+        self.c.drawString(150, 712, 'DGGEN DTG ' + now)
+        self.c.drawString(150, 700, 'CLASSIFIED/DG/NTK//')
+        self.c.drawString(150, 688, 'SUBJ ROSTER/ACTIVE/NOCELL/CONUS//')
+        top = 650
+        pagenum = 2
+        for count, profession in enumerate(professions):
+            chapter = '{:.<40}'.format(profession['label']) + '{:.>4}'.format(pagenum)
+            self.c.drawString(150, top - self.line_drop(count), chapter)
+            self.c.linkAbsolute(profession['label'], profession['label'],
+                                (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
+            pagenum += profession['number_to_generate']
+        chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(
+            pagenum + profession['number_to_generate'])
+        self.c.drawString(150, top - self.line_drop(pagenum), chapter)
+        self.c.linkAbsolute('Back Page', 'Back Page',
+                            (145, (top - 6) - self.line_drop(pagenum), 470, (top + 18) - self.line_drop(pagenum)))
+        self.c.showPage()
 
     @staticmethod
     def line_drop(count, linesize=22):
@@ -390,20 +392,30 @@ class Need2KnowPDF(object):
         self.c.save()
 
 
-def get_options(argv):
+def get_options():
     """Get options and arguments from argv string."""
-    parser = optparse.OptionParser(usage=usage, version=__version__)
-    parser.description = description
-    parser.add_option("-v", "--verbosity", action="count", default=0,
-                      help="Specify up to three times to increase verbosity, i.e. -v to see warnings, -vv for "
-                           "information messages, or -vvv for debug messages.")
-    parser.add_option("-o", "--output", action="store",
-                      default=f'DeltaGreenPregen-{datetime.datetime.now() :%Y-%m-%d-%H:%M}.pdf',
-                      help="Output PDF file. Defaults to %default.")
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument(
+        "-v",
+        "--verbosity",
+        action="count",
+        default=0,
+        help="specify up to three times to increase verbosity, "
+             "i.e. -v to see warnings, -vv for information messages, or -vvv for debug messages.",
+    )
+    parser.add_argument("-V", "--version", action="version", version=__version__)
 
-    options, args = parser.parse_args(list(argv))
-    script, args = args[0], args[1:]
-    return options, script, args, parser.format_help()
+    parser.add_argument("-o", "--output", action="store",
+                        default=f'DeltaGreenPregen-{datetime.datetime.now() :%Y-%m-%d-%H:%M}.pdf',
+                        help="Output PDF file. Defaults to %(default)s.")
+    parser.add_argument("-t", "--type", action="store",
+                        help=f"Select single profession to generate - any one of {', '.join(p for p in PROFESSIONS.keys())}.")
+    parser.add_argument("-l", "--label", action="store", help="Override profession label.")
+    parser.add_argument("-c", "--count", type=int, action="store",
+                        help="Generate this many characters of each profession.")
+    parser.add_argument("-e", "--employer", action="store", help="Set employer for all generated characters.")
+
+    return parser.parse_args()
 
 
 def init_logger(verbosity, stream=sys.stdout):
@@ -418,4 +430,4 @@ def init_logger(verbosity, stream=sys.stdout):
 
 
 if __name__ == '__main__':
-    sys.exit(main(*sys.argv))
+    sys.exit(main())
