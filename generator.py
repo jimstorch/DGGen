@@ -273,7 +273,7 @@ class Need2KnowCharacter(object):
             self.e[f'weapon{slot}_note'] = self.store_footnote(weapon['note'])
 
         damage = weapon['damage']
-        damage_modifier = damage['modifier'] + (self.damage_bonus if damage['modifier'] else 0)
+        damage_modifier = damage['modifier'] + (self.damage_bonus if damage['db-applies'] else 0)
         damage_note_indicator = self.store_footnote(damage['special'])
 
         self.e[f'weapon{slot}_damage'] = f"{damage['dice']}D{damage['die-type']}" + (
