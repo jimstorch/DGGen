@@ -268,7 +268,7 @@ class Need2KnowCharacter(object):
         if weapon['lethality']:
             lethality = weapon['lethality']
             lethality_note_indicator = self.store_footnote(lethality['special']) if "special" in lethality else None
-            self.e[f'weapon{slot}_lethality'] = f"{lethality['rating']}%" + (
+            self.e[f'weapon{slot}_lethality'] = (f"{lethality['rating']}%" if lethality['rating'] else "") + (
                 f" {lethality_note_indicator}" if lethality_note_indicator else "")
 
         if weapon['ammo']:
@@ -404,7 +404,7 @@ class Need2KnowPDF(object):
         'weapon0_damage': (270, 480, 11),
         'weapon0_ap': (345, 480, 11),
         'weapon0_lethality': (410, 480, 11),
-        'weapon0_kill_radius': (465, 480, 11),
+        'weapon0_kill_radius': (462, 480, 11),
         'weapon0_ammo': (525, 480, 11),
         'weapon0_note': (560, 480, 11),
 
@@ -414,7 +414,7 @@ class Need2KnowPDF(object):
         'weapon1_damage': (270, 461, 11),
         'weapon1_ap': (345, 461, 11),
         'weapon1_lethality': (410, 461, 11),
-        'weapon1_kill_radius': (465, 461, 11),
+        'weapon1_kill_radius': (462, 461, 11),
         'weapon1_ammo': (525, 461, 11),
         'weapon1_note': (560, 461, 11),
 
@@ -424,7 +424,7 @@ class Need2KnowPDF(object):
         'weapon2_damage': (270, 442, 11),
         'weapon2_ap': (345, 442, 11),
         'weapon2_lethality': (410, 442, 11),
-        'weapon2_kill_radius': (465, 442, 11),
+        'weapon2_kill_radius': (462, 442, 11),
         'weapon2_ammo': (525, 442, 11),
         'weapon2_note': (560, 442, 11),
 
@@ -434,7 +434,7 @@ class Need2KnowPDF(object):
         'weapon3_damage': (270, 423, 11),
         'weapon3_ap': (345, 423, 11),
         'weapon3_lethality': (410, 423, 11),
-        'weapon3_kill_radius': (465, 423, 11),
+        'weapon3_kill_radius': (462, 423, 11),
         'weapon3_ammo': (525, 423, 11),
         'weapon3_note': (560, 423, 11),
 
@@ -444,7 +444,7 @@ class Need2KnowPDF(object):
         'weapon4_damage': (270, 404, 11),
         'weapon4_ap': (345, 404, 11),
         'weapon4_lethality': (410, 404, 11),
-        'weapon4_kill_radius': (465, 404, 11),
+        'weapon4_kill_radius': (462, 404, 11),
         'weapon4_ammo': (525, 404, 11),
         'weapon4_note': (560, 404, 11),
 
@@ -454,7 +454,7 @@ class Need2KnowPDF(object):
         'weapon5_damage': (270, 385, 11),
         'weapon5_ap': (345, 385, 11),
         'weapon5_lethality': (410, 385, 11),
-        'weapon5_kill_radius': (465, 385, 11),
+        'weapon5_kill_radius': (462, 385, 11),
         'weapon5_ammo': (525, 385, 11),
         'weapon5_note': (560, 385, 11),
 
