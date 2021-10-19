@@ -8,7 +8,9 @@
         {
           "type": "light-pistol",
           "chance": 50,
-          "note": "Ankle holster"
+          "notes": [
+            "Ankle holster"
+          ]
         },
         {
           "one-of": [
@@ -16,17 +18,24 @@
               "both": [
                 {
                   "type": "shotgun",
-                  "note": "In car boot"
+                  "notes": [
+                    "In car boot"
+                  ]
                 },
                 {
                   "type": "shotgun-slug",
-                  "note": "In car boot"
+                  "notes": [
+                    "In car boot"
+                  ]
                 }
               ]
             },
             {
               "type": "light-carbine",
-              "note": "In car boot"
+              "notes": [
+                "In car boot",
+                "With holographic sight - +20% bonus to hit as long as your Agent has taken no damage since last action"
+              ]
             }
           ]
         }
@@ -37,11 +46,15 @@
         },
         {
           "type": "tactical-body",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "type": "kevlar-helmet",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         }
       ],
       "gear": [
@@ -74,19 +87,27 @@
         },
         {
           "text": "Encrypted laptop with access to agency networks",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "First aid kit",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Portable fire extinguisher",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Spare ammunition",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         }
       ]
     },
@@ -98,7 +119,9 @@
         {
           "type": "light-pistol",
           "chance": 50,
-          "note": "Ankle holster"
+          "notes": [
+            "Ankle holster"
+          ]
         },
         {
           "one-of": [
@@ -106,17 +129,23 @@
               "both": [
                 {
                   "type": "shotgun",
-                  "note": "In car boot"
+                  "notes": [
+                    "In car boot"
+                  ]
                 },
                 {
                   "type": "shotgun-slug",
-                  "note": "In car boot"
+                  "notes": [
+                    "In car boot"
+                  ]
                 }
               ]
             },
             {
               "type": "light-carbine",
-              "note": "In car boot"
+              "notes": [
+                "In car boot"
+              ]
             }
           ]
         },
@@ -133,7 +162,9 @@
         },
         {
           "type": "riot-helmet",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         }
       ],
       "gear": [
@@ -163,47 +194,69 @@
         },
         {
           "text": "Police radio",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Spare ammunition",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Mounted laptop computer",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
-          "text": "Driver’s-license scanner",
-          "note": "In car boot"
+          "text": "Driver’s license scanner",
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Spike strips",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Flares",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Reflective vest to wear in traffic",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Evidence bags",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Traffic cones",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Blood-borne pathogen kit",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "text": "Fire extinguisher",
-          "note": "In car boot"
+          "notes": [
+            "In car boot"
+          ]
         }
       ]
     },
@@ -271,14 +324,113 @@
       ],
       "gear": [
         {
+          "text": "Dog tags"
+        },
+        {
           "text": "Night vision goggles"
+        },
+        {
+          "text": "Spare ammunition",
+          "notes": [
+            "In chest rig"
+          ]
+        },
+        {
+          "text": "Tactical light"
+        },
+        {
+          "text": "Night vision goggles"
+        },
+        {
+          "text": "Military-band radio with earpiece and throat microphone"
+        },
+        {
+          "text": "Multitool"
+        },
+        {
+          "text": "Compass"
+        },
+        {
+          "text": "Field dressing"
+        },
+        {
+          "text": "GPS"
         }
       ]
     },
     "spec-ops": {
-      "weapons": [],
-      "armour": [],
-      "gear": []
+      "weapons": [
+        {
+          "type": "assault-carbine",
+          "notes": [
+            "With holographic sight, targeting laser, & sound suppressor - +20% bonus to hit as long as shooter has taken no damage since last action"
+          ]
+        },
+        {
+          "type": "medium-pistol"
+        },
+        {
+          "type": "grenade"
+        },
+        {
+          "type": "smoke-grenade"
+        },
+        {
+          "type": "stun-grenade"
+        },
+        {
+          "type": "combat-knife"
+        }
+      ],
+      "armour": [
+        {
+          "type": "tactical-body"
+        },
+        {
+          "type": "kevlar-helmet"
+        }
+      ],
+      "gear": [
+        {
+          "text": "Dog tags"
+        },
+        {
+          "text": "6 carbine magazines",
+          "notes": [
+            "In chest rig"
+          ]
+        },
+        {
+          "text": "2 pistol magazines",
+          "notes": [
+            "In chest rig"
+          ]
+        },
+        {
+          "text": "Flexible cuffs"
+        },
+        {
+          "text": "Tactical light"
+        },
+        {
+          "text": "Night vision goggles"
+        },
+        {
+          "text": "Military-band radio with earpiece and throat microphone"
+        },
+        {
+          "text": "Multitool"
+        },
+        {
+          "text": "Compass"
+        },
+        {
+          "text": "Field dressing"
+        },
+        {
+          "text": "GPS"
+        }
+      ]
     },
     "swat": {
       "weapons": [],
@@ -467,6 +619,24 @@
       "ammo": 30,
       "ap": 3
     },
+    "assault-carbine": {
+      "name": "Assault Carbine",
+      "skill": "firearms",
+      "base-range": "100m",
+      "damage": {
+        "dice": 1,
+        "die-type": 12,
+        "modifier": 0,
+        "db-applies": false,
+        "special": "Use Lethality rating if firing bursts"
+      },
+      "lethality": {
+        "rating": 10
+      },
+      "kill-radius": "",
+      "ammo": 30,
+      "ap": 3
+    },
     "heavy-rifle": {
       "name": "Heavy Rifle",
       "skill": "firearms",
@@ -509,6 +679,31 @@
       "base-range": "20m",
       "lethality": {
         "rating": 15
+      },
+      "kill-radius": "10m",
+      "ammo": 2,
+      "ap": 0
+    },
+    "smoke-grenade": {
+      "name": "Smoke Grenade",
+      "skill": "athletics",
+      "base-range": "20m",
+      "lethality": {
+        "rating": 0
+      },
+      "kill-radius": "",
+      "ammo": 2,
+      "ap": 0
+    },
+    "stun-grenade": {
+      "name": "Flash-bang Grenade",
+      "skill": "athletics",
+      "base-range": "20m",
+      "damage": {
+        "special": "Victim -40%"
+      },
+      "lethality": {
+        "rating": 0
       },
       "kill-radius": "10m",
       "ammo": 2,
