@@ -103,7 +103,8 @@
         "pharmacy": 40
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "criminal"
   },
   "engineer": {
     "label": "Engineer",

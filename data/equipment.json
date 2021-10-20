@@ -432,6 +432,40 @@
         }
       ]
     },
+    "criminal": {
+      "weapons": [
+        {
+          "one-of": [
+            {
+              "type": "light-pistol"
+            },
+            {
+              "type": "medium-pistol"
+            },
+            {
+              "type": "heavy-pistol"
+            },
+            {
+              "type": "knife"
+            },
+            {
+              "type": "combat-knife"
+            },
+            {
+              "type": "machete"
+            },
+            {
+              "type": "baseball-bat"
+            },
+            {
+              "type": "brass-knuckles"
+            }
+          ]
+        }
+      ],
+      "armour": [],
+      "gear": []
+    },
     "swat": {
       "weapons": [],
       "armour": [],
@@ -446,6 +480,15 @@
         "dice": 1,
         "die-type": 4,
         "modifier": -1,
+        "db-applies": true
+      }
+    },
+    "brass-knuckles": {
+      "name": "Brass Knuckles",
+      "skill": "unarmed combat",
+      "damage": {
+        "dice": 1,
+        "die-type": 4,
         "db-applies": true
       }
     },
@@ -469,12 +512,40 @@
       },
       "ap": 3
     },
+    "knife": {
+      "name": "Knife",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 4,
+        "db-applies": true
+      },
+      "ap": 3
+    },
     "baton": {
       "name": "Baton",
       "skill": "melee weapons",
       "damage": {
         "dice": 1,
-        "die-type": 4,
+        "die-type": 6,
+        "db-applies": true
+      }
+    },
+    "baseball-bat": {
+      "name": "Baseball bat",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 6,
+        "db-applies": true
+      }
+    },
+    "machete": {
+      "name": "Machete",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 8,
         "db-applies": true
       }
     },
