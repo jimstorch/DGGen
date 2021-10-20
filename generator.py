@@ -9,9 +9,9 @@ import sys
 import warnings
 from collections import defaultdict
 from copy import copy
-from itertools import islice, cycle
+from itertools import islice, cycle, chain
 from random import randint, shuffle, choice, sample
-from textwrap import shorten
+from textwrap import shorten, wrap
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -232,11 +232,13 @@ class Need2KnowCharacter(object):
             kit = KITS[kit_name]
             weapons += self.build_weapon_list(kit["weapons"])
 
+            if len(kit['armour'] + kit['gear']) > 22: logger.warning("Too much gear - truncated.")
             for i, gear in enumerate((kit['armour'] + kit['gear'])[:22]):
                 notes = (" ".join(self.store_footnote(n) for n in gear['notes']) + " ") if "notes" in gear else ""
                 text = notes + (ARMOUR[gear["type"]] if "type" in gear else gear["text"])
                 self.e[f'gear{i}'] = shorten(text, 55, placeholder="…")
 
+        if len(weapons) > 7: logger.warning("Too many weapons %s - truncated.", weapons)
         for i, weapon in enumerate(weapons[:7]):
             self.equip_weapon(i, weapon)
 
@@ -292,8 +294,11 @@ class Need2KnowCharacter(object):
             self.e[f'weapon{slot}_damage'] = damage_roll + (f" {damage_note_indicator}" if damage_note_indicator else "")
 
     def footnotes(self):
-        for i, (note, pointer) in enumerate(list(self.notes.items())[:8]):
-            self.e[f'note{i}'] = f"{pointer} {note}"
+        notes = list(chain(*[wrap(f"{pointer} {note}", 57, subsequent_indent='  ') for (note, pointer) in list(self.notes.items())]))
+
+        if len(notes) > 8: logger.warning("Too many footnotes - truncated.")
+        for i, note in enumerate(notes[:8]):
+            self.e[f'note{i}'] = note
 
     def store_footnote(self, note):
         """Returns indicator character"""
