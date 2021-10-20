@@ -80,11 +80,12 @@
     "skills": {
       "fixed": {
         "alertness": 50,
+        "athletics": 50,
         "criminology": 60,
         "dodge": 40,
         "drive": 50,
         "firearms": 40,
-        "law": 40,
+        "law": 20,
         "melee weapons": 40,
         "persuade": 50,
         "stealth": 50,
