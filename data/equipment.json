@@ -586,6 +586,7 @@
     "shotgun": {
       "name": "Shotgun (shot)",
       "skill": "firearms",
+      "bonus": 20,
       "base-range": "75m",
       "damage": {
         "dice": 2,

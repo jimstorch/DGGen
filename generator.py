@@ -261,7 +261,8 @@ class Need2KnowCharacter(object):
 
     def equip_weapon(self, slot, weapon):
         self.e[f'weapon{slot}'] = shorten(weapon['name'], 15, placeholder="…")
-        self.e[f'weapon{slot}_roll'] = f"{self.d.get(weapon['skill'], 0)}%"
+        roll = int(self.d.get(weapon['skill'], 0) + (weapon['bonus'] if 'bonus' in weapon else 0))
+        self.e[f'weapon{slot}_roll'] = f"{roll}%"
         self.e[f'weapon{slot}_range'] = weapon['base-range']
         if weapon['ap']:
             self.e[f'weapon{slot}_ap'] = f"{weapon['ap']}"
