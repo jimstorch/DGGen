@@ -265,18 +265,17 @@ class Need2KnowCharacter(object):
         self.e[f'weapon{slot}'] = shorten(weapon['name'], 15, placeholder="…")
         roll = int(self.d.get(weapon['skill'], 0) + (weapon['bonus'] if 'bonus' in weapon else 0))
         self.e[f'weapon{slot}_roll'] = f"{roll}%"
-        self.e[f'weapon{slot}_range'] = weapon['base-range']
-        if weapon['ap']:
-            self.e[f'weapon{slot}_ap'] = f"{weapon['ap']}"
-        if weapon['lethality']:
+        if "base-range" in weapon: self.e[f'weapon{slot}_range'] = weapon['base-range']
+        if "ap" in weapon: self.e[f'weapon{slot}_ap'] = f"{weapon['ap']}"
+        if "lethality" in weapon:
             lethality = weapon['lethality']
             lethality_note_indicator = self.store_footnote(lethality['special']) if "special" in lethality else None
             self.e[f'weapon{slot}_lethality'] = (f"{lethality['rating']}%" if lethality['rating'] else "") + (
                 f" {lethality_note_indicator}" if lethality_note_indicator else "")
 
-        if weapon['ammo']:
+        if "ammo" in weapon:
             self.e[f'weapon{slot}_ammo'] = f"{weapon['ammo']}"
-        if weapon['kill-radius']:
+        if "kill-radius" in weapon:
             self.e[f'weapon{slot}_kill_radius'] = f"{weapon['kill-radius']}"
 
         if "notes" in weapon:
@@ -284,11 +283,13 @@ class Need2KnowCharacter(object):
 
         if "damage" in weapon:
             damage = weapon['damage']
-            damage_note_indicator = self.store_footnote(damage['special'])
+            damage_note_indicator = self.store_footnote(damage['special']) if "special" in damage else None
 
             if "dice" in damage:
-                damage_modifier = damage['modifier'] + (self.damage_bonus if damage['db-applies'] else 0)
-                damage_roll = f"{damage['dice']}D{damage['die-type']}" + (f"{damage_modifier:+d}" if damage_modifier else "")
+                damage_modifier = (damage['modifier'] if "modifier" in damage else 0) + (
+                    self.damage_bonus if 'db-applies' in damage and damage['db-applies'] else 0)
+                damage_roll = f"{damage['dice']}D{damage['die-type']}" + (
+                    f"{damage_modifier:+d}" if damage_modifier else "")
             else: damage_roll = ""
 
             self.e[f'weapon{slot}_damage'] = damage_roll + (f" {damage_note_indicator}" if damage_note_indicator else "")

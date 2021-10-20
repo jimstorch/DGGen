@@ -442,74 +442,41 @@
     "unarmed": {
       "name": "Unarmed",
       "skill": "unarmed combat",
-      "base-range": "",
       "damage": {
         "dice": 1,
         "die-type": 4,
         "modifier": -1,
-        "db-applies": true,
-        "special": ""
-      },
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 0,
-      "ap": 0
+        "db-applies": true
+      }
     },
     "combat-knife": {
       "name": "Combat Knife",
       "skill": "melee weapons",
-      "base-range": "",
       "damage": {
         "dice": 1,
         "die-type": 6,
-        "modifier": 0,
-        "db-applies": true,
-        "special": ""
+        "db-applies": true
       },
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 0,
       "ap": 3
     },
     "pocket-knife": {
       "name": "Pocket Knife",
       "skill": "melee weapons",
-      "base-range": "",
       "damage": {
         "dice": 1,
         "die-type": 4,
-        "modifier": 0,
-        "db-applies": true,
-        "special": ""
+        "db-applies": true
       },
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 0,
       "ap": 3
     },
     "baton": {
       "name": "Baton",
       "skill": "melee weapons",
-      "base-range": "",
       "damage": {
         "dice": 1,
         "die-type": 4,
-        "modifier": 0,
-        "db-applies": true,
-        "special": ""
-      },
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 0,
-      "ap": 0
+        "db-applies": true
+      }
     },
     "light-pistol": {
       "name": "Light Pistol",
@@ -517,17 +484,9 @@
       "base-range": "10m",
       "damage": {
         "dice": 1,
-        "die-type": 8,
-        "modifier": 0,
-        "db-applies": false,
-        "special": ""
+        "die-type": 8
       },
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 7,
-      "ap": 0
+      "ammo": 7
     },
     "medium-pistol": {
       "name": "Medium Pistol",
@@ -535,17 +494,9 @@
       "base-range": "15m",
       "damage": {
         "dice": 1,
-        "die-type": 10,
-        "modifier": 0,
-        "db-applies": false,
-        "special": ""
+        "die-type": 10
       },
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 15,
-      "ap": 0
+      "ammo": 15
     },
     "heavy-pistol": {
       "name": "Heavy Pistol",
@@ -553,17 +504,9 @@
       "base-range": "20m",
       "damage": {
         "dice": 1,
-        "die-type": 12,
-        "modifier": 0,
-        "db-applies": false,
-        "special": ""
+        "die-type": 12
       },
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 10,
-      "ap": 0
+      "ammo": 10
     },
     "shotgun-slug": {
       "name": "Shotgun (slug)",
@@ -572,16 +515,9 @@
       "damage": {
         "dice": 2,
         "die-type": 8,
-        "modifier": 0,
-        "db-applies": false,
         "special": "Damage reduced to 2D6 beyond base range"
       },
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 5,
-      "ap": 0
+      "ammo": 5
     },
     "shotgun": {
       "name": "Shotgun (shot)",
@@ -591,16 +527,9 @@
       "damage": {
         "dice": 2,
         "die-type": 8,
-        "modifier": 0,
-        "db-applies": false,
         "special": "Half damage beyond base range"
       },
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 5,
-      "ap": 0
+      "ammo": 5
     },
     "light-carbine": {
       "name": "Light Carbine",
@@ -609,14 +538,11 @@
       "damage": {
         "dice": 1,
         "die-type": 12,
-        "modifier": 0,
-        "db-applies": false,
         "special": "Use Lethality rating if firing bursts"
       },
       "lethality": {
         "rating": 10
       },
-      "kill-radius": "",
       "ammo": 30,
       "ap": 3
     },
@@ -627,14 +553,11 @@
       "damage": {
         "dice": 1,
         "die-type": 12,
-        "modifier": 0,
-        "db-applies": false,
         "special": "Use Lethality rating if firing bursts"
       },
       "lethality": {
         "rating": 10
       },
-      "kill-radius": "",
       "ammo": 30,
       "ap": 3
     },
@@ -646,13 +569,11 @@
         "dice": 1,
         "die-type": 12,
         "modifier": 2,
-        "db-applies": false,
         "special": "Use Lethality rating if firing bursts"
       },
       "lethality": {
         "rating": 10
       },
-      "kill-radius": "",
       "ammo": 20,
       "ap": 5
     },
@@ -663,14 +584,11 @@
       "damage": {
         "dice": 1,
         "die-type": 10,
-        "modifier": 0,
-        "db-applies": false,
         "special": "Use Lethality rating if firing bursts"
       },
       "lethality": {
         "rating": 10
       },
-      "kill-radius": "",
       "ammo": 20,
       "ap": 5
     },
@@ -682,19 +600,13 @@
         "rating": 15
       },
       "kill-radius": "10m",
-      "ammo": 2,
-      "ap": 0
+      "ammo": 2
     },
     "smoke-grenade": {
       "name": "Smoke Grenade",
       "skill": "athletics",
       "base-range": "20m",
-      "lethality": {
-        "rating": 0
-      },
-      "kill-radius": "",
-      "ammo": 2,
-      "ap": 0
+      "ammo": 2
     },
     "stun-grenade": {
       "name": "Flash-bang Grenade",
@@ -703,12 +615,8 @@
       "damage": {
         "special": "Victim -40%"
       },
-      "lethality": {
-        "rating": 0
-      },
       "kill-radius": "10m",
-      "ammo": 2,
-      "ap": 0
+      "ammo": 2
     },
     "very-heavy-rifle": {
       "name": "Very Heavy Rifle",
@@ -717,7 +625,6 @@
       "lethality": {
         "rating": 20
       },
-      "kill-radius": "",
       "ammo": 10,
       "ap": 5
     },
@@ -740,8 +647,7 @@
         "rating": 10
       },
       "kill-radius": "1m",
-      "ammo": 20,
-      "ap": 0
+      "ammo": 20
     },
     "gpmg": {
       "name": "GP Machine Gun",
@@ -762,8 +668,7 @@
         "rating": 15
       },
       "kill-radius": "10m",
-      "ammo": 1,
-      "ap": 0
+      "ammo": 1
     },
     "gmg": {
       "name": "Grenade machine gun",
