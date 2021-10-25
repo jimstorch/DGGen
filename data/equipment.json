@@ -1,0 +1,807 @@
+{
+  "kits": {
+    "agent": {
+      "weapons": [
+        {
+          "type": "medium-pistol"
+        },
+        {
+          "type": "light-pistol",
+          "chance": 50,
+          "notes": [
+            "Ankle holster"
+          ]
+        },
+        {
+          "one-of": [
+            {
+              "both": [
+                {
+                  "type": "shotgun",
+                  "notes": [
+                    "In car boot"
+                  ]
+                },
+                {
+                  "type": "shotgun-slug",
+                  "notes": [
+                    "In car boot"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "light-carbine",
+              "notes": [
+                "In car boot",
+                "With holographic sight - +20% bonus to hit as long as shooter has taken no damage since last action"
+              ]
+            }
+          ]
+        }
+      ],
+      "armour": [
+        {
+          "type": "kevlar-vest"
+        },
+        {
+          "type": "tactical-body",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "type": "kevlar-helmet",
+          "notes": [
+            "In car boot"
+          ]
+        }
+      ],
+      "gear": [
+        {
+          "text": "Agency badge and ID card"
+        },
+        {
+          "text": "Pistol holster (belt)"
+        },
+        {
+          "text": "2 spare pistol mags (belt pouch)"
+        },
+        {
+          "text": "Tactical light"
+        },
+        {
+          "text": "Handcuffs (belt pouch)"
+        },
+        {
+          "text": "Agency marked windbreaker jacket"
+        },
+        {
+          "text": "Encrypted smartphone"
+        },
+        {
+          "text": "Police-band radio, with earpiece & throat mic"
+        },
+        {
+          "text": "Small evidence-collection kit"
+        },
+        {
+          "text": "Encrypted laptop with access to agency networks",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "First aid kit",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Portable fire extinguisher",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Spare ammunition",
+          "notes": [
+            "In car boot"
+          ]
+        }
+      ]
+    },
+    "police": {
+      "weapons": [
+        {
+          "type": "medium-pistol"
+        },
+        {
+          "type": "light-pistol",
+          "chance": 50,
+          "notes": [
+            "Ankle holster"
+          ]
+        },
+        {
+          "one-of": [
+            {
+              "both": [
+                {
+                  "type": "shotgun",
+                  "notes": [
+                    "In car boot"
+                  ]
+                },
+                {
+                  "type": "shotgun-slug",
+                  "notes": [
+                    "In car boot"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "light-carbine",
+              "notes": [
+                "In car boot"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "baton"
+        },
+        {
+          "type": "pocket-knife"
+        }
+      ],
+      "armour": [
+        {
+          "type": "kevlar-vest"
+        },
+        {
+          "type": "riot-helmet",
+          "notes": [
+            "In car boot"
+          ]
+        }
+      ],
+      "gear": [
+        {
+          "text": "Badge and ID card"
+        },
+        {
+          "text": "Pistol holster (belt)"
+        },
+        {
+          "text": "2 spare pistol mags (belt pouch)"
+        },
+        {
+          "text": "Flashlight"
+        },
+        {
+          "text": "Handcuffs (belt pouch)"
+        },
+        {
+          "text": "Handheld radio"
+        },
+        {
+          "text": "Pen and pocket notebook"
+        },
+        {
+          "text": "Multitool"
+        },
+        {
+          "text": "Police radio",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Spare ammunition",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Mounted laptop computer",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Driver’s license scanner",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Spike strips",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Flares",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Reflective vest to wear in traffic",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Evidence bags",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Traffic cones",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Blood-borne pathogen kit",
+          "notes": [
+            "In car boot"
+          ]
+        },
+        {
+          "text": "Fire extinguisher",
+          "notes": [
+            "In car boot"
+          ]
+        }
+      ]
+    },
+    "soldier": {
+      "weapons": [
+        {
+          "one-of": [
+            {
+              "type": "heavy-rifle"
+            },
+            {
+              "type": "smg"
+            },
+            {
+              "both": [
+                {
+                  "type": "medium-pistol"
+                },
+                {
+                  "one-of": [
+                    {
+                      "type": "very-heavy-rifle"
+                    },
+                    {
+                      "type": "rpg"
+                    },
+                    {
+                      "type": "flamethrower"
+                    },
+                    {
+                      "type": "gpmg"
+                    },
+                    {
+                      "type": "gl"
+                    },
+                    {
+                      "type": "gmg"
+                    },
+                    {
+                      "type": "lmg"
+                    },
+                    {
+                      "type": "gmg"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "combat-knife"
+        },
+        {
+          "type": "grenade"
+        }
+      ],
+      "armour": [
+        {
+          "type": "tactical-body"
+        },
+        {
+          "type": "kevlar-helmet"
+        }
+      ],
+      "gear": [
+        {
+          "text": "Dog tags"
+        },
+        {
+          "text": "Night vision goggles"
+        },
+        {
+          "text": "Spare ammunition",
+          "notes": [
+            "In chest rig"
+          ]
+        },
+        {
+          "text": "Tactical light"
+        },
+        {
+          "text": "Night vision goggles"
+        },
+        {
+          "text": "Military-band radio with earpiece and throat microphone"
+        },
+        {
+          "text": "Multitool"
+        },
+        {
+          "text": "Compass"
+        },
+        {
+          "text": "Field dressing"
+        },
+        {
+          "text": "GPS"
+        }
+      ]
+    },
+    "spec-ops": {
+      "weapons": [
+        {
+          "type": "assault-carbine",
+          "notes": [
+            "With holographic sight, targeting laser, & sound suppressor - +20% bonus to hit as long as shooter has taken no damage since last action"
+          ]
+        },
+        {
+          "type": "medium-pistol"
+        },
+        {
+          "type": "grenade"
+        },
+        {
+          "type": "smoke-grenade"
+        },
+        {
+          "type": "stun-grenade"
+        },
+        {
+          "type": "combat-knife"
+        }
+      ],
+      "armour": [
+        {
+          "type": "tactical-body"
+        },
+        {
+          "type": "kevlar-helmet"
+        }
+      ],
+      "gear": [
+        {
+          "text": "Dog tags"
+        },
+        {
+          "text": "6 carbine magazines",
+          "notes": [
+            "In chest rig"
+          ]
+        },
+        {
+          "text": "2 pistol magazines",
+          "notes": [
+            "In chest rig"
+          ]
+        },
+        {
+          "text": "Flexible cuffs"
+        },
+        {
+          "text": "Tactical light"
+        },
+        {
+          "text": "Night vision goggles"
+        },
+        {
+          "text": "Military-band radio with earpiece and throat microphone"
+        },
+        {
+          "text": "Multitool"
+        },
+        {
+          "text": "Compass"
+        },
+        {
+          "text": "Field dressing"
+        },
+        {
+          "text": "GPS"
+        }
+      ]
+    },
+    "criminal": {
+      "weapons": [
+        {
+          "one-of": [
+            {
+              "type": "light-pistol"
+            },
+            {
+              "type": "medium-pistol"
+            },
+            {
+              "type": "heavy-pistol"
+            },
+            {
+              "type": "knife"
+            },
+            {
+              "type": "combat-knife"
+            },
+            {
+              "type": "machete"
+            },
+            {
+              "type": "baseball-bat"
+            },
+            {
+              "type": "brass-knuckles"
+            }
+          ]
+        }
+      ],
+      "armour": [],
+      "gear": []
+    },
+    "swat": {
+      "weapons": [],
+      "armour": [],
+      "gear": []
+    }
+  },
+  "weapons": {
+    "unarmed": {
+      "name": "Unarmed",
+      "skill": "unarmed combat",
+      "damage": {
+        "dice": 1,
+        "die-type": 4,
+        "modifier": -1,
+        "db-applies": true
+      }
+    },
+    "brass-knuckles": {
+      "name": "Brass Knuckles",
+      "skill": "unarmed combat",
+      "damage": {
+        "dice": 1,
+        "die-type": 4,
+        "db-applies": true
+      }
+    },
+    "combat-knife": {
+      "name": "Combat Knife",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 6,
+        "db-applies": true
+      },
+      "ap": 3
+    },
+    "pocket-knife": {
+      "name": "Pocket Knife",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 4,
+        "db-applies": true
+      },
+      "ap": 3
+    },
+    "knife": {
+      "name": "Knife",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 4,
+        "db-applies": true
+      },
+      "ap": 3
+    },
+    "baton": {
+      "name": "Baton",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 6,
+        "db-applies": true
+      }
+    },
+    "baseball-bat": {
+      "name": "Baseball bat",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 6,
+        "db-applies": true
+      }
+    },
+    "machete": {
+      "name": "Machete",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 8,
+        "db-applies": true
+      }
+    },
+    "light-pistol": {
+      "name": "Light Pistol",
+      "skill": "firearms",
+      "base-range": "10m",
+      "damage": {
+        "dice": 1,
+        "die-type": 8
+      },
+      "ammo": 7
+    },
+    "medium-pistol": {
+      "name": "Medium Pistol",
+      "skill": "firearms",
+      "base-range": "15m",
+      "damage": {
+        "dice": 1,
+        "die-type": 10
+      },
+      "ammo": 15
+    },
+    "heavy-pistol": {
+      "name": "Heavy Pistol",
+      "skill": "firearms",
+      "base-range": "20m",
+      "damage": {
+        "dice": 1,
+        "die-type": 12
+      },
+      "ammo": 10
+    },
+    "shotgun-slug": {
+      "name": "Shotgun (slug)",
+      "skill": "firearms",
+      "base-range": "75m",
+      "damage": {
+        "dice": 2,
+        "die-type": 8,
+        "special": "Damage reduced to 2D6 beyond base range"
+      },
+      "ammo": 5
+    },
+    "shotgun": {
+      "name": "Shotgun (shot)",
+      "skill": "firearms",
+      "bonus": 20,
+      "base-range": "75m",
+      "damage": {
+        "dice": 2,
+        "die-type": 8,
+        "special": "Half damage beyond base range"
+      },
+      "ammo": 5
+    },
+    "light-carbine": {
+      "name": "Light Carbine",
+      "skill": "firearms",
+      "base-range": "100m",
+      "damage": {
+        "dice": 1,
+        "die-type": 12,
+        "special": "Use Lethality rating if firing bursts"
+      },
+      "lethality": {
+        "rating": 10
+      },
+      "ammo": 30,
+      "ap": 3
+    },
+    "assault-carbine": {
+      "name": "Assault Carbine",
+      "skill": "firearms",
+      "base-range": "100m",
+      "damage": {
+        "dice": 1,
+        "die-type": 12,
+        "special": "Use Lethality rating if firing bursts"
+      },
+      "lethality": {
+        "rating": 10
+      },
+      "ammo": 30,
+      "ap": 3
+    },
+    "heavy-rifle": {
+      "name": "Heavy Rifle",
+      "skill": "firearms",
+      "base-range": "150m",
+      "damage": {
+        "dice": 1,
+        "die-type": 12,
+        "modifier": 2,
+        "special": "Use Lethality rating if firing bursts"
+      },
+      "lethality": {
+        "rating": 10
+      },
+      "ammo": 20,
+      "ap": 5
+    },
+    "smg": {
+      "name": "Submachine Gun",
+      "skill": "firearms",
+      "base-range": "50m",
+      "damage": {
+        "dice": 1,
+        "die-type": 10,
+        "special": "Use Lethality rating if firing bursts"
+      },
+      "lethality": {
+        "rating": 10
+      },
+      "ammo": 20,
+      "ap": 5
+    },
+    "grenade": {
+      "name": "Hand Grenade",
+      "skill": "athletics",
+      "base-range": "20m",
+      "lethality": {
+        "rating": 15
+      },
+      "kill-radius": "10m",
+      "ammo": 2
+    },
+    "smoke-grenade": {
+      "name": "Smoke Grenade",
+      "skill": "athletics",
+      "base-range": "20m",
+      "ammo": 2
+    },
+    "stun-grenade": {
+      "name": "Flash-bang Grenade",
+      "skill": "athletics",
+      "base-range": "20m",
+      "damage": {
+        "special": "Victim -40%"
+      },
+      "kill-radius": "10m",
+      "ammo": 2
+    },
+    "very-heavy-rifle": {
+      "name": "Very Heavy Rifle",
+      "skill": "firearms",
+      "base-range": "250m",
+      "lethality": {
+        "rating": 20
+      },
+      "ammo": 10,
+      "ap": 5
+    },
+    "rpg": {
+      "name": "RPG launcher",
+      "skill": "heavy weapons",
+      "base-range": "200m",
+      "lethality": {
+        "rating": 30
+      },
+      "kill-radius": "10m",
+      "ammo": 20,
+      "ap": 20
+    },
+    "flamethrower": {
+      "name": "Flamethrower",
+      "skill": "heavy weapons",
+      "base-range": "5m",
+      "lethality": {
+        "rating": 10
+      },
+      "kill-radius": "1m",
+      "ammo": 20
+    },
+    "gpmg": {
+      "name": "GP Machine Gun",
+      "skill": "heavy weapons",
+      "base-range": "300m",
+      "lethality": {
+        "rating": 15
+      },
+      "kill-radius": "Per burst",
+      "ammo": 100,
+      "ap": 3
+    },
+    "gl": {
+      "name": "Grenade launcher",
+      "skill": "heavy weapons",
+      "base-range": "150m",
+      "lethality": {
+        "rating": 15
+      },
+      "kill-radius": "10m",
+      "ammo": 1
+    },
+    "gmg": {
+      "name": "Grenade machine gun",
+      "skill": "heavy weapons",
+      "base-range": "300m",
+      "lethality": {
+        "rating": 15,
+        "special": "If firing a burst (5 grenades), Lethality is 20%"
+      },
+      "kill-radius": "Per burst",
+      "ammo": 100,
+      "ap": 3
+    },
+    "hmg": {
+      "name": "Heavy Machine Gun",
+      "skill": "heavy weapons",
+      "base-range": "400m",
+      "lethality": {
+        "rating": 20
+      },
+      "kill-radius": "Per burst",
+      "ammo": 100,
+      "ap": 5
+    },
+    "lmg": {
+      "name": "Light Machine Gun",
+      "skill": "heavy weapons",
+      "base-range": "200m",
+      "lethality": {
+        "rating": 10
+      },
+      "kill-radius": "Per burst",
+      "ammo": 200,
+      "ap": 3
+    },
+    "autocannon": {
+      "name": "Autocannon",
+      "skill": "heavy weapons",
+      "base-range": "400m",
+      "lethality": {
+        "rating": 30
+      },
+      "kill-radius": "3m",
+      "ammo": 100,
+      "ap": 5
+    },
+    "minigun": {
+      "name": "Minigun",
+      "skill": "heavy weapons",
+      "base-range": "300m",
+      "lethality": {
+        "rating": 20
+      },
+      "kill-radius": "3m (long spray)",
+      "ammo": 4000,
+      "ap": 5
+    }
+  },
+  "armour": {
+    "kevlar-vest": "Reinforced Kevlar vest - Armour Rating 4",
+    "tactical-body": "Tactical body armor - Armour Rating 5",
+    "kevlar-helmet": "Kevlar helmet - Armour Rating +1",
+    "riot-helmet": "Riot helmet - Armour Rating +1"
+  }
+}

@@ -80,11 +80,12 @@
     "skills": {
       "fixed": {
         "alertness": 50,
+        "athletics": 50,
         "criminology": 60,
         "dodge": 40,
         "drive": 50,
         "firearms": 40,
-        "law": 40,
+        "law": 20,
         "melee weapons": 40,
         "persuade": 50,
         "stealth": 50,
@@ -102,7 +103,8 @@
         "pharmacy": 40
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "criminal"
   },
   "engineer": {
     "label": "Engineer",
@@ -159,7 +161,8 @@
         "pharmacy": 50
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "agent"
   },
   "firefighter": {
     "label": "Firefighter",
@@ -330,7 +333,8 @@
         "swim": 60
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "soldier"
   },
   "media": {
     "label": "Media Specialist",
@@ -489,7 +493,8 @@
         "ride": 60
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "police"
   },
   "manager": {
     "label": "Program Manager",
@@ -567,7 +572,7 @@
   },
   "soldier": {
     "label": "Soldier",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -595,7 +600,8 @@
         "swim": 60
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "soldier"
   },
   "spec-ops": {
     "label": "Special Operator",
@@ -619,6 +625,7 @@
       "possible": {
       }
     },
-    "bonds": 2
+    "bonds": 2,
+    "equipment-kit": "spec-ops"
   }
 }

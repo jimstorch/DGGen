@@ -7,8 +7,11 @@ import logging
 import os
 import sys
 import warnings
-from itertools import islice, cycle
+from collections import defaultdict
+from copy import copy
+from itertools import islice, cycle, chain
 from random import randint, shuffle, choice, sample
+from textwrap import shorten, wrap
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -18,7 +21,7 @@ script_name = os.path.basename(sys.argv[0])
 description = '''
 Generate characters for the Delta Green pen-and-paper roleplaying game from Arc Dream Publishing.
 '''
-__version__ = "1.1"
+__version__ = "1.2"
 
 logger = logging.getLogger(script_name)
 
@@ -44,6 +47,12 @@ with open('data/towns.txt') as f:
 with open('data/professions.json') as f:
     PROFESSIONS = json.load(f)
 
+with open('data/equipment.json') as f:
+    equipment = json.load(f)
+    KITS = equipment['kits']
+    WEAPONS = equipment['weapons']
+    ARMOUR = equipment['armour']
+
 DISTINGUISHING = {}
 with open('data/distinguishing-features.csv') as distinguishing:
     for row in csv.DictReader(distinguishing):
@@ -57,14 +66,22 @@ def main():
     init_logger(options.verbosity)
     logger.debug(options)
 
+    pages_per_sheet = 2 if options.equip else 1
     professions = [PROFESSIONS[options.type]] if options.type else PROFESSIONS.values()
-    p = Need2KnowPDF(options.output, professions)
+    p = Need2KnowPDF(options.output, professions, pages_per_sheet=pages_per_sheet)
     for profession in professions:
         p.bookmark(profession["label"])
         for sex in islice(cycle(['female', 'male']), options.count or profession['number_to_generate']):
             c = Need2KnowCharacter(sex=sex, profession=profession, label_override=options.label,
                                    employer=options.employer)
+            if options.equip:
+                c.equip(profession.get("equipment-kit", None))
+            c.footnotes()
+
             p.add_page(c.d)
+            if pages_per_sheet >= 2:
+                p.add_page_2(c.e)
+
     p.save_pdf()
     logger.info("Wrote %s", options.output)
 
@@ -150,8 +167,11 @@ class Need2KnowCharacter(object):
 
     def __init__(self, sex, profession, label_override=None, employer=None):
 
-        # Hold all dictionary
+        # Hold all dictionaries
         self.d = {}
+        self.e = {}
+
+        self.notes = defaultdict(iter(["*", "†", "‡", "§", "‖", "¶", "**", "††", "‡‡", "§§", "‖‖", "¶¶"]).__next__)
 
         if sex == 'male':
             self.d['male'] = 'X'
@@ -183,7 +203,8 @@ class Need2KnowCharacter(object):
         self.d['willpower'] = self.d['power']
         self.d['sanity'] = self.d['power'] * 5
         self.d['breaking point'] = self.d['power'] * 4
-        self.d['damage bonus'] = 'DB=%d' % (((self.d['strength'] - 1) >> 2) - 2)
+        self.damage_bonus = (((self.d['strength'] - 1) >> 2) - 2)
+        self.d['damage bonus'] = 'DB=%d' % self.damage_bonus
 
         # Default skills
         self.d.update(self.DEFAULT_SKILLS)
@@ -201,115 +222,299 @@ class Need2KnowCharacter(object):
         for skill in bonus_skills:
             boost = self.d.get(skill, 0) + 20
             if boost > 80:
+                logger.warning("Lost boost - %s already at %s", skill, self.d.get(skill, 0))
                 boost = 80
             self.d[skill] = boost
+
+    def equip(self, kit_name=None):
+        weapons = [WEAPONS["unarmed"]]
+        if kit_name:
+            kit = KITS[kit_name]
+            weapons += self.build_weapon_list(kit["weapons"])
+
+            if len(kit['armour'] + kit['gear']) > 22: logger.warning("Too much gear - truncated.")
+            for i, gear in enumerate((kit['armour'] + kit['gear'])[:22]):
+                notes = (" ".join(self.store_footnote(n) for n in gear['notes']) + " ") if "notes" in gear else ""
+                text = notes + (ARMOUR[gear["type"]] if "type" in gear else gear["text"])
+                self.e[f'gear{i}'] = shorten(text, 55, placeholder="…")
+
+        if len(weapons) > 7: logger.warning("Too many weapons %s - truncated.", weapons)
+        for i, weapon in enumerate(weapons[:7]):
+            self.equip_weapon(i, weapon)
+
+    def build_weapon_list(self, weapons_to_add):
+        result = []
+        for weapon_to_add in weapons_to_add:
+            if "type" in weapon_to_add:
+                weapon = copy(WEAPONS.get(weapon_to_add["type"], None))
+                if weapon:
+                    if "notes" in weapon_to_add: weapon["notes"] = weapon_to_add["notes"]
+                    result += [weapon] if "chance" not in weapon_to_add or weapon_to_add[
+                        "chance"] >= randint(1, 100) else []
+                else:
+                    logger.error("Unknown weapon type %s", weapon_to_add["type"])
+            elif "one-of" in weapon_to_add:
+                result += self.build_weapon_list([choice(weapon_to_add["one-of"])])
+            elif "both" in weapon_to_add:
+                result += self.build_weapon_list(w for w in weapon_to_add["both"])
+            else:
+                logger.error("Don't understand weapon %r", weapon_to_add)
+        return result
+
+    def equip_weapon(self, slot, weapon):
+        self.e[f'weapon{slot}'] = shorten(weapon['name'], 15, placeholder="…")
+        roll = int(self.d.get(weapon['skill'], 0) + (weapon['bonus'] if 'bonus' in weapon else 0))
+        self.e[f'weapon{slot}_roll'] = f"{roll}%"
+        if "base-range" in weapon: self.e[f'weapon{slot}_range'] = weapon['base-range']
+        if "ap" in weapon: self.e[f'weapon{slot}_ap'] = f"{weapon['ap']}"
+        if "lethality" in weapon:
+            lethality = weapon['lethality']
+            lethality_note_indicator = self.store_footnote(lethality['special']) if "special" in lethality else None
+            self.e[f'weapon{slot}_lethality'] = (f"{lethality['rating']}%" if lethality['rating'] else "") + (
+                f" {lethality_note_indicator}" if lethality_note_indicator else "")
+
+        if "ammo" in weapon:
+            self.e[f'weapon{slot}_ammo'] = f"{weapon['ammo']}"
+        if "kill-radius" in weapon:
+            self.e[f'weapon{slot}_kill_radius'] = f"{weapon['kill-radius']}"
+
+        if "notes" in weapon:
+            self.e[f'weapon{slot}_note'] = " ".join(self.store_footnote(n) for n in weapon['notes'])
+
+        if "damage" in weapon:
+            damage = weapon['damage']
+            damage_note_indicator = self.store_footnote(damage['special']) if "special" in damage else None
+
+            if "dice" in damage:
+                damage_modifier = (damage['modifier'] if "modifier" in damage else 0) + (
+                    self.damage_bonus if 'db-applies' in damage and damage['db-applies'] else 0)
+                damage_roll = f"{damage['dice']}D{damage['die-type']}" + (
+                    f"{damage_modifier:+d}" if damage_modifier else "")
+            else: damage_roll = ""
+
+            self.e[f'weapon{slot}_damage'] = damage_roll + (f" {damage_note_indicator}" if damage_note_indicator else "")
+
+    def footnotes(self):
+        notes = list(chain(*[wrap(f"{pointer} {note}", 57, subsequent_indent='  ') for (note, pointer) in list(self.notes.items())]))
+
+        if len(notes) > 8: logger.warning("Too many footnotes - truncated.")
+        for i, note in enumerate(notes[:8]):
+            self.e[f'note{i}'] = note
+
+    def store_footnote(self, note):
+        """Returns indicator character"""
+        return self.notes[note] if note else None
 
 
 class Need2KnowPDF(object):
 
-    # Location of form fields in Points (1/72 inch). 0,0 is bottom-left
-    field_xy = {
+    # Location of form fields in Points (1/72 inch) -  0,0 is bottom-left - and font size
+    field_xys = {
         # Personal Data
-        'name': (75, 693),
-        'profession': (343, 693),
-        'employer': (75, 665),
-        'nationality': (343, 665),
-        'age': (185, 640),
-        'birthday': (200, 640),
-        'male': (98, 639),
-        'female': (76, 639),
+        'name': (75, 693, 11),
+        'profession': (343, 693, 11),
+        'employer': (75, 665, 11),
+        'nationality': (343, 665, 11),
+        'age': (185, 640, 11),
+        'birthday': (200, 640, 11),
+        'male': (98, 639, 11),
+        'female': (76, 639, 11),
 
         # Statistical Data
-        'strength': (136, 604),
-        'damage bonus': (555, 200),
-        'constitution': (136, 586),
-        'dexterity': (136, 568),
-        'intelligence': (136, 550),
-        'power': (136, 532),
-        'charisma': (136, 514),
-        'hitpoints': (195, 482),
-        'willpower': (195, 464),
-        'sanity': (195, 446),
-        'breaking point': (195, 428),
-        'bond0': (512, 604),
-        'bond1': (512, 586),
-        'bond2': (512, 568),
-        'bond3': (512, 550),
+        'strength': (136, 604, 11),
+        'damage bonus': (555, 200, 11),
+        'constitution': (136, 586, 11),
+        'dexterity': (136, 568, 11),
+        'intelligence': (136, 550, 11),
+        'power': (136, 532, 11),
+        'charisma': (136, 514, 11),
+        'hitpoints': (195, 482, 11),
+        'willpower': (195, 464, 11),
+        'sanity': (195, 446, 11),
+        'breaking point': (195, 428, 11),
+        'bond0': (512, 604, 11),
+        'bond1': (512, 586, 11),
+        'bond2': (512, 568, 11),
+        'bond3': (512, 550, 11),
 
         # Applicable Skill Sets
-        'accounting': (200, 361),
-        'alertness': (200, 343),
-        'anthropology': (200, 325),
-        'archeology': (200, 307),
-        'art1': (200, 289),
-        'art2': (200, 281),
-        'artillery': (200, 253),
-        'athletics': (200, 235),
-        'bureaucracy': (200, 217),
-        'computer science': (200, 200),
-        'craft1label': (90, 185),
-        'craft1value': (200, 185),
-        'craft2label': (90, 177),
-        'craft2value': (200, 177),
-        'craft3label': (90, 169),
-        'craft3value': (200, 169),
-        'craft4label': (90, 161),
-        'craft4value': (200, 161),
-        'criminology': (200, 145),
-        'demolitions': (200, 127),
-        'disguise': (200, 109),
-        'dodge': (200, 91),
-        'drive': (200, 73),
-        'firearms': (200, 54),
-        'first aide': (361, 361),
-        'forensics': (361, 343),
-        'heavy machinery': (361, 325),
-        'heavy weapons': (361, 307),
-        'history': (361, 289),
-        'humint': (361, 270),
-        'law': (361, 253),
-        'medicine': (361, 235),
-        'melee weapons': (361, 217),
-        'military science': (361, 199),
-        'milsci label': (327, 199),
-        'navigate': (361, 163),
-        'occult': (361, 145),
-        'persuade': (361, 127),
-        'pharmacy': (361, 109),
-        'pilot1': (361, 91),
-        'pilot2': (361, 83),
-        'psychotherapy': (361, 54),
-        'ride': (521, 361),
-        'science1label': (442, 347),
-        'science1value': (521, 347),
-        'science2label': (442, 340),
-        'science2value': (521, 340),
-        'science3label': (442, 333),
-        'science3value': (521, 333),
-        'science4label': (442, 326),
-        'science4value': (521, 326),
-        'search': (521, 307),
-        'sigint': (521, 289),
-        'stealth': (521, 270),
-        'surgery': (521, 253),
-        'survival': (521, 235),
-        'swim': (521, 217),
-        'unarmed combat': (521, 200),
-        'unnatural': (521, 181),
-        'language1': (521, 145),
-        'language2': (521, 127),
-        'language3': (521, 109),
-        'skill1': (521, 91),
-        'skill2': (521, 73),
-        'skill3': (521, 54),
+        'accounting': (200, 361, 11),
+        'alertness': (200, 343, 11),
+        'anthropology': (200, 325, 11),
+        'archeology': (200, 307, 11),
+        'art1': (200, 289, 11),
+        'art2': (200, 281, 11),
+        'artillery': (200, 253, 11),
+        'athletics': (200, 235, 11),
+        'bureaucracy': (200, 217, 11),
+        'computer science': (200, 200, 11),
+        'craft1label': (90, 185, 9),
+        'craft1value': (200, 185, 9),
+        'craft2label': (90, 177, 9),
+        'craft2value': (200, 177, 9),
+        'craft3label': (90, 169, 9),
+        'craft3value': (200, 169, 9),
+        'craft4label': (90, 161, 9),
+        'craft4value': (200, 161, 9),
+        'criminology': (200, 145, 11),
+        'demolitions': (200, 127, 11),
+        'disguise': (200, 109, 11),
+        'dodge': (200, 91, 11),
+        'drive': (200, 73, 11),
+        'firearms': (200, 54, 11),
+        'first aide': (361, 361, 11),
+        'forensics': (361, 343, 11),
+        'heavy machinery': (361, 325, 11),
+        'heavy weapons': (361, 307, 11),
+        'history': (361, 289, 11),
+        'humint': (361, 270, 11),
+        'law': (361, 253, 11),
+        'medicine': (361, 235, 11),
+        'melee weapons': (361, 217, 11),
+        'military science': (361, 199, 11),
+        'milsci label': (327, 199, 11),
+        'navigate': (361, 163, 11),
+        'occult': (361, 145, 11),
+        'persuade': (361, 127, 11),
+        'pharmacy': (361, 109, 11),
+        'pilot1': (361, 91, 11),
+        'pilot2': (361, 83, 11),
+        'psychotherapy': (361, 54, 11),
+        'ride': (521, 361, 11),
+        'science1label': (442, 347, 9),
+        'science1value': (521, 347, 9),
+        'science2label': (442, 340, 9),
+        'science2value': (521, 340, 9),
+        'science3label': (442, 333, 9),
+        'science3value': (521, 333, 9),
+        'science4label': (442, 326, 9),
+        'science4value': (521, 326, 9),
+        'search': (521, 307, 11),
+        'sigint': (521, 289, 11),
+        'stealth': (521, 270, 11),
+        'surgery': (521, 253, 11),
+        'survival': (521, 235, 11),
+        'swim': (521, 217, 11),
+        'unarmed combat': (521, 200, 11),
+        'unnatural': (521, 181, 11),
+        'language1': (521, 145, 11),
+        'language2': (521, 127, 11),
+        'language3': (521, 109, 11),
+        'skill1': (521, 91, 11),
+        'skill2': (521, 73, 11),
+        'skill3': (521, 54, 11),
+
+        # 2nd page
+        'weapon0': (85, 480, 11),
+        'weapon0_roll': (175, 480, 11),
+        'weapon0_range': (215, 480, 11),
+        'weapon0_damage': (270, 480, 11),
+        'weapon0_ap': (345, 480, 11),
+        'weapon0_lethality': (410, 480, 11),
+        'weapon0_kill_radius': (462, 480, 11),
+        'weapon0_ammo': (525, 480, 11),
+        'weapon0_note': (560, 480, 11),
+
+        'weapon1': (85, 461, 11),
+        'weapon1_roll': (175, 461, 11),
+        'weapon1_range': (215, 461, 11),
+        'weapon1_damage': (270, 461, 11),
+        'weapon1_ap': (345, 461, 11),
+        'weapon1_lethality': (410, 461, 11),
+        'weapon1_kill_radius': (462, 461, 11),
+        'weapon1_ammo': (525, 461, 11),
+        'weapon1_note': (560, 461, 11),
+
+        'weapon2': (85, 442, 11),
+        'weapon2_roll': (175, 442, 11),
+        'weapon2_range': (215, 442, 11),
+        'weapon2_damage': (270, 442, 11),
+        'weapon2_ap': (345, 442, 11),
+        'weapon2_lethality': (410, 442, 11),
+        'weapon2_kill_radius': (462, 442, 11),
+        'weapon2_ammo': (525, 442, 11),
+        'weapon2_note': (560, 442, 11),
+
+        'weapon3': (85, 423, 11),
+        'weapon3_roll': (175, 423, 11),
+        'weapon3_range': (215, 423, 11),
+        'weapon3_damage': (270, 423, 11),
+        'weapon3_ap': (345, 423, 11),
+        'weapon3_lethality': (410, 423, 11),
+        'weapon3_kill_radius': (462, 423, 11),
+        'weapon3_ammo': (525, 423, 11),
+        'weapon3_note': (560, 423, 11),
+
+        'weapon4': (85, 404, 11),
+        'weapon4_roll': (175, 404, 11),
+        'weapon4_range': (215, 404, 11),
+        'weapon4_damage': (270, 404, 11),
+        'weapon4_ap': (345, 404, 11),
+        'weapon4_lethality': (410, 404, 11),
+        'weapon4_kill_radius': (462, 404, 11),
+        'weapon4_ammo': (525, 404, 11),
+        'weapon4_note': (560, 404, 11),
+
+        'weapon5': (85, 385, 11),
+        'weapon5_roll': (175, 385, 11),
+        'weapon5_range': (215, 385, 11),
+        'weapon5_damage': (270, 385, 11),
+        'weapon5_ap': (345, 385, 11),
+        'weapon5_lethality': (410, 385, 11),
+        'weapon5_kill_radius': (462, 385, 11),
+        'weapon5_ammo': (525, 385, 11),
+        'weapon5_note': (560, 385, 11),
+
+        'weapon6': (85, 366, 11),
+        'weapon6_roll': (175, 366, 11),
+        'weapon6_range': (215, 366, 11),
+        'weapon6_damage': (270, 366, 11),
+        'weapon6_ap': (345, 366, 11),
+        'weapon6_lethality': (410, 366, 11),
+        'weapon6_kill_radius': (465, 366, 11),
+        'weapon6_ammo': (525, 366, 11),
+        'weapon6_note': (560, 366, 11),
+
+        'gear0': (75,   628, 8),
+        'gear1': (75,   618, 8),
+        'gear2': (75,   608, 8),
+        'gear3': (75,   598, 8),
+        'gear4': (75,   588, 8),
+        'gear5': (75,   578, 8),
+        'gear6': (75,   568, 8),
+        'gear7': (75,   558, 8),
+        'gear8': (75,   548, 8),
+        'gear9': (75,   538, 8),
+        'gear10': (75,  528, 8),
+        'gear11': (323, 628, 8),
+        'gear12': (323, 618, 8),
+        'gear13': (323, 608, 8),
+        'gear14': (323, 598, 8),
+        'gear15': (323, 588, 8),
+        'gear16': (323, 578, 8),
+        'gear17': (323, 568, 8),
+        'gear18': (323, 558, 8),
+        'gear19': (323, 548, 8),
+        'gear20': (323, 538, 8),
+        'gear21': (323, 528, 8),
+
+        'note0': (50, 40, 8),
+        'note1': (50, 30, 8),
+        'note2': (50, 20, 8),
+        'note3': (50, 10, 8),
+        'note4': (300, 40, 8),
+        'note5': (300, 30, 8),
+        'note6': (300, 20, 8),
+        'note7': (300, 10, 8),
     }
 
     # Fields that also get a multiplier
     x5_stats = ['strength', 'constitution', 'dexterity', 'intelligence',
                 'power', 'charisma']
 
-    def __init__(self, filename, professions):
+    def __init__(self, filename, professions, pages_per_sheet=1):
         self.filename = filename
+        self.pages_per_sheet = pages_per_sheet
         self.c = canvas.Canvas(self.filename)
         # Set US Letter in points
         self.c.setPageSize((612, 792))
@@ -320,9 +525,9 @@ class Need2KnowPDF(object):
         pdfmetrics.registerFont(TTFont('Special Elite', 'data/SpecialElite.ttf'))
         pdfmetrics.registerFont(TTFont('OCRA', 'data/OCRA.ttf'))
         if len(professions) > 1:
-            self.generate_toc(professions)
+            self.generate_toc(professions, pages_per_sheet)
 
-    def generate_toc(self, professions):
+    def generate_toc(self, professions, pages_per_sheet):
         """Build a clickable Table of Contents on page 1"""
         self.bookmark('Table of Contents')
         self.c.setFillColorRGB(0, 0, 0)
@@ -338,12 +543,14 @@ class Need2KnowPDF(object):
             self.c.drawString(150, top - self.line_drop(count), chapter)
             self.c.linkAbsolute(profession['label'], profession['label'],
                                 (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
-            pagenum += profession['number_to_generate']
-        chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(
-            pagenum + profession['number_to_generate'])
-        self.c.drawString(150, top - self.line_drop(pagenum), chapter)
-        self.c.linkAbsolute('Back Page', 'Back Page',
-                            (145, (top - 6) - self.line_drop(pagenum), 470, (top + 18) - self.line_drop(pagenum)))
+            pagenum += profession['number_to_generate'] * pages_per_sheet
+        if pages_per_sheet == 1:
+            chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(
+                pagenum + profession['number_to_generate'])
+            self.c.drawString(150, top - self.line_drop(pagenum), chapter)
+            self.c.linkAbsolute('Back Page', 'Back Page',
+                                (145, (top - 6) - self.line_drop(pagenum), 470,
+                                 (top + 18) - self.line_drop(pagenum)))
         self.c.showPage()
 
     @staticmethod
@@ -354,19 +561,19 @@ class Need2KnowPDF(object):
         self.c.bookmarkPage(text)
         self.c.addOutlineEntry(text, text)
 
-    def font_color(self, r, g, b):
-        self.c.setFillColorRGB(r, g, b)
-
-    def draw_string(self, x, y, text):
+    def draw_string(self, x, y, size, text):
+        self.c.setFont(DEFAULT_FONT, size)
+        self.c.setFillColorRGB(*TEXT_COLOR)
         self.c.drawString(x, y, str(text))
 
     def fill_field(self, field, value):
-        x, y = self.field_xy[field]
-        self.c.drawString(x, y, str(value))
+        x, y, s = self.field_xys[field]
+        self.draw_string(x, y, s, str(value))
 
+        # TODO: Make these just like normal fields - i.e. part of the character Class
         if field in self.x5_stats:
-            self.draw_string(x + 36, y, str(value * 5))
-            self.draw_string(x + 72, y, self.distinguishing(field, value))
+            self.draw_string(x + 36, y, 11, str(value * 5))
+            self.draw_string(x + 72, y, 11, self.distinguishing(field, value))
 
     @staticmethod
     def distinguishing(field, value):
@@ -374,8 +581,6 @@ class Need2KnowPDF(object):
 
     def add_page(self, d):
         # Add background.  ReportLab will cache it for repeat
-        self.c.setFont(DEFAULT_FONT, 11)
-        self.font_color(*TEXT_COLOR)
         self.c.drawImage(
             'data/Character Sheet NO BACKGROUND FRONT.jpg', 0, 0, 612, 792)
 
@@ -385,11 +590,23 @@ class Need2KnowPDF(object):
         # Tell ReportLab we're done with current page
         self.c.showPage()
 
-    def save_pdf(self):
-        self.bookmark('Back Page')
+    def add_page_2(self, e):
+        # Add background.  ReportLab will cache it for repeat
         self.c.drawImage(
             'data/Character Sheet NO BACKGROUND BACK.jpg', 0, 0, 612, 792)
+
+        for key in e:
+            self.fill_field(key, e[key])
+
+        # Tell ReportLab we're done with current page
         self.c.showPage()
+
+    def save_pdf(self):
+        if self.pages_per_sheet == 1:
+            self.bookmark('Back Page')
+            self.c.drawImage(
+                'data/Character Sheet NO BACKGROUND BACK.jpg', 0, 0, 612, 792)
+            self.c.showPage()
         self.c.save()
 
 
@@ -415,6 +632,8 @@ def get_options():
     parser.add_argument("-c", "--count", type=int, action="store",
                         help="Generate this many characters of each profession.")
     parser.add_argument("-e", "--employer", action="store", help="Set employer for all generated characters.")
+    parser.add_argument("-u", "--unequipped", action="store_false", dest="equip", help="Don't generate equipment.",
+                        default=True)
 
     return parser.parse_args()
 
