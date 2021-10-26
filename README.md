@@ -1,6 +1,6 @@
 # DGGen
 
-DGGen is a program written in Python to generate characters for the pen-and-paper roleplaying game Delta Green from Arc Dream Publishing.  It follows the character creations rules included in Delta Green:Need to Know and the Delta Green Agent's Handbook.  The [ReportLab](https://www.reportlab.com/dev/opensource/) library is required.  Characters are created one-per-page into a PDF.  The second-page of the character sheet is included as the final page in the PDF.  By default, between 5 and 40 characters of alternating genders are created in each of the following professions:
+DGGen is a program written in Python to generate characters for the pen-and-paper roleplaying game Delta Green from Arc Dream Publishing.  It follows the character creations rules included in Delta Green:Need to Know and the Delta Green Agent's Handbook.  The [ReportLab](https://www.reportlab.com/dev/opensource/) library is required.  Characters are created one-per-page (if unequipped) or two-per-page into a PDF.  (The second-page of the character sheet is included as the final page in the PDF if characters are generated unequipped.) By default, between 5 and 40 characters of alternating genders are created in each of the following professions:
 
 * Anthropologist
 * Business Executive
@@ -36,16 +36,15 @@ The following character sheet images were graciously provided by Simeon Cogswell
 
 Big thank you to Simeon and the folks at Arc Dream Publishing for the support.
 
-
 ## Setting up a virtual environment
 
-We use [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) to isolate our dependancies from any other projects that we might be working on.
+We use [venv](https://docs.python.org/3/library/venv.html) to isolate our dependancies from any other projects that we might be working on.
 
-    $ virtualenv -p python3 venv
+    $ python3 -m venv venv
 
 We do this only once, when we need to create the virtual environment. We can activate an existing virtual environment with:
 
-    * source venv/bin/activate
+    $ source venv/bin/activate
 
 ## Installing dependecies
 
@@ -57,9 +56,13 @@ To generate characters, run:
 
     $ ./generator.py
 
-If you need a more targeted set of characters, all of a specific profession, you can generate one like so:
+If you need a more targeted set of characters, all of a specific profession, you can generate one as per these examples:
 
     $ ./generator.py --type soldier --label "Green Beret" --employer "United States Army" --count 24 --output "Bravo Company.pdf"
+    
+    $ ./generator.py --type police --employer "NYPD" --output "The 17th Precinct.pdf"
+    
+    $ ./generator.py --type criminal --label "Thug" --employer "Fat Tony" --count 12 --output "Tony's Enforcers.pdf"
 
 To see what options you have available, run:
 
