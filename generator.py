@@ -194,13 +194,16 @@ class Need2KnowCharacter(object):
             self.d[f'bond{i}'] = self.d['charisma']
 
         # Bonus skills
-        bonus_skills = (profession['skills'].get('bonus', []) + sample(self.BONUS, 8))[:8]
-        for skill in bonus_skills:
+        bonus_skills = profession['skills'].get('bonus', []) + sample(self.BONUS, len(self.BONUS))
+        bonuses_applied = 0
+        while bonuses_applied < 8:
+            skill = bonus_skills.pop(0)
             boost = self.d.get(skill, 0) + 20
-            if boost > 80:
-                logger.warning("Lost boost - %s already at %s", skill, self.d.get(skill, 0))
-                boost = 80
-            self.d[skill] = boost
+            if boost <= 80:
+                self.d[skill] = boost
+                bonuses_applied += 1
+            else:
+                logger.info("Skipped boost - %s already at %s", skill, self.d.get(skill, 0))
 
     def distinguishing(self, field, value):
         return choice(self.data.distinguishing.get((field, value), [""]))
