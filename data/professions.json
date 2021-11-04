@@ -1,7 +1,7 @@
 {
   "anthropologist": {
     "label": "Anthropologist",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "anthropology": 50,
@@ -26,7 +26,7 @@
   },
   "business": {
     "label": "Business Executive",
-    "number_to_generate": 5,
+    "number_to_generate": 10,
     "skills": {
       "fixed": {
         "accounting": 50,
@@ -47,7 +47,7 @@
   },
   "compsci": {
     "label": "Computer Scientist",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "computer science": 60,
@@ -76,7 +76,7 @@
   },
   "criminal": {
     "label": "Criminal",
-    "number_to_generate": 10,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -108,7 +108,7 @@
   },
   "engineer": {
     "label": "Engineer",
-    "number_to_generate": 10,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "computer science": 60,
@@ -137,7 +137,7 @@
   },
   "agent": {
     "label": "Federal Agent",
-    "number_to_generate": 40,
+    "number_to_generate": 121,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -166,7 +166,7 @@
   },
   "firefighter": {
     "label": "Firefighter",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -177,21 +177,18 @@
         "craft2value": 40,
         "demolitions": 50,
         "drive": 50,
-        "first aide": 50,
+        "first aid": 50,
         "forensics": 40,
         "heavy machinery": 50,
         "navigate": 50,
         "search": 40
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 3
   },
   "foreign-service": {
     "label": "Foreign Service Officer",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "accounting": 40,
@@ -204,16 +201,13 @@
         "humint": 50,
         "law": 40,
         "persuade": 50
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 3
   },
   "historian": {
     "label": "Historian",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "archeology": 50,
@@ -238,7 +232,7 @@
   },
   "analyst": {
     "label": "Intelligence Analyst",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "anthropology": 40,
@@ -251,16 +245,13 @@
         "history": 40,
         "humint": 50,
         "sigint": 40
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 3
   },
   "case-officer": {
     "label": "Intelligence Case Officer",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -275,16 +266,13 @@
         "sigint": 40,
         "stealth": 50,
         "unarmed combat": 50
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 2
   },
   "lawyer": {
     "label": "Lawyer",
-    "number_to_generate": 10,
+    "number_to_generate": 20,
     "skills": {
       "fixed": {
         "accounting": 50,
@@ -305,7 +293,7 @@
   },
   "marine": {
     "label": "Marine",
-    "number_to_generate": 20,
+    "number_to_generate": 80,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -313,9 +301,9 @@
         "bureaucracy": 30,
         "drive": 40,
         "firearms": 40,
-        "first aide": 40,
-        "military science": 40,
-        "milsci label": "Land",
+        "first aid": 40,
+        "militaryscience1value": 40,
+        "militaryscience1label": "Land",
         "navigate": 40,
         "persuade": 30,
         "unarmed combat": 50
@@ -338,7 +326,7 @@
   },
   "media": {
     "label": "Media Specialist",
-    "number_to_generate": 10,
+    "number_to_generate": 20,
     "skills": {
       "fixed": {
         "art1": 60,
@@ -356,7 +344,7 @@
         "criminology": 50,
         "language1": 40,
         "law": 40,
-        "military science": 40,
+        "militaryscience1value": 40,
         "occult": 50,
         "science1value": 40
       }
@@ -365,12 +353,12 @@
   },
   "nurse": {
     "label": "Nurse",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "alertness": 40,
         "bureaucracy": 40,
-        "first aide": 60,
+        "first aid": 60,
         "humint": 40,
         "medicine": 40,
         "persuade": 40,
@@ -391,12 +379,12 @@
   },
   "paramedic": {
     "label": "Paramedic",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "alertness": 40,
         "bureaucracy": 40,
-        "first aide": 60,
+        "first aid": 60,
         "humint": 40,
         "medicine": 40,
         "persuade": 40,
@@ -417,11 +405,11 @@
   },
   "physician": {
     "label": "Physician",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "bureaucracy": 50,
-        "first aide": 60,
+        "first aid": 60,
         "medicine": 60,
         "persuade": 40,
         "pharmacy": 50,
@@ -441,7 +429,7 @@
   },
   "pilot": {
     "label": "Pilot",
-    "number_to_generate": 10,
+    "number_to_generate": 20,
     "skills": {
       "fixed": {
         "alertness": 60,
@@ -451,7 +439,7 @@
         "craft2label": "Mechanic",
         "craft2value": 40,
         "navigate": 50,
-        "pilot1": 60,
+        "pilot1value": 60,
         "science1label": "Meteorology",
         "science1value": 40,
         "swim": 40
@@ -461,14 +449,14 @@
         "language1": 50,
         "pilot2": 50,
         "heavy weapons": 50,
-        "military science": 50
+        "militaryscience1value": 50
       }
     },
     "bonds": 1
   },
   "police": {
     "label": "Police Officer",
-    "number_to_generate": 20,
+    "number_to_generate": 60,
     "skills": {
       "fixed": {
         "alertness": 60,
@@ -476,7 +464,7 @@
         "criminology": 50,
         "drive": 50,
         "firearms": 40,
-        "first aide": 30,
+        "first aid": 30,
         "humint": 50,
         "law": 30,
         "melee weapons": 50,
@@ -498,7 +486,7 @@
   },
   "manager": {
     "label": "Program Manager",
-    "number_to_generate": 5,
+    "number_to_generate": 10,
     "skills": {
       "fixed": {
         "accounting": 60,
@@ -522,7 +510,7 @@
   },
   "sailor": {
     "label": "Sailor",
-    "number_to_generate": 10,
+    "number_to_generate": 20,
     "skills": {
       "fixed": {
         "alertness": 60,
@@ -532,7 +520,7 @@
         "craft2label": "Mechanic",
         "craft2value": 40,
         "navigate": 50,
-        "pilot1": 60,
+        "pilot1value": 60,
         "science1label": "Meteorology",
         "science1value": 40,
         "swim": 40
@@ -542,14 +530,14 @@
         "language1": 50,
         "pilot2": 50,
         "heavy weapons": 50,
-        "military science": 50
+        "militaryscience1value": 50
       }
     },
     "bonds": 1
   },
   "scientist": {
     "label": "Scientist",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "bureaucracy": 40,
@@ -572,7 +560,7 @@
   },
   "soldier": {
     "label": "Soldier",
-    "number_to_generate": 40,
+    "number_to_generate": 100,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -580,9 +568,9 @@
         "bureaucracy": 30,
         "drive": 40,
         "firearms": 40,
-        "first aide": 40,
-        "military science": 40,
-        "milsci label": "Land",
+        "first aid": 40,
+        "militaryscience1value": 40,
+        "militaryscience1label": "Land",
         "navigate": 40,
         "persuade": 30,
         "unarmed combat": 50
@@ -605,7 +593,7 @@
   },
   "spec-ops": {
     "label": "Special Operator",
-    "number_to_generate": 20,
+    "number_to_generate": 80,
     "skills": {
       "fixed": {
         "alertness": 60,
@@ -614,15 +602,13 @@
         "firearms": 60,
         "heavy weapons": 50,
         "melee weapons": 50,
-        "military science": 60,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
         "navigate": 50,
         "stealth": 50,
         "survival": 50,
         "swim": 50,
         "unarmed combat": 60
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 2,

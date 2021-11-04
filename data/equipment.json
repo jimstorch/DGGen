@@ -80,13 +80,13 @@
           "text": "Encrypted smartphone"
         },
         {
-          "text": "Police-band radio, with earpiece & throat mic"
+          "text": "Police-band radio with earpiece & throat microphone"
         },
         {
           "text": "Small evidence-collection kit"
         },
         {
-          "text": "Encrypted laptop with access to agency networks",
+          "text": "Rugged, encrypted laptop with access to agency networks",
           "notes": [
             "In car boot"
           ]
@@ -467,9 +467,60 @@
       "gear": []
     },
     "swat": {
-      "weapons": [],
-      "armour": [],
-      "gear": []
+      "weapons": [
+        {
+          "type": "assault-carbine",
+          "notes": [
+            "With holographic sight, targeting laser, & sound suppressor - +20% bonus to hit as long as shooter has taken no damage since last action"
+          ]
+        },
+        {
+          "type": "shotgun"
+        },
+        {
+          "type": "medium-pistol"
+        },
+        {
+          "type": "tactical-knife"
+        },
+        {
+          "type": "ced-pistol"
+        },
+        {
+          "type": "stun-grenade"
+        },
+        {
+          "type": "tear-grenade"
+        }
+      ],
+      "armour": [
+        {
+          "type": "tactical-body"
+        },
+        {
+          "type": "kevlar-helmet"
+        }
+      ],
+      "gear": [
+        {
+          "text": "6 carbine magazines",
+          "notes": [
+            "In chest rig"
+          ]
+        },
+        {
+          "text": "6 spare shotgun shells ",
+          "notes": [
+            "In receiver mount"
+          ]
+        },
+        {
+          "text": "2 spare pistol mags",
+          "notes": [
+            "In chest rig"
+          ]
+        }
+      ]
     }
   },
   "weapons": {
@@ -494,6 +545,16 @@
     },
     "combat-knife": {
       "name": "Combat Knife",
+      "skill": "melee weapons",
+      "damage": {
+        "dice": 1,
+        "die-type": 6,
+        "db-applies": true
+      },
+      "ap": 3
+    },
+    "tactical-knife": {
+      "name": "Tactical Knife",
       "skill": "melee weapons",
       "damage": {
         "dice": 1,
@@ -578,6 +639,15 @@
         "die-type": 12
       },
       "ammo": 10
+    },
+    "ced-pistol": {
+      "name": "CED Pistol",
+      "skill": "firearms",
+      "base-range": "4m",
+      "damage": {
+        "special": "–20% for 1D20 turns"
+      },
+      "ammo": 4
     },
     "shotgun-slug": {
       "name": "Shotgun (slug)",
@@ -677,6 +747,16 @@
       "name": "Smoke Grenade",
       "skill": "athletics",
       "base-range": "20m",
+      "ammo": 2
+    },
+    "tear-grenade": {
+      "name": "Tear-gas Grenade",
+      "skill": "athletics",
+      "base-range": "20m",
+      "damage": {
+        "special": "Victim -40% for 1 hour"
+      },
+      "kill-radius": "10m",
       "ammo": 2
     },
     "stun-grenade": {

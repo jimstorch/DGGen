@@ -1,6 +1,11 @@
 # DGGen
 
-DGGen is a program written in Python to generate characters for the pen-and-paper roleplaying game Delta Green from Arc Dream Publishing.  It follows the character creations rules included in Delta Green:Need to Know and the Delta Green Agent's Handbook.  The [ReportLab](https://www.reportlab.com/dev/opensource/) library is required.  Characters are created one-per-page (if unequipped) or two-per-page into a PDF.  (The second-page of the character sheet is included as the final page in the PDF if characters are generated unequipped.) By default, between 5 and 40 characters of alternating genders are created in each of the following professions:
+DGGen is a program written in Python to generate characters for the pen-and-paper roleplaying game Delta Green from Arc
+Dream Publishing. It follows the character creations rules included in Delta Green:Need to Know and the Delta Green
+Agent's Handbook. The [ReportLab](https://www.reportlab.com/dev/opensource/) library is required. Characters are created
+one-per-page (if unequipped) or two-per-page into a PDF.  (The second-page of the character sheet is included as the
+final page in the PDF if characters are generated unequipped.) By default, characters of alternating genders are created
+in each of the following professions:
 
 * Anthropologist
 * Business Executive
@@ -27,7 +32,8 @@ DGGen is a program written in Python to generate characters for the pen-and-pape
 * Soldier
 * Special Operator
 
-(Edit `data/professions.json` to alter the professions generated, or the number of characters generated per profession.)
+(Edit [data/professions.json](`data/professions.json`) to alter the professions generated, or the number of characters
+generated per profession.)
 
 The following character sheet images were graciously provided by Simeon Cogswell, designer for Delta Green:
 * Character Sheet NO BACKGROUND.pdf
@@ -64,13 +70,31 @@ If you need a more targeted set of characters, all of a specific profession, you
     
     $ ./generator.py --type criminal --label "Thug" --employer "Fat Tony" --count 12 --output "Tony's Enforcers.pdf"
 
+By default, the generator uses data from [data/professions.json](`data/professions.json`) to define professions.
+Different sets of professions can be used with the `--professions` flag.
+See [data/professions-fbi.json](`data/professions-fbi.json`)
+as an example, or you can create your own.
+
+    $ ./generator.py --professions data/professions-fbi.json -o "FBI Field Office.pdf"
+
+    $ ./generator.py --professions data/professions-cia.json -o "CIA London Station.pdf"
+
+    $ ./generator.py --professions data/professions-socom.json -o "SOCOM Camp Echo.pdf"
+
+    $ ./generator.py --professions data/professions-socom.json --type seal --count 12 -o "Operation ROOKHAVEN.pdf"
+
+Pre-built examples include [data/professions-fbi.json](`data/professions-fbi.json`),
+[data/professions-cia.json](`data/professions-cia.json`), and
+[data/professions-socom.json](`data/professions-socom.json`), and you can of course create your own.
+
 To see what options you have available, run:
 
     $ ./generator.py -h
-    
+
 ## License
 
-DDGen is licensed under the Apache 2.0 Open Source License.  Please see the /data folder for font licenses.  The intellectual property known as Delta Green is ™ and © the Delta Green Partnership (http://www.delta-green.com).
+DDGen is licensed under the Apache 2.0 Open Source License. Please see the /data folder for font licenses. The
+intellectual property known as Delta Green is ™ and © the Delta Green Partnership (http://www.delta-green.com).
 
 ## Contact
 

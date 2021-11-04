@@ -9,9 +9,11 @@ import sys
 import warnings
 from collections import defaultdict
 from copy import copy
+from dataclasses import dataclass
 from itertools import islice, cycle, chain
 from random import randint, shuffle, choice, sample
 from textwrap import shorten, wrap
+from typing import List, Any, Dict, Tuple
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -21,7 +23,7 @@ script_name = os.path.basename(sys.argv[0])
 description = '''
 Generate characters for the Delta Green pen-and-paper roleplaying game from Arc Dream Publishing.
 '''
-__version__ = "1.2"
+__version__ = "1.3"
 
 logger = logging.getLogger(script_name)
 
@@ -31,48 +33,22 @@ DEFAULT_FONT = 'Special Elite'
 MONTHS = ('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
           'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC')
 
-# Read names and places
-with open('data/boys1986.txt') as f:
-    MALES = f.read().splitlines()
-
-with open('data/girls1986.txt') as f:
-    FEMALES = f.read().splitlines()
-
-with open('data/surnames.txt') as f:
-    SURNAMES = f.read().splitlines()
-
-with open('data/towns.txt') as f:
-    TOWNS = f.read().splitlines()
-
-with open('data/professions.json') as f:
-    PROFESSIONS = json.load(f)
-
-with open('data/equipment.json') as f:
-    equipment = json.load(f)
-    KITS = equipment['kits']
-    WEAPONS = equipment['weapons']
-    ARMOUR = equipment['armour']
-
-DISTINGUISHING = {}
-with open('data/distinguishing-features.csv') as distinguishing:
-    for row in csv.DictReader(distinguishing):
-        for value in range(int(row['from']), int(row['to']) + 1):
-            DISTINGUISHING.setdefault(
-                (row['statistic'], value), []).append(row['distinguishing'])
-
 
 def main():
     options = get_options()
     init_logger(options.verbosity)
     logger.debug(options)
 
+    data = load_data(options)
+
     pages_per_sheet = 2 if options.equip else 1
-    professions = [PROFESSIONS[options.type]] if options.type else PROFESSIONS.values()
+    professions = [data.professions[options.type]] if options.type else data.professions.values()
     p = Need2KnowPDF(options.output, professions, pages_per_sheet=pages_per_sheet)
     for profession in professions:
-        p.bookmark(profession["label"])
+        label = generate_label(profession)
+        p.bookmark(label)
         for sex in islice(cycle(['female', 'male']), options.count or profession['number_to_generate']):
-            c = Need2KnowCharacter(sex=sex, profession=profession, label_override=options.label,
+            c = Need2KnowCharacter(data=data, sex=sex, profession=profession, label_override=options.label,
                                    employer=options.employer)
             if options.equip:
                 c.equip(profession.get("equipment-kit", None))
@@ -103,7 +79,7 @@ class Need2KnowCharacter(object):
         'dodge': 30,
         'drive': 20,
         'firearms': 20,
-        'first aide': 10,
+        'first aid': 10,
         'heavy machinery': 10,
         'history': 10,
         'humint': 10,
@@ -137,7 +113,7 @@ class Need2KnowCharacter(object):
         'dodge',
         'drive',
         'firearms',
-        'first aide',
+        'first aid',
         'forensics',
         'heavy machinery',
         'heavy weapons',
@@ -146,12 +122,12 @@ class Need2KnowCharacter(object):
         'law',
         'medicine',
         'melee weapons',
-        'military science',
+        'militaryscience1value',
         'navigate',
         'occult',
         'persuade',
         'pharmacy',
-        'pilot1',
+        'pilot1value',
         'psychotherapy',
         'ride',
         'science1value',
@@ -165,37 +141,36 @@ class Need2KnowCharacter(object):
         'language1',
     ]
 
-    def __init__(self, sex, profession, label_override=None, employer=None):
+    def __init__(self, data, sex, profession, label_override=None, employer=None):
+        self.data = data
 
         # Hold all dictionaries
         self.d = {}
         self.e = {}
 
-        self.notes = defaultdict(iter(["*", "†", "‡", "§", "‖", "¶", "**", "††", "‡‡", "§§", "‖‖", "¶¶"]).__next__)
+        self.notes = defaultdict(iter(["*", "†", "‡", "§", "¶", "**", "††", "‡‡", "§§", "¶¶", "***", "†††", "‡‡‡", "§§§"]).__next__)
 
         if sex == 'male':
             self.d['male'] = 'X'
-            self.d['name'] = choice(SURNAMES).upper() + ', ' + choice(MALES)
+            self.d['name'] = choice(self.data.family_names).upper() + ', ' + choice(self.data.male_given_names)
         else:
             self.d['female'] = 'X'
-            self.d['name'] = choice(SURNAMES).upper() + ', ' + choice(FEMALES)
+            self.d['name'] = choice(self.data.family_names).upper() + ', ' + choice(self.data.female_given_names)
         self.d['profession'] = label_override or profession['label']
-        if employer:
-            self.d['employer'] = employer
-        self.d['nationality'] = '(U.S.A.) ' + choice(TOWNS)
+        self.d['employer'] = employer or ", ".join(e for e in [profession.get("employer", ""),
+                                                               profession.get("division", "")] if e)
+        self.d['nationality'] = '(U.S.A.) ' + choice(self.data.towns)
         self.d['age'] = '%d    (%s %d)' % (randint(24, 55), choice(MONTHS),
-            (randint(1, 28)))
+                                           (randint(1, 28)))
 
         # Stats
         rolled = [[sum(sorted([randint(1, 6) for _ in range(4)])[1:]) for _ in range(6)]]
         pool = choice(self.statpools + rolled)
         shuffle(pool)
-        self.d['strength'] = pool[0]
-        self.d['constitution'] = pool[1]
-        self.d['dexterity'] = pool[2]
-        self.d['intelligence'] = pool[3]
-        self.d['power'] = pool[4]
-        self.d['charisma'] = pool[5]
+        for score, stat in zip(pool, ['strength', 'constitution', 'dexterity', 'intelligence', 'power', 'charisma']):
+            self.d[stat] = score
+            self.d[f"{stat}_x5"] = score * 5
+            self.d[f"{stat}_distinguishing"] = self.distinguishing(stat, score)
 
         # Derived attributes
         self.d['hitpoints'] = int(round((self.d['strength'] +
@@ -203,6 +178,7 @@ class Need2KnowCharacter(object):
         self.d['willpower'] = self.d['power']
         self.d['sanity'] = self.d['power'] * 5
         self.d['breaking point'] = self.d['power'] * 4
+
         self.damage_bonus = (((self.d['strength'] - 1) >> 2) - 2)
         self.d['damage bonus'] = 'DB=%d' % self.damage_bonus
 
@@ -211,32 +187,49 @@ class Need2KnowCharacter(object):
 
         # Professional skills
         self.d.update(profession['skills']['fixed'])
-        for skill, score in sample(profession['skills']['possible'].items(),
-                                   profession['skills']['possible-count']):
+        for skill, score in sample(profession['skills'].get('possible', {}).items(),
+                                   profession['skills'].get('possible-count', 0)):
             self.d[skill] = score
         for i in range(profession['bonds']):
             self.d[f'bond{i}'] = self.d['charisma']
 
         # Bonus skills
-        bonus_skills = sample(self.BONUS, 8)
-        for skill in bonus_skills:
-            boost = self.d.get(skill, 0) + 20
-            if boost > 80:
-                logger.warning("Lost boost - %s already at %s", skill, self.d.get(skill, 0))
-                boost = 80
-            self.d[skill] = boost
+        bonus_skills = [s for s
+                        in profession['skills'].get('bonus', [])
+                        if randint(1, 100) <= 50] + sample(self.BONUS, len(self.BONUS))
+        bonuses_applied = 0
+        while bonuses_applied < 8:
+            skill = bonus_skills.pop(0)
+            boosted = self.d.get(skill, 0) + 20
+            if boosted <= 80:
+                self.d[skill] = boosted
+                bonuses_applied += 1
+                logger.debug("%s, boosted %s to %s", self, skill, boosted)
+            else:
+                logger.info("%s, Skipped boost - %s already at %s", self, skill, self.d.get(skill, 0))
+
+    def __str__(self):
+        return ", ".join([self.d.get(i) for i in ("name", "profession", "employer", "department") if self.d.get(i)])
+
+    def distinguishing(self, field, value):
+        return choice(self.data.distinguishing.get((field, value), [""]))
 
     def equip(self, kit_name=None):
-        weapons = [WEAPONS["unarmed"]]
+        weapons = [self.data.weapons["unarmed"]]
         if kit_name:
-            kit = KITS[kit_name]
+            kit = self.data.kits[kit_name]
             weapons += self.build_weapon_list(kit["weapons"])
 
-            if len(kit['armour'] + kit['gear']) > 22: logger.warning("Too much gear - truncated.")
-            for i, gear in enumerate((kit['armour'] + kit['gear'])[:22]):
-                notes = (" ".join(self.store_footnote(n) for n in gear['notes']) + " ") if "notes" in gear else ""
-                text = notes + (ARMOUR[gear["type"]] if "type" in gear else gear["text"])
-                self.e[f'gear{i}'] = shorten(text, 55, placeholder="…")
+            gear = []
+            for item in (kit['armour'] + kit['gear']):
+                notes = (" ".join(self.store_footnote(n) for n in item['notes']) + " ") if "notes" in item else ""
+                text = notes + (self.data.armour[item["type"]] if "type" in item else item["text"])
+                gear.append(text)
+
+            wrapped_gear = list(chain(*[wrap(item, 55, subsequent_indent='  ') for item in gear]))
+            if len(wrapped_gear) > 22: logger.warning("Too much gear - truncated.")
+            for i, line in enumerate(wrapped_gear):
+                self.e[f'gear{i}'] = line
 
         if len(weapons) > 7: logger.warning("Too many weapons %s - truncated.", weapons)
         for i, weapon in enumerate(weapons[:7]):
@@ -246,7 +239,7 @@ class Need2KnowCharacter(object):
         result = []
         for weapon_to_add in weapons_to_add:
             if "type" in weapon_to_add:
-                weapon = copy(WEAPONS.get(weapon_to_add["type"], None))
+                weapon = copy(self.data.weapons.get(weapon_to_add["type"], None))
                 if weapon:
                     if "notes" in weapon_to_add: weapon["notes"] = weapon_to_add["notes"]
                     result += [weapon] if "chance" not in weapon_to_add or weapon_to_add[
@@ -295,10 +288,10 @@ class Need2KnowCharacter(object):
             self.e[f'weapon{slot}_damage'] = damage_roll + (f" {damage_note_indicator}" if damage_note_indicator else "")
 
     def footnotes(self):
-        notes = list(chain(*[wrap(f"{pointer} {note}", 57, subsequent_indent='  ') for (note, pointer) in list(self.notes.items())]))
+        notes = list(chain(*[wrap(f"{pointer} {note}", 40, subsequent_indent='  ') for (note, pointer) in list(self.notes.items())]))
 
-        if len(notes) > 8: logger.warning("Too many footnotes - truncated.")
-        for i, note in enumerate(notes[:8]):
+        if len(notes) > 12: logger.warning("Too many footnotes - truncated.")
+        for i, note in enumerate(notes[:12]):
             self.e[f'note{i}'] = note
 
     def store_footnote(self, note):
@@ -322,12 +315,27 @@ class Need2KnowPDF(object):
 
         # Statistical Data
         'strength': (136, 604, 11),
-        'damage bonus': (555, 200, 11),
         'constitution': (136, 586, 11),
         'dexterity': (136, 568, 11),
         'intelligence': (136, 550, 11),
         'power': (136, 532, 11),
         'charisma': (136, 514, 11),
+
+        'strength_x5': (172, 604, 11),
+        'constitution_x5': (172, 586, 11),
+        'dexterity_x5': (172, 568, 11),
+        'intelligence_x5': (172, 550, 11),
+        'power_x5': (172, 532, 11),
+        'charisma_x5': (172, 514, 11),
+
+        'strength_distinguishing': (208, 604, 11),
+        'constitution_distinguishing': (208, 586, 11),
+        'dexterity_distinguishing': (208, 568, 11),
+        'intelligence_distinguishing': (208, 550, 11),
+        'power_distinguishing': (208, 532, 11),
+        'charisma_distinguishing': (208, 514, 11),
+
+        'damage bonus': (555, 200, 11),
         'hitpoints': (195, 482, 11),
         'willpower': (195, 464, 11),
         'sanity': (195, 446, 11),
@@ -362,7 +370,7 @@ class Need2KnowPDF(object):
         'dodge': (200, 91, 11),
         'drive': (200, 73, 11),
         'firearms': (200, 54, 11),
-        'first aide': (361, 361, 11),
+        'first aid': (361, 361, 11),
         'forensics': (361, 343, 11),
         'heavy machinery': (361, 325, 11),
         'heavy weapons': (361, 307, 11),
@@ -371,14 +379,18 @@ class Need2KnowPDF(object):
         'law': (361, 253, 11),
         'medicine': (361, 235, 11),
         'melee weapons': (361, 217, 11),
-        'military science': (361, 199, 11),
-        'milsci label': (327, 199, 11),
+        'militaryscience1value': (361, 199, 11),
+        'militaryscience1label': (327, 199, 11),
+        'militaryscience2value': (361, 186, 11),
+        'militaryscience2label': (327, 186, 11),
         'navigate': (361, 163, 11),
         'occult': (361, 145, 11),
         'persuade': (361, 127, 11),
         'pharmacy': (361, 109, 11),
-        'pilot1': (361, 91, 11),
-        'pilot2': (361, 83, 11),
+        'pilot1value': (361, 91, 11),
+        'pilot1label': (290, 91, 11),
+        'pilot2value': (361, 83, 11),
+        'pilot2label': (290, 83, 11),
         'psychotherapy': (361, 54, 11),
         'ride': (521, 361, 11),
         'science1label': (442, 347, 9),
@@ -502,10 +514,14 @@ class Need2KnowPDF(object):
         'note1': (50, 30, 8),
         'note2': (50, 20, 8),
         'note3': (50, 10, 8),
-        'note4': (300, 40, 8),
-        'note5': (300, 30, 8),
-        'note6': (300, 20, 8),
-        'note7': (300, 10, 8),
+        'note4': (240, 40, 8),
+        'note5': (240, 30, 8),
+        'note6': (240, 20, 8),
+        'note7': (240, 10, 8),
+        'note8': (410, 40, 8),
+        'note9': (410, 30, 8),
+        'note10': (410, 20, 8),
+        'note11': (410, 10, 8),
     }
 
     # Fields that also get a multiplier
@@ -539,10 +555,10 @@ class Need2KnowPDF(object):
         top = 650
         pagenum = 2
         for count, profession in enumerate(professions):
-            chapter = '{:.<40}'.format(profession['label']) + '{:.>4}'.format(pagenum)
+            label = generate_label(profession)
+            chapter = '{:.<40}'.format(shorten(label, 37, placeholder="")) + '{:.>4}'.format(pagenum)
             self.c.drawString(150, top - self.line_drop(count), chapter)
-            self.c.linkAbsolute(profession['label'], profession['label'],
-                                (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
+            self.c.linkAbsolute(label, label, (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
             pagenum += profession['number_to_generate'] * pages_per_sheet
         if pages_per_sheet == 1:
             chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(
@@ -567,17 +583,11 @@ class Need2KnowPDF(object):
         self.c.drawString(x, y, str(text))
 
     def fill_field(self, field, value):
-        x, y, s = self.field_xys[field]
-        self.draw_string(x, y, s, str(value))
-
-        # TODO: Make these just like normal fields - i.e. part of the character Class
-        if field in self.x5_stats:
-            self.draw_string(x + 36, y, 11, str(value * 5))
-            self.draw_string(x + 72, y, 11, self.distinguishing(field, value))
-
-    @staticmethod
-    def distinguishing(field, value):
-        return choice(DISTINGUISHING.get((field, value), [""]))
+        try:
+            x, y, s = self.field_xys[field]
+            self.draw_string(x, y, s, str(value))
+        except KeyError:
+            logger.error("Unknown field %s", field)
 
     def add_page(self, d):
         # Add background.  ReportLab will cache it for repeat
@@ -610,6 +620,12 @@ class Need2KnowPDF(object):
         self.c.save()
 
 
+def generate_label(profession):
+    return ", ".join(e for e in [profession.get("label", ""),
+                                 profession.get("employer", ""),
+                                 profession.get("division", "")] if e)
+
+
 def get_options():
     """Get options and arguments from argv string."""
     parser = argparse.ArgumentParser(description=description)
@@ -624,10 +640,10 @@ def get_options():
     parser.add_argument("-V", "--version", action="version", version=__version__)
 
     parser.add_argument("-o", "--output", action="store",
-                        default=f'DeltaGreenPregen-{datetime.datetime.now() :%Y-%m-%d-%H:%M}.pdf',
+                        default=f'DeltaGreenPregen-{datetime.datetime.now() :%Y-%m-%d-%H-%M}.pdf',
                         help="Output PDF file. Defaults to %(default)s.")
     parser.add_argument("-t", "--type", action="store",
-                        help=f"Select single profession to generate - any one of {', '.join(p for p in PROFESSIONS.keys())}.")
+                        help=f"Select single profession to generate.")
     parser.add_argument("-l", "--label", action="store", help="Override profession label.")
     parser.add_argument("-c", "--count", type=int, action="store",
                         help="Generate this many characters of each profession.")
@@ -635,7 +651,54 @@ def get_options():
     parser.add_argument("-u", "--unequipped", action="store_false", dest="equip", help="Don't generate equipment.",
                         default=True)
 
+    data = parser.add_argument_group(title="Data", description="Data file locations")
+    data.add_argument("--professions", action="store", default="data/professions.json",
+                      help="Data file for professions - defaults to %(default)s")
+
     return parser.parse_args()
+
+
+@dataclass
+class Data:
+    male_given_names: List[str]
+    female_given_names: List[str]
+    family_names: List[str]
+    towns: List[str]
+    professions: Dict[str, Any]
+    kits: Dict[str, Any]
+    weapons: Dict[str, Any]
+    armour: Dict[str, Any]
+    distinguishing: Dict[Tuple[str, int], List[str]]
+
+
+def load_data(options):
+    with open('data/boys1986.txt') as f:
+        male_given_names = f.read().splitlines()
+    with open('data/girls1986.txt') as f:
+        female_given_names = f.read().splitlines()
+    with open('data/surnames.txt') as f:
+        family_names = f.read().splitlines()
+    with open('data/towns.txt') as f:
+        towns = f.read().splitlines()
+    with open(options.professions) as f:
+        professions = json.load(f)
+    with open('data/equipment.json') as f:
+        equipment = json.load(f)
+        kits = equipment['kits']
+        weapons = equipment['weapons']
+        armour = equipment['armour']
+
+    distinguishing = {}
+    with open('data/distinguishing-features.csv') as f:
+        for row in csv.DictReader(f):
+            for value in range(int(row['from']), int(row['to']) + 1):
+                distinguishing.setdefault(
+                    (row['statistic'], value), []).append(row['distinguishing'])
+
+    data = Data(male_given_names=male_given_names, female_given_names=female_given_names, family_names=family_names,
+                towns=towns, professions=professions, kits=kits, weapons=weapons, armour=armour,
+                distinguishing=distinguishing)
+    return data
 
 
 def init_logger(verbosity, stream=sys.stdout):
