@@ -1,0 +1,137 @@
+{
+  "cid": {
+    "label": "Federal Agent",
+    "employer": "FBI",
+    "division": "CID",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "drive": 50,
+        "firearms": 50,
+        "forensics": 30,
+        "humint": 60,
+        "law": 30,
+        "persuade": 50,
+        "search": 50,
+        "unarmed combat": 60
+      },
+      "possible-count": 1,
+      "possible": {
+        "accounting": 60,
+        "computer science": 50,
+        "language1": 50,
+        "heavy weapons": 50,
+        "pharmacy": 50
+      },
+      "bonus": [
+        "criminology",
+        "forensics",
+        "firearms",
+        "law"
+      ]
+    },
+    "bonds": 3,
+    "equipment-kit": "agent"
+  },
+  "nsb-agent": {
+    "label": "Federal Agent",
+    "employer": "FBI",
+    "division": "NSB",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "drive": 50,
+        "firearms": 50,
+        "forensics": 30,
+        "humint": 60,
+        "law": 30,
+        "persuade": 50,
+        "search": 50,
+        "unarmed combat": 60
+      },
+      "possible-count": 1,
+      "possible": {
+        "accounting": 60,
+        "computer science": 50,
+        "language1": 50,
+        "heavy weapons": 50,
+        "pharmacy": 50
+      },
+      "bonus": [
+        "language1",
+        "language2",
+        "humint",
+        "sigint",
+        "computer science"
+      ]
+    },
+    "bonds": 3,
+    "equipment-kit": "agent"
+  },
+  "nsb-analyst": {
+    "label": "Intelligence Analyst",
+    "employer": "FBI",
+    "division": "NSB",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "anthropology": 40,
+        "bureaucracy": 50,
+        "computer science": 40,
+        "criminology": 40,
+        "language1": 50,
+        "language2": 50,
+        "language3": 40,
+        "history": 40,
+        "humint": 50,
+        "sigint": 40
+      },
+      "possible-count": 0,
+      "bonus": [
+        "language1",
+        "language2",
+        "humint",
+        "sigint",
+        "computer science"
+      ]
+    },
+    "bonds": 3
+  },
+  "nsb-case-officer": {
+    "label": "Intelligence Case Officer",
+    "employer": "FBI",
+    "division": "NSB",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "disguise": 50,
+        "drive": 40,
+        "firearms": 40,
+        "language1": 50,
+        "language2": 40,
+        "humint": 60,
+        "sigint": 40,
+        "stealth": 50,
+        "unarmed combat": 50
+      },
+      "possible-count": 0,
+      "bonus": [
+        "language1",
+        "language2",
+        "humint",
+        "sigint",
+        "computer science"
+      ]
+    },
+    "bonds": 2
+  }
+}

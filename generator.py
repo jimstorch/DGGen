@@ -45,7 +45,8 @@ def main():
     professions = [data.professions[options.type]] if options.type else data.professions.values()
     p = Need2KnowPDF(options.output, professions, pages_per_sheet=pages_per_sheet)
     for profession in professions:
-        p.bookmark(profession["label"])
+        label = generate_label(profession)
+        p.bookmark(label)
         for sex in islice(cycle(['female', 'male']), options.count or profession['number_to_generate']):
             c = Need2KnowCharacter(data=data, sex=sex, profession=profession, label_override=options.label,
                                    employer=options.employer)
@@ -156,8 +157,8 @@ class Need2KnowCharacter(object):
             self.d['female'] = 'X'
             self.d['name'] = choice(self.data.family_names).upper() + ', ' + choice(self.data.female_given_names)
         self.d['profession'] = label_override or profession['label']
-        if employer:
-            self.d['employer'] = employer
+        self.d['employer'] = employer or ", ".join(e for e in [profession.get("employer", ""),
+                                                               profession.get("division", "")] if e)
         self.d['nationality'] = '(U.S.A.) ' + choice(self.data.towns)
         self.d['age'] = '%d    (%s %d)' % (randint(24, 55), choice(MONTHS),
                                            (randint(1, 28)))
@@ -186,14 +187,14 @@ class Need2KnowCharacter(object):
 
         # Professional skills
         self.d.update(profession['skills']['fixed'])
-        for skill, score in sample(profession['skills']['possible'].items(),
-                                   profession['skills']['possible-count']):
+        for skill, score in sample(profession['skills'].get('possible', {}).items(),
+                                   profession['skills'].get('possible-count', 0)):
             self.d[skill] = score
         for i in range(profession['bonds']):
             self.d[f'bond{i}'] = self.d['charisma']
 
         # Bonus skills
-        bonus_skills = sample(self.BONUS, 8)
+        bonus_skills = (profession['skills'].get('bonus', []) + sample(self.BONUS, 8))[:8]
         for skill in bonus_skills:
             boost = self.d.get(skill, 0) + 20
             if boost > 80:
@@ -532,10 +533,10 @@ class Need2KnowPDF(object):
         top = 650
         pagenum = 2
         for count, profession in enumerate(professions):
-            chapter = '{:.<40}'.format(profession['label']) + '{:.>4}'.format(pagenum)
+            label = generate_label(profession)
+            chapter = '{:.<40}'.format(shorten(label, 37, placeholder="")) + '{:.>4}'.format(pagenum)
             self.c.drawString(150, top - self.line_drop(count), chapter)
-            self.c.linkAbsolute(profession['label'], profession['label'],
-                                (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
+            self.c.linkAbsolute(label, label, (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)))
             pagenum += profession['number_to_generate'] * pages_per_sheet
         if pages_per_sheet == 1:
             chapter = '{:.<40}'.format('Blank Character Sheet Second Page') + '{:.>4}'.format(
@@ -594,6 +595,12 @@ class Need2KnowPDF(object):
         self.c.save()
 
 
+def generate_label(profession):
+    return ", ".join(e for e in [profession.get("label", ""),
+                                 profession.get("employer", ""),
+                                 profession.get("division", "")] if e)
+
+
 def get_options():
     """Get options and arguments from argv string."""
     parser = argparse.ArgumentParser(description=description)
@@ -620,7 +627,7 @@ def get_options():
                         default=True)
 
     data = parser.add_argument_group(title="Data", description="Data file locations")
-    data.add_argument("--professions", default="data/professions.json",
+    data.add_argument("--professions", action="store", default="data/professions.json",
                       help="Data file for professions - defaults to %(default)s")
 
     return parser.parse_args()
