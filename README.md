@@ -79,8 +79,13 @@ as an example, or you can create your own.
 
     $ ./generator.py --professions data/professions-cia.json -o "CIA London Station.pdf"
 
-Pre-built examples include [data/professions-fbi.json](`data/professions-fbi.json`) and
-[data/professions-fbi.json](`data/professions-fbi.json`), and you can of course create your own.
+    $ ./generator.py --professions data/professions-socom.json -o "SOCOM Camp Echo.pdf"
+
+    $ ./generator.py --professions data/professions-socom.json --type seal --count 12 -o "Operation ROOKHAVEN.pdf"
+
+Pre-built examples include [data/professions-fbi.json](`data/professions-fbi.json`),
+[data/professions-cia.json](`data/professions-cia.json`), and
+[data/professions-socom.json](`data/professions-socom.json`), and you can of course create your own.
 
 To see what options you have available, run:
 

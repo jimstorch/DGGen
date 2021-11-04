@@ -1,0 +1,278 @@
+{
+  "720th": {
+    "label": "SOCOM",
+    "employer": "USAF",
+    "division": "720th Special Tactics Group",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "athletics": 60,
+        "demolitions": 40,
+        "firearms": 60,
+        "heavy weapons": 50,
+        "melee weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
+        "navigate": 50,
+        "stealth": 50,
+        "survival": 50,
+        "swim": 50,
+        "unarmed combat": 60
+      },
+      "possible-count": 1,
+      "possible": {
+        "first aid": 60,
+        "sigint": 50
+      },
+      "bonus": [
+        "athletics",
+        "navigate",
+        "survival",
+        "stealth"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  },
+  "green-berets": {
+    "label": "SOCOM",
+    "employer": "US Army",
+    "division": "Green Berets",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "athletics": 60,
+        "demolitions": 40,
+        "firearms": 60,
+        "language1": 20,
+        "heavy weapons": 50,
+        "humint": 40,
+        "melee weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
+        "navigate": 50,
+        "persuade": 40,
+        "stealth": 50,
+        "survival": 50,
+        "swim": 50,
+        "unarmed combat": 60
+      },
+      "bonus": [
+        "firearms",
+        "demolitions",
+        "persuade",
+        "sigint"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  },
+  "75th-ranger": {
+    "label": "SOCOM",
+    "employer": "US Army",
+    "division": "75th Ranger Regiment",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "athletics": 60,
+        "demolitions": 40,
+        "firearms": 60,
+        "heavy weapons": 50,
+        "melee weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
+        "navigate": 50,
+        "stealth": 50,
+        "survival": 50,
+        "swim": 50,
+        "unarmed combat": 60
+      }
+    },
+    "bonds": 2,
+    "equipment-kit": "spec-ops",
+    "bonus": [
+      "athletics",
+      "melee weapons",
+      "stealth",
+      "unarmed combat"
+    ]
+  },
+  "4th-mist": {
+    "label": "SOCOM",
+    "employer": "US Army",
+    "division": "4th Military Information Support Team",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "athletics": 50,
+        "bureaucracy": 30,
+        "drive": 40,
+        "firearms": 40,
+        "first aid": 30,
+        "language1": 40,
+        "humint": 50,
+        "militaryscience1value": 40,
+        "militaryscience1label": "Land",
+        "navigate": 40,
+        "persuade": 50,
+        "sigint": 40,
+        "unarmed combat": 50
+      },
+      "possible-count": 1,
+      "possible": {
+        "art1": 40,
+        "computer science": 40,
+        "craft1value": 40,
+        "language2": 40
+      },
+      "bonus": [
+        "athletics",
+        "language3",
+        "psychotherapy",
+        "sigint"
+      ]
+    },
+    "bonds": 3,
+    "equipment-kit": "spec-ops"
+  },
+  "160th-soar": {
+    "label": "SOCOM",
+    "employer": "US Army",
+    "division": "160th Special Operations Aviation Regiment",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "athletics": 50,
+        "bureaucracy": 30,
+        "craft1label": "Electrician",
+        "craft1value": 40,
+        "craft2label": "Mechanic",
+        "craft2value": 40,
+        "firearms": 40,
+        "heavy weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Air",
+        "militaryscience2value": 20,
+        "militaryscience2label": "Land",
+        "navigate": 60,
+        "pilot1value": 50,
+        "pilot1label": "Helicopter",
+        "science1value": 50,
+        "science1label": "Meteorology",
+        "swim": 50
+      },
+      "bonus": [
+        "alertness",
+        "pilot1value",
+        "survival",
+        "stealth"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  },
+  "isa": {
+    "label": "SOCOM",
+    "employer": "US Army",
+    "division": "Intelligence Support Activity",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "athletics": 60,
+        "firearms": 60,
+        "heavy weapons": 50,
+        "humint": 50,
+        "melee weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
+        "navigate": 50,
+        "sigint": 50,
+        "stealth": 50,
+        "survival": 50,
+        "swim": 50,
+        "unarmed combat": 60
+      },
+      "bonus": [
+        "firearms",
+        "navigate",
+        "search",
+        "stealth"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  },
+  "marine-raider": {
+    "label": "SOCOM",
+    "employer": "USMC",
+    "division": "Marine Raiders",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "athletics": 60,
+        "demolitions": 40,
+        "firearms": 60,
+        "heavy weapons": 50,
+        "melee weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
+        "navigate": 50,
+        "persuade": 40,
+        "pilot1value": 40,
+        "pilot1label": "Small boat",
+        "stealth": 50,
+        "survival": 50,
+        "swim": 50,
+        "unarmed combat": 60
+      },
+      "bonus": [
+        "athletics",
+        "heavy weapons",
+        "humint",
+        "melee weapons"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  },
+  "seal": {
+    "label": "SOCOM",
+    "employer": "US Navy",
+    "division": "SEALs",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "athletics": 60,
+        "demolitions": 40,
+        "firearms": 60,
+        "heavy weapons": 50,
+        "melee weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
+        "navigate": 50,
+        "pilot1value": 40,
+        "pilot1label": "Small boat",
+        "stealth": 50,
+        "survival": 60,
+        "swim": 60,
+        "unarmed combat": 60
+      },
+      "bonus": [
+        "firearms",
+        "melee weapons",
+        "stealth",
+        "unarmed combat"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  }
+}

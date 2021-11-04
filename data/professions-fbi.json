@@ -210,7 +210,7 @@
     "skills": {
       "fixed": {
         "bureaucracy": 50,
-        "first aide": 60,
+        "first aid": 60,
         "medicine": 60,
         "persuade": 40,
         "pharmacy": 50,
@@ -337,7 +337,8 @@
         "forensics": 30,
         "heavy weapons": 50,
         "melee weapons": 50,
-        "military science": 60,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
         "navigate": 50,
         "stealth": 50,
         "survival": 50,
@@ -368,7 +369,8 @@
         "forensics": 30,
         "heavy weapons": 50,
         "melee weapons": 50,
-        "military science": 60,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
         "navigate": 50,
         "stealth": 50,
         "survival": 50,

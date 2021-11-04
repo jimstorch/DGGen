@@ -177,7 +177,7 @@
         "craft2value": 40,
         "demolitions": 50,
         "drive": 50,
-        "first aide": 50,
+        "first aid": 50,
         "forensics": 40,
         "heavy machinery": 50,
         "navigate": 50,
@@ -301,9 +301,9 @@
         "bureaucracy": 30,
         "drive": 40,
         "firearms": 40,
-        "first aide": 40,
-        "military science": 40,
-        "milsci label": "Land",
+        "first aid": 40,
+        "militaryscience1value": 40,
+        "militaryscience1label": "Land",
         "navigate": 40,
         "persuade": 30,
         "unarmed combat": 50
@@ -344,7 +344,7 @@
         "criminology": 50,
         "language1": 40,
         "law": 40,
-        "military science": 40,
+        "militaryscience1value": 40,
         "occult": 50,
         "science1value": 40
       }
@@ -358,7 +358,7 @@
       "fixed": {
         "alertness": 40,
         "bureaucracy": 40,
-        "first aide": 60,
+        "first aid": 60,
         "humint": 40,
         "medicine": 40,
         "persuade": 40,
@@ -384,7 +384,7 @@
       "fixed": {
         "alertness": 40,
         "bureaucracy": 40,
-        "first aide": 60,
+        "first aid": 60,
         "humint": 40,
         "medicine": 40,
         "persuade": 40,
@@ -409,7 +409,7 @@
     "skills": {
       "fixed": {
         "bureaucracy": 50,
-        "first aide": 60,
+        "first aid": 60,
         "medicine": 60,
         "persuade": 40,
         "pharmacy": 50,
@@ -439,7 +439,7 @@
         "craft2label": "Mechanic",
         "craft2value": 40,
         "navigate": 50,
-        "pilot1": 60,
+        "pilot1value": 60,
         "science1label": "Meteorology",
         "science1value": 40,
         "swim": 40
@@ -449,7 +449,7 @@
         "language1": 50,
         "pilot2": 50,
         "heavy weapons": 50,
-        "military science": 50
+        "militaryscience1value": 50
       }
     },
     "bonds": 1
@@ -464,7 +464,7 @@
         "criminology": 50,
         "drive": 50,
         "firearms": 40,
-        "first aide": 30,
+        "first aid": 30,
         "humint": 50,
         "law": 30,
         "melee weapons": 50,
@@ -520,7 +520,7 @@
         "craft2label": "Mechanic",
         "craft2value": 40,
         "navigate": 50,
-        "pilot1": 60,
+        "pilot1value": 60,
         "science1label": "Meteorology",
         "science1value": 40,
         "swim": 40
@@ -530,7 +530,7 @@
         "language1": 50,
         "pilot2": 50,
         "heavy weapons": 50,
-        "military science": 50
+        "militaryscience1value": 50
       }
     },
     "bonds": 1
@@ -568,9 +568,9 @@
         "bureaucracy": 30,
         "drive": 40,
         "firearms": 40,
-        "first aide": 40,
-        "military science": 40,
-        "milsci label": "Land",
+        "first aid": 40,
+        "militaryscience1value": 40,
+        "militaryscience1label": "Land",
         "navigate": 40,
         "persuade": 30,
         "unarmed combat": 50
@@ -602,7 +602,8 @@
         "firearms": 60,
         "heavy weapons": 50,
         "melee weapons": 50,
-        "military science": 60,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
         "navigate": 50,
         "stealth": 50,
         "survival": 50,

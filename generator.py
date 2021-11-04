@@ -79,7 +79,7 @@ class Need2KnowCharacter(object):
         'dodge': 30,
         'drive': 20,
         'firearms': 20,
-        'first aide': 10,
+        'first aid': 10,
         'heavy machinery': 10,
         'history': 10,
         'humint': 10,
@@ -113,7 +113,7 @@ class Need2KnowCharacter(object):
         'dodge',
         'drive',
         'firearms',
-        'first aide',
+        'first aid',
         'forensics',
         'heavy machinery',
         'heavy weapons',
@@ -122,12 +122,12 @@ class Need2KnowCharacter(object):
         'law',
         'medicine',
         'melee weapons',
-        'military science',
+        'militaryscience1value',
         'navigate',
         'occult',
         'persuade',
         'pharmacy',
-        'pilot1',
+        'pilot1value',
         'psychotherapy',
         'ride',
         'science1value',
@@ -194,8 +194,9 @@ class Need2KnowCharacter(object):
             self.d[f'bond{i}'] = self.d['charisma']
 
         # Bonus skills
-        bonus_skills = [s for s in profession['skills'].get('bonus', []) if randint(1, 100) <= 75] + sample(self.BONUS,
-                                                                                                            len(self.BONUS))
+        bonus_skills = [s for s
+                        in profession['skills'].get('bonus', [])
+                        if randint(1, 100) <= 50] + sample(self.BONUS, len(self.BONUS))
         bonuses_applied = 0
         while bonuses_applied < 8:
             skill = bonus_skills.pop(0)
@@ -369,7 +370,7 @@ class Need2KnowPDF(object):
         'dodge': (200, 91, 11),
         'drive': (200, 73, 11),
         'firearms': (200, 54, 11),
-        'first aide': (361, 361, 11),
+        'first aid': (361, 361, 11),
         'forensics': (361, 343, 11),
         'heavy machinery': (361, 325, 11),
         'heavy weapons': (361, 307, 11),
@@ -378,14 +379,18 @@ class Need2KnowPDF(object):
         'law': (361, 253, 11),
         'medicine': (361, 235, 11),
         'melee weapons': (361, 217, 11),
-        'military science': (361, 199, 11),
-        'milsci label': (327, 199, 11),
+        'militaryscience1value': (361, 199, 11),
+        'militaryscience1label': (327, 199, 11),
+        'militaryscience2value': (361, 186, 11),
+        'militaryscience2label': (327, 186, 11),
         'navigate': (361, 163, 11),
         'occult': (361, 145, 11),
         'persuade': (361, 127, 11),
         'pharmacy': (361, 109, 11),
-        'pilot1': (361, 91, 11),
-        'pilot2': (361, 83, 11),
+        'pilot1value': (361, 91, 11),
+        'pilot1label': (290, 91, 11),
+        'pilot2value': (361, 83, 11),
+        'pilot2label': (290, 83, 11),
         'psychotherapy': (361, 54, 11),
         'ride': (521, 361, 11),
         'science1label': (442, 347, 9),
