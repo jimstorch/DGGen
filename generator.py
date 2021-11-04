@@ -214,11 +214,16 @@ class Need2KnowCharacter(object):
             kit = self.data.kits[kit_name]
             weapons += self.build_weapon_list(kit["weapons"])
 
-            if len(kit['armour'] + kit['gear']) > 22: logger.warning("Too much gear - truncated.")
-            for i, gear in enumerate((kit['armour'] + kit['gear'])[:22]):
-                notes = (" ".join(self.store_footnote(n) for n in gear['notes']) + " ") if "notes" in gear else ""
-                text = notes + (self.data.armour[gear["type"]] if "type" in gear else gear["text"])
-                self.e[f'gear{i}'] = shorten(text, 55, placeholder="…")
+            gear = []
+            for item in (kit['armour'] + kit['gear']):
+                notes = (" ".join(self.store_footnote(n) for n in item['notes']) + " ") if "notes" in item else ""
+                text = notes + (self.data.armour[item["type"]] if "type" in item else item["text"])
+                gear.append(text)
+
+            wrapped_gear = list(chain(*[wrap(item, 55, subsequent_indent='  ') for item in gear]))
+            if len(wrapped_gear) > 22: logger.warning("Too much gear - truncated.")
+            for i, line in enumerate(wrapped_gear):
+                self.e[f'gear{i}'] = line
 
         if len(weapons) > 7: logger.warning("Too many weapons %s - truncated.", weapons)
         for i, weapon in enumerate(weapons[:7]):
