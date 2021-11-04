@@ -192,9 +192,6 @@
         "stealth": 50,
         "unarmed combat": 50
       },
-      "possible-count": 0,
-      "possible": {
-      },
       "bonus": [
         "science1value",
         "science2value",
@@ -288,9 +285,6 @@
         "humint": 50,
         "sigint": 40
       },
-      "possible-count": 0,
-      "possible": {
-      },
       "bonus": [
         "criminology",
         "forensics",
@@ -319,9 +313,6 @@
         "sigint": 40,
         "stealth": 50,
         "unarmed combat": 50
-      },
-      "possible-count": 0,
-      "possible": {
       },
       "bonus": [
         "criminology",
@@ -353,9 +344,6 @@
         "swim": 50,
         "unarmed combat": 60
       },
-      "possible-count": 0,
-      "possible": {
-      },
       "bonus": [
         "criminology",
         "firearms",
@@ -386,9 +374,6 @@
         "survival": 50,
         "swim": 50,
         "unarmed combat": 60
-      },
-      "possible-count": 0,
-      "possible": {
       },
       "bonus": [
         "criminology",

@@ -578,8 +578,11 @@ class Need2KnowPDF(object):
         self.c.drawString(x, y, str(text))
 
     def fill_field(self, field, value):
-        x, y, s = self.field_xys[field]
-        self.draw_string(x, y, s, str(value))
+        try:
+            x, y, s = self.field_xys[field]
+            self.draw_string(x, y, s, str(value))
+        except KeyError:
+            logger.error("Unknown field %s", field)
 
     def add_page(self, d):
         # Add background.  ReportLab will cache it for repeat

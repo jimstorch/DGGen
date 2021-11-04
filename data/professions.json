@@ -182,9 +182,6 @@
         "heavy machinery": 50,
         "navigate": 50,
         "search": 40
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 3
@@ -204,9 +201,6 @@
         "humint": 50,
         "law": 40,
         "persuade": 50
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 3
@@ -251,9 +245,6 @@
         "history": 40,
         "humint": 50,
         "sigint": 40
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 3
@@ -275,9 +266,6 @@
         "sigint": 40,
         "stealth": 50,
         "unarmed combat": 50
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 2
@@ -620,9 +608,6 @@
         "survival": 50,
         "swim": 50,
         "unarmed combat": 60
-      },
-      "possible-count": 0,
-      "possible": {
       }
     },
     "bonds": 2,

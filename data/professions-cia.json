@@ -1,0 +1,124 @@
+{
+  "do-case-officer": {
+    "label": "Intelligence Case Officer",
+    "employer": "CIA",
+    "division": "DO Clandestine Service",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "disguise": 50,
+        "drive": 40,
+        "firearms": 40,
+        "language1": 50,
+        "language2": 40,
+        "humint": 60,
+        "sigint": 40,
+        "stealth": 50,
+        "unarmed combat": 50
+      },
+      "bonus": [
+        "bureaucracy",
+        "humint",
+        "persuade",
+        "sigint"
+      ]
+    },
+    "bonds": 2
+  },
+  "sagsod": {
+    "label": "Special Operations Group",
+    "employer": "CIA",
+    "division": "SAD/SOG",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "athletics": 50,
+        "demolitions": 40,
+        "firearms": 60,
+        "language1": 40,
+        "heavy weapons": 50,
+        "humint": 30,
+        "melee weapons": 50,
+        "military science": 50,
+        "navigate": 50,
+        "persuade": 40,
+        "stealth": 50,
+        "survival": 50,
+        "swim": 40,
+        "unarmed combat": 60
+      },
+      "bonus": [
+        "alertness",
+        "firearms",
+        "stealth",
+        "survival"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  },
+  "sadpag": {
+    "label": "Division Political Action Group",
+    "employer": "CIA",
+    "division": "SAD/SOG",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "accounting": 40,
+        "anthropology": 40,
+        "athletics": 40,
+        "bureaucracy": 60,
+        "disguise": 40,
+        "firearms": 40,
+        "language1": 50,
+        "language2": 50,
+        "language3": 40,
+        "history": 40,
+        "humint": 50,
+        "law": 40,
+        "persuade": 50,
+        "stealth": 50,
+        "unarmed combat": 60
+      },
+      "bonus": [
+        "bureaucracy",
+        "criminology",
+        "persuade",
+        "sigint"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  },
+  "cia-analyst": {
+    "label": "Intelligence Analyst",
+    "employer": "CIA",
+    "division": "DoA",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "anthropology": 40,
+        "bureaucracy": 50,
+        "computer science": 40,
+        "criminology": 40,
+        "language1": 50,
+        "language2": 50,
+        "language3": 40,
+        "history": 40,
+        "humint": 50,
+        "sigint": 40
+      },
+      "bonus": [
+        "anthropology",
+        "humint",
+        "sigint",
+        "history"
+      ]
+    },
+    "bonds": 3
+  }
+}
