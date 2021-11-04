@@ -1,7 +1,7 @@
 {
   "anthropologist": {
     "label": "Anthropologist",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "anthropology": 50,
@@ -26,7 +26,7 @@
   },
   "business": {
     "label": "Business Executive",
-    "number_to_generate": 5,
+    "number_to_generate": 10,
     "skills": {
       "fixed": {
         "accounting": 50,
@@ -47,7 +47,7 @@
   },
   "compsci": {
     "label": "Computer Scientist",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "computer science": 60,
@@ -76,7 +76,7 @@
   },
   "criminal": {
     "label": "Criminal",
-    "number_to_generate": 10,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -108,7 +108,7 @@
   },
   "engineer": {
     "label": "Engineer",
-    "number_to_generate": 10,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "computer science": 60,
@@ -137,7 +137,7 @@
   },
   "agent": {
     "label": "Federal Agent",
-    "number_to_generate": 40,
+    "number_to_generate": 121,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -166,7 +166,7 @@
   },
   "firefighter": {
     "label": "Firefighter",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -191,7 +191,7 @@
   },
   "foreign-service": {
     "label": "Foreign Service Officer",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "accounting": 40,
@@ -213,7 +213,7 @@
   },
   "historian": {
     "label": "Historian",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "archeology": 50,
@@ -238,7 +238,7 @@
   },
   "analyst": {
     "label": "Intelligence Analyst",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "anthropology": 40,
@@ -260,7 +260,7 @@
   },
   "case-officer": {
     "label": "Intelligence Case Officer",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -284,7 +284,7 @@
   },
   "lawyer": {
     "label": "Lawyer",
-    "number_to_generate": 10,
+    "number_to_generate": 20,
     "skills": {
       "fixed": {
         "accounting": 50,
@@ -305,7 +305,7 @@
   },
   "marine": {
     "label": "Marine",
-    "number_to_generate": 20,
+    "number_to_generate": 80,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -338,7 +338,7 @@
   },
   "media": {
     "label": "Media Specialist",
-    "number_to_generate": 10,
+    "number_to_generate": 20,
     "skills": {
       "fixed": {
         "art1": 60,
@@ -365,7 +365,7 @@
   },
   "nurse": {
     "label": "Nurse",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "alertness": 40,
@@ -391,7 +391,7 @@
   },
   "paramedic": {
     "label": "Paramedic",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "alertness": 40,
@@ -417,7 +417,7 @@
   },
   "physician": {
     "label": "Physician",
-    "number_to_generate": 10,
+    "number_to_generate": 30,
     "skills": {
       "fixed": {
         "bureaucracy": 50,
@@ -441,7 +441,7 @@
   },
   "pilot": {
     "label": "Pilot",
-    "number_to_generate": 10,
+    "number_to_generate": 20,
     "skills": {
       "fixed": {
         "alertness": 60,
@@ -468,7 +468,7 @@
   },
   "police": {
     "label": "Police Officer",
-    "number_to_generate": 20,
+    "number_to_generate": 60,
     "skills": {
       "fixed": {
         "alertness": 60,
@@ -498,7 +498,7 @@
   },
   "manager": {
     "label": "Program Manager",
-    "number_to_generate": 5,
+    "number_to_generate": 10,
     "skills": {
       "fixed": {
         "accounting": 60,
@@ -522,7 +522,7 @@
   },
   "sailor": {
     "label": "Sailor",
-    "number_to_generate": 10,
+    "number_to_generate": 20,
     "skills": {
       "fixed": {
         "alertness": 60,
@@ -549,7 +549,7 @@
   },
   "scientist": {
     "label": "Scientist",
-    "number_to_generate": 20,
+    "number_to_generate": 40,
     "skills": {
       "fixed": {
         "bureaucracy": 40,
@@ -572,7 +572,7 @@
   },
   "soldier": {
     "label": "Soldier",
-    "number_to_generate": 40,
+    "number_to_generate": 100,
     "skills": {
       "fixed": {
         "alertness": 50,
@@ -605,7 +605,7 @@
   },
   "spec-ops": {
     "label": "Special Operator",
-    "number_to_generate": 20,
+    "number_to_generate": 80,
     "skills": {
       "fixed": {
         "alertness": 60,
