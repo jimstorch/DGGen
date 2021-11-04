@@ -133,5 +133,271 @@
       ]
     },
     "bonds": 2
+  },
+  "ioos-compsci": {
+    "label": "Computer Scientist",
+    "employer": "FBI",
+    "division": "IOSS",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "computer science": 60,
+        "craft1label": "Electrician",
+        "craft1value": 30,
+        "craft2label": "Mechanic",
+        "craft2value": 30,
+        "craft3label": "Microelectronics",
+        "craft3value": 40,
+        "science1label": "Mathematics",
+        "science1value": 40,
+        "sigint": 40
+      },
+      "possible-count": 4,
+      "possible": {
+        "accounting": 50,
+        "bureaucracy": 50,
+        "craft4value": 40,
+        "language1": 40,
+        "heavy machinery": 50,
+        "law": 40,
+        "science3value": 40
+      },
+      "bonus": [
+        "science1value",
+        "science2value",
+        "humint",
+        "psychotherapy",
+        "computer science"
+      ]
+    },
+    "bonds": 3
+  },
+  "ioos-case-officer": {
+    "label": "Intelligence Case Officer",
+    "employer": "FBI",
+    "division": "IOSS",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "disguise": 50,
+        "drive": 40,
+        "firearms": 40,
+        "language1": 50,
+        "language2": 40,
+        "humint": 60,
+        "sigint": 40,
+        "stealth": 50,
+        "unarmed combat": 50
+      },
+      "possible-count": 0,
+      "possible": {
+      },
+      "bonus": [
+        "science1value",
+        "science2value",
+        "humint",
+        "psychotherapy",
+        "computer science"
+      ]
+    },
+    "bonds": 2
+  },
+  "ioss-physician": {
+    "label": "Physician",
+    "employer": "FBI",
+    "division": "IOSS",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "bureaucracy": 50,
+        "first aide": 60,
+        "medicine": 60,
+        "persuade": 40,
+        "pharmacy": 50,
+        "science1label": "Biology",
+        "science1value": 60,
+        "search": 40
+      },
+      "possible-count": 2,
+      "possible": {
+        "forensics": 50,
+        "psychotherapy": 60,
+        "science2value": 50,
+        "surgery": 50
+      },
+      "bonus": [
+        "science1value",
+        "science2value",
+        "humint",
+        "psychotherapy",
+        "computer science"
+      ]
+    },
+    "bonds": 2
+  },
+  "ioss-scientist": {
+    "label": "Scientist",
+    "employer": "FBI",
+    "division": "IOSS",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "bureaucracy": 40,
+        "computer science": 40,
+        "science1value": 60,
+        "science2value": 50,
+        "science3value": 50
+      },
+      "possible-count": 3,
+      "possible": {
+        "accounting": 50,
+        "craft1value": 40,
+        "language1": 40,
+        "forensics": 40,
+        "law": 40,
+        "pharmacy": 40
+      },
+      "bonus": [
+        "science1value",
+        "science4value",
+        "humint",
+        "psychotherapy",
+        "computer science"
+      ]
+    },
+    "bonds": 3
+  },
+  "doi-analyst": {
+    "label": "Intelligence Analyst",
+    "employer": "FBI",
+    "division": "DoI",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "anthropology": 40,
+        "bureaucracy": 50,
+        "computer science": 40,
+        "criminology": 40,
+        "language1": 50,
+        "language2": 50,
+        "language3": 40,
+        "history": 40,
+        "humint": 50,
+        "sigint": 40
+      },
+      "possible-count": 0,
+      "possible": {
+      },
+      "bonus": [
+        "criminology",
+        "forensics",
+        "firearms",
+        "law"
+      ]
+    },
+    "bonds": 3
+  },
+  "doi-case-officer": {
+    "label": "Intelligence Case Officer",
+    "employer": "FBI",
+    "division": "DoI",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "disguise": 50,
+        "drive": 40,
+        "firearms": 40,
+        "language1": 50,
+        "language2": 40,
+        "humint": 60,
+        "sigint": 40,
+        "stealth": 50,
+        "unarmed combat": 50
+      },
+      "possible-count": 0,
+      "possible": {
+      },
+      "bonus": [
+        "criminology",
+        "forensics",
+        "firearms",
+        "law"
+      ]
+    },
+    "bonds": 2
+  },
+  "hrt": {
+    "label": "Hostage Rescue Team",
+    "employer": "FBI",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "athletics": 60,
+        "demolitions": 40,
+        "dodge": 50,
+        "firearms": 60,
+        "forensics": 30,
+        "heavy weapons": 50,
+        "melee weapons": 50,
+        "military science": 60,
+        "navigate": 50,
+        "stealth": 50,
+        "survival": 50,
+        "swim": 50,
+        "unarmed combat": 60
+      },
+      "possible-count": 0,
+      "possible": {
+      },
+      "bonus": [
+        "criminology",
+        "firearms",
+        "melee weapons",
+        "stealth"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "swat"
+  },
+  "swat": {
+    "label": "SWAT",
+    "employer": "FBI",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "athletics": 60,
+        "demolitions": 40,
+        "dodge": 50,
+        "firearms": 60,
+        "forensics": 30,
+        "heavy weapons": 50,
+        "melee weapons": 50,
+        "military science": 60,
+        "navigate": 50,
+        "stealth": 50,
+        "survival": 50,
+        "swim": 50,
+        "unarmed combat": 60
+      },
+      "possible-count": 0,
+      "possible": {
+      },
+      "bonus": [
+        "criminology",
+        "firearms",
+        "melee weapons",
+        "stealth"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "swat"
   }
 }

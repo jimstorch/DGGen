@@ -23,7 +23,7 @@ script_name = os.path.basename(sys.argv[0])
 description = '''
 Generate characters for the Delta Green pen-and-paper roleplaying game from Arc Dream Publishing.
 '''
-__version__ = "1.2"
+__version__ = "1.3"
 
 logger = logging.getLogger(script_name)
 
@@ -148,7 +148,7 @@ class Need2KnowCharacter(object):
         self.d = {}
         self.e = {}
 
-        self.notes = defaultdict(iter(["*", "†", "‡", "§", "‖", "¶", "**", "††", "‡‡", "§§", "‖‖", "¶¶"]).__next__)
+        self.notes = defaultdict(iter(["*", "†", "‡", "§", "¶", "**", "††", "‡‡", "§§", "¶¶", "***", "†††", "‡‡‡", "§§§"]).__next__)
 
         if sex == 'male':
             self.d['male'] = 'X'
@@ -194,16 +194,21 @@ class Need2KnowCharacter(object):
             self.d[f'bond{i}'] = self.d['charisma']
 
         # Bonus skills
-        bonus_skills = profession['skills'].get('bonus', []) + sample(self.BONUS, len(self.BONUS))
+        bonus_skills = [s for s in profession['skills'].get('bonus', []) if randint(1, 100) <= 75] + sample(self.BONUS,
+                                                                                                            len(self.BONUS))
         bonuses_applied = 0
         while bonuses_applied < 8:
             skill = bonus_skills.pop(0)
-            boost = self.d.get(skill, 0) + 20
-            if boost <= 80:
-                self.d[skill] = boost
+            boosted = self.d.get(skill, 0) + 20
+            if boosted <= 80:
+                self.d[skill] = boosted
                 bonuses_applied += 1
+                logger.debug("%s, boosted %s to %s", self, skill, boosted)
             else:
-                logger.info("Skipped boost - %s already at %s", skill, self.d.get(skill, 0))
+                logger.info("%s, Skipped boost - %s already at %s", self, skill, self.d.get(skill, 0))
+
+    def __str__(self):
+        return ", ".join([self.d.get(i) for i in ("name", "profession", "employer", "department") if self.d.get(i)])
 
     def distinguishing(self, field, value):
         return choice(self.data.distinguishing.get((field, value), [""]))
@@ -282,10 +287,10 @@ class Need2KnowCharacter(object):
             self.e[f'weapon{slot}_damage'] = damage_roll + (f" {damage_note_indicator}" if damage_note_indicator else "")
 
     def footnotes(self):
-        notes = list(chain(*[wrap(f"{pointer} {note}", 57, subsequent_indent='  ') for (note, pointer) in list(self.notes.items())]))
+        notes = list(chain(*[wrap(f"{pointer} {note}", 40, subsequent_indent='  ') for (note, pointer) in list(self.notes.items())]))
 
-        if len(notes) > 8: logger.warning("Too many footnotes - truncated.")
-        for i, note in enumerate(notes[:8]):
+        if len(notes) > 12: logger.warning("Too many footnotes - truncated.")
+        for i, note in enumerate(notes[:12]):
             self.e[f'note{i}'] = note
 
     def store_footnote(self, note):
@@ -504,10 +509,14 @@ class Need2KnowPDF(object):
         'note1': (50, 30, 8),
         'note2': (50, 20, 8),
         'note3': (50, 10, 8),
-        'note4': (300, 40, 8),
-        'note5': (300, 30, 8),
-        'note6': (300, 20, 8),
-        'note7': (300, 10, 8),
+        'note4': (240, 40, 8),
+        'note5': (240, 30, 8),
+        'note6': (240, 20, 8),
+        'note7': (240, 10, 8),
+        'note8': (410, 40, 8),
+        'note9': (410, 30, 8),
+        'note10': (410, 20, 8),
+        'note11': (410, 10, 8),
     }
 
     # Fields that also get a multiplier
