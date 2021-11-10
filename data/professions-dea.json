@@ -1,0 +1,334 @@
+{
+  "agent": {
+    "label": "Federal Agent",
+    "employer": "DEA",
+    "division": "Operations",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "drive": 50,
+        "firearms": 50,
+        "forensics": 30,
+        "humint": 60,
+        "law": 30,
+        "persuade": 50,
+        "search": 50,
+        "unarmed combat": 60
+      },
+      "possible-count": 1,
+      "possible": {
+        "accounting": 60,
+        "computer science": 50,
+        "language1": 50,
+        "heavy weapons": 50,
+        "pharmacy": 50
+      }
+    },
+    "bonds": 3,
+    "equipment-kit": "agent",
+    "bonus": [
+      "criminology",
+      "pharmacy",
+      "science1value",
+      "search"
+    ]
+  },
+  "police": {
+    "label": "Police Officer",
+    "employer": "DEA",
+    "division": "Operations",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "drive": 50,
+        "firearms": 40,
+        "first aid": 30,
+        "humint": 50,
+        "law": 30,
+        "melee weapons": 50,
+        "navigate": 40,
+        "persuade": 40,
+        "search": 50,
+        "unarmed combat": 60
+      },
+      "possible-count": 1,
+      "possible": {
+        "forensics": 50,
+        "heavy machinery": 60,
+        "heavy weapons": 50,
+        "ride": 60
+      }
+    },
+    "bonds": 3,
+    "equipment-kit": "police",
+    "bonus": [
+      "criminology",
+      "pharmacy",
+      "science1value",
+      "search"
+    ]
+  },
+  "anthropologist": {
+    "label": "Anthropologist",
+    "employer": "DEA",
+    "division": "Operational Support",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "anthropology": 50,
+        "bureaucracy": 40,
+        "language1": 50,
+        "language2": 30,
+        "history": 60,
+        "occult": 40,
+        "persuade": 40
+      },
+      "possible-count": 2,
+      "possible": {
+        "archeology": 40,
+        "humint": 50,
+        "navigate": 50,
+        "ride": 50,
+        "search": 60,
+        "survival": 50
+      }
+    },
+    "bonds": 4,
+    "bonus": [
+      "accounting",
+      "forensics",
+      "law",
+      "pharmacy"
+    ]
+  },
+  "historian": {
+    "label": "Historian",
+    "employer": "DEA",
+    "division": "Operational Support",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "archeology": 50,
+        "bureaucracy": 40,
+        "language1": 50,
+        "language2": 30,
+        "history": 60,
+        "occult": 40,
+        "persuade": 40
+      },
+      "possible-count": 2,
+      "possible": {
+        "anthropology": 40,
+        "humint": 50,
+        "navigate": 50,
+        "ride": 50,
+        "search": 60,
+        "survival": 50
+      }
+    },
+    "bonds": 4,
+    "bonus": [
+      "accounting",
+      "forensics",
+      "law",
+      "pharmacy"
+    ]
+  },
+  "lawyer": {
+    "label": "Lawyer",
+    "employer": "DEA",
+    "division": "Operational Support",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "accounting": 50,
+        "bureaucracy": 50,
+        "humint": 40,
+        "persuade": 60
+      },
+      "possible-count": 4,
+      "possible": {
+        "computer science": 50,
+        "criminology": 60,
+        "language1": 50,
+        "law": 50,
+        "pharmacy": 50
+      }
+    },
+    "bonds": 4,
+    "bonus": [
+      "accounting",
+      "forensics",
+      "law",
+      "pharmacy"
+    ]
+  },
+  "manager": {
+    "label": "Program Manager",
+    "employer": "DEA",
+    "division": "Operational Support",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "accounting": 60,
+        "bureaucracy": 60,
+        "computer science": 50,
+        "criminology": 30,
+        "language1": 50,
+        "history": 40,
+        "law": 40,
+        "persuade": 50
+      },
+      "possible-count": 1,
+      "possible": {
+        "anthropology": 30,
+        "art1": 30,
+        "craft1value": 30,
+        "science1value": 30
+      }
+    },
+    "bonds": 4,
+    "bonus": [
+      "accounting",
+      "forensics",
+      "law",
+      "pharmacy"
+    ]
+  },
+  "scientist": {
+    "label": "Scientist",
+    "employer": "DEA",
+    "division": "Operational Support",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "bureaucracy": 40,
+        "computer science": 40,
+        "science1value": 60,
+        "science2value": 50,
+        "science3value": 50
+      },
+      "possible-count": 3,
+      "possible": {
+        "accounting": 50,
+        "craft1value": 40,
+        "language1": 40,
+        "forensics": 40,
+        "law": 40,
+        "pharmacy": 40
+      }
+    },
+    "bonds": 3,
+    "bonus": [
+      "accounting",
+      "forensics",
+      "law",
+      "pharmacy"
+    ]
+  },
+  "compsci": {
+    "label": "Computer Scientist",
+    "employer": "DEA",
+    "division": "Special Operations",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "computer science": 60,
+        "craft1label": "Electrician",
+        "craft1value": 30,
+        "craft2label": "Mechanic",
+        "craft2value": 30,
+        "craft3label": "Microelectronics",
+        "craft3value": 40,
+        "science1label": "Mathematics",
+        "science1value": 40,
+        "sigint": 40
+      },
+      "possible-count": 4,
+      "possible": {
+        "accounting": 50,
+        "bureaucracy": 50,
+        "craft4value": 40,
+        "language1": 40,
+        "heavy machinery": 50,
+        "law": 40,
+        "science3value": 40
+      }
+    },
+    "bonds": 3,
+    "bonus": [
+      "computer science",
+      "criminology",
+      "law",
+      "sigint"
+    ]
+  },
+  "analyst": {
+    "label": "Intelligence Analyst",
+    "employer": "DEA",
+    "division": "Special Operations",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "anthropology": 40,
+        "bureaucracy": 50,
+        "computer science": 40,
+        "criminology": 40,
+        "language1": 50,
+        "language2": 50,
+        "language3": 40,
+        "history": 40,
+        "humint": 50,
+        "sigint": 40
+      }
+    },
+    "bonds": 3,
+    "bonus": [
+      "computer science",
+      "criminology",
+      "law",
+      "sigint"
+    ]
+  },
+  "spec-ops": {
+    "label": "Special Operator",
+    "employer": "DEA",
+    "division": "FAST",
+    "number_to_generate": 40,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "drive": 40,
+        "firearms": 50,
+        "language1": 30,
+        "forensics": 30,
+        "heavy weapons": 30,
+        "humint": 40,
+        "law": 30,
+        "militaryscience1value": 30,
+        "militaryscience1label": "Land",
+        "persuade": 40,
+        "pharmacy": 30,
+        "search": 50,
+        "survival": 30,
+        "unarmed combat": 60
+      }
+    },
+    "bonds": 2,
+    "equipment-kit": "spec-ops",
+    "bonus": [
+      "athletics",
+      "firearms",
+      "forensics",
+      "search"
+    ]
+  }
+}
