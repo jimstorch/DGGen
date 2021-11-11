@@ -447,7 +447,7 @@
       "possible-count": 2,
       "possible": {
         "language1": 50,
-        "pilot2": 50,
+        "pilot2value": 50,
         "heavy weapons": 50,
         "militaryscience1value": 50
       }
@@ -528,7 +528,7 @@
       "possible-count": 2,
       "possible": {
         "language1": 50,
-        "pilot2": 50,
+        "pilot2value": 50,
         "heavy weapons": 50,
         "militaryscience1value": 50
       }
