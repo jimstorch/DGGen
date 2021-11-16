@@ -32,7 +32,7 @@ in each of the following professions:
 * Soldier
 * Special Operator
 
-(Edit [data/professions.json](`data/professions.json`) to alter the professions generated, or the number of characters
+(Edit [`data/professions.json`](data/professions.json) to alter the professions generated, or the number of characters
 generated per profession.)
 
 The following character sheet images were graciously provided by Simeon Cogswell, designer for Delta Green:
@@ -70,9 +70,9 @@ If you need a more targeted set of characters, all of a specific profession, you
     
     $ ./generator.py --type criminal --label "Thug" --employer "Fat Tony" --count 12 --output "Tony's Enforcers.pdf"
 
-By default, the generator uses data from [data/professions.json](`data/professions.json`) to define professions.
+By default, the generator uses data from [`data/professions.json`](data/professions.json) to define professions.
 Different sets of professions can be used with the `--professions` flag.
-See [data/professions-fbi.json](`data/professions-fbi.json`)
+See [`data/professions-fbi.json`](data/professions-fbi.json)
 as an example, or you can create your own.
 
     $ ./generator.py --professions data/professions-fbi.json -o "FBI Field Office.pdf"
@@ -85,9 +85,9 @@ as an example, or you can create your own.
 
     $ ./generator.py --professions data/professions-socom.json --type seal --count 12 -o "Operation ROOKHAVEN.pdf"
 
-Pre-built examples include [data/professions-fbi.json](`data/professions-fbi.json`),
-[data/professions-cia.json](`data/professions-cia.json`), [data/professions-dea.json](`data/professions-dea.json`), and
-[data/professions-socom.json](`data/professions-socom.json`), and you can of course create your own.
+Pre-built examples include [`data/professions-fbi.json`](data/professions-fbi.json),
+[`data/professions-cia.json`](data/professions-cia.json), [`data/professions-dea.json`](data/professions-dea.json), and
+[`data/professions-socom.json`](data/professions-socom.json), and you can of course create your own.
 
 To see what options you have available, run:
 
