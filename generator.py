@@ -56,6 +56,8 @@ def main():
                 profession=profession,
                 label_override=options.label,
                 employer_override=options.employer,
+                min_age=options.min_age,
+                max_age=options.max_age
             )
             if options.equip:
                 c.equip(profession.get("equipment-kit", None))
@@ -148,7 +150,7 @@ class Need2KnowCharacter(object):
         "language1",
     ]
 
-    def __init__(self, data, sex, profession, label_override=None, employer_override=None):
+    def __init__(self, data, sex, profession, label_override=None, employer_override=None, min_age=24, max_age=55):
         self.data = data
         self.profession = profession
         self.sex = sex
@@ -163,12 +165,12 @@ class Need2KnowCharacter(object):
             ).__next__
         )
 
-        self.generate_demographics(label_override, employer_override)
+        self.generate_demographics(label_override, employer_override, min_age, max_age)
         self.generate_stats()
         self.generate_derived_attributes()
         self.generate_skills()
 
-    def generate_demographics(self, label_override, employer_override):
+    def generate_demographics(self, label_override, employer_override, min_age, max_age):
         if self.sex == "male":
             self.d["male"] = "X"
             self.d["name"] = (
@@ -186,7 +188,7 @@ class Need2KnowCharacter(object):
             if e
         )
         self.d["nationality"] = "(U.S.A.) " + choice(self.data.towns)
-        self.d["age"] = "%d    (%s %d)" % (randint(24, 55), choice(MONTHS), (randint(1, 28)))
+        self.d["age"] = "%d    (%s %d)" % (randint(min_age, max_age), choice(MONTHS), (randint(1, 28)))
 
     def generate_stats(self):
         rolled = [[sum(sorted([randint(1, 6) for _ in range(4)])[1:]) for _ in range(6)]]
@@ -712,7 +714,6 @@ def get_options():
         "i.e. -v to see warnings, -vv for information messages, or -vvv for debug messages.",
     )
     parser.add_argument("-V", "--version", action="version", version=__version__)
-
     parser.add_argument(
         "-o",
         "--output",
@@ -750,6 +751,8 @@ def get_options():
         default="data/professions.json",
         help="Data file for professions - defaults to %(default)s",
     )
+    parser.add_argument("-A", "--max-age", action="store", type=int, help="Maximum age of characters", default=55)
+    parser.add_argument("-a", "--min-age", action="store", type=int, help="Minimum age of characters", default=25)
 
     return parser.parse_args()
 
