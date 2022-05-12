@@ -28,6 +28,7 @@ constitution,13,16,Perfect health
 constitution,13,16,Resilient
 constitution,13,16,Resistant
 constitution,13,16,Robust
+constitution,13,16,Never gets sick
 constitution,17,18,Indefatigable
 constitution,17,18,Tough
 constitution,3,4,Ailing
@@ -66,6 +67,8 @@ intelligence,13,16,Ingenious
 intelligence,13,16,Perceptive
 intelligence,13,16,Quick witted
 intelligence,13,16,Sharp
+intelligence,13,16,Smart
+intelligence,13,16,Clever
 intelligence,17,18,Brilliant
 intelligence,17,18,Genius
 intelligence,3,4,Foolish
@@ -108,3 +111,4 @@ strength,3,4,Feeble
 strength,3,4,Wasted
 strength,5,8,Puny
 strength,5,8,Weak
+strength,5,8,Out of shape

@@ -11,7 +11,8 @@ from copy import copy
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import islice, cycle, chain
-from random import randint, shuffle, choice, sample
+from math import floor
+from random import randint, shuffle, choice, sample, choices
 from textwrap import shorten, wrap
 from typing import List, Any, Dict, Tuple
 
@@ -64,7 +65,9 @@ def main():
                 label_override=options.label,
                 employer_override=options.employer,
                 min_age=options.min_age,
-                max_age=options.max_age
+                max_age=options.max_age,
+                veterancy=options.veterancy,
+                damaged=options.damaged,
             )
             if options.equip:
                 c.equip(profession.get("equipment-kit", None))
@@ -79,6 +82,9 @@ def main():
 
 
 class Need2KnowCharacter(object):
+    PHYSICAL_STATS = ["strength", "constitution", "dexterity"]
+    STATS = PHYSICAL_STATS + ["intelligence", "power", "charisma"]
+
     stat_pools = [
         [13, 13, 12, 12, 11, 11],
         [15, 14, 12, 11, 10, 10],
@@ -157,7 +163,17 @@ class Need2KnowCharacter(object):
         "language1",
     ]
 
-    def __init__(self, data, sex, profession, label_override=None, employer_override=None, min_age=24, max_age=55):
+    def __init__(self,
+                 data,
+                 sex,
+                 profession,
+                 label_override=None,
+                 employer_override=None,
+                 min_age=24,
+                 max_age=55,
+                 veterancy=True,
+                 damaged=True,
+        ):
         self.data = data
         self.profession = profession
         self.sex = sex
@@ -172,10 +188,14 @@ class Need2KnowCharacter(object):
             ).__next__
         )
 
+        self.bonus_skills = []
+
         self.generate_demographics(label_override, employer_override, min_age, max_age)
         self.generate_stats()
-        self.generate_derived_attributes()
         self.generate_skills()
+        if veterancy:
+            self.veterancy(damaged)
+        self.generate_derived_attributes()
 
     def generate_demographics(self, label_override, employer_override, min_age, max_age):
         if self.sex == "male":
@@ -195,26 +215,29 @@ class Need2KnowCharacter(object):
             if e
         )
         self.d["nationality"] = "(U.S.A.) " + choice(self.data.towns)
-        self.d["age"] = "%d    (%s %d)" % (randint(min_age, max_age), choice(MONTHS), (randint(1, 28)))
+        self.age = randint(min_age, max_age)
+        self.d["age"] = "%d    (%s %d)" % (self.age, choice(MONTHS), (randint(1, 28)))
 
     def generate_stats(self):
         rolled = [[sum(sorted([randint(1, 6) for _ in range(4)])[1:]) for _ in range(6)]]
         pool = choice(self.stat_pools + rolled)
         shuffle(pool)
-        for score, stat in zip(
-            pool, ["strength", "constitution", "dexterity", "intelligence", "power", "charisma"]
-        ):
+        for score, stat in zip(pool, self.STATS):
             self.d[stat] = score
-            self.d[f"{stat}_x5"] = score * 5
-            self.d[f"{stat}_distinguishing"] = self.distinguishing(stat, score)
 
     def generate_derived_attributes(self):
         self.d["hitpoints"] = int(round((self.d["strength"] + self.d["constitution"]) / 2.0))
         self.d["willpower"] = self.d["power"]
-        self.d["sanity"] = self.d["power"] * 5
-        self.d["breaking point"] = self.d["power"] * 4
+        self.d["sanity"] = (self.d["power"] * 5) - getattr(self, "san_loss", 0)
+        self.d["breaking point"] = self.d["sanity"] - self.d["power"]
         self.damage_bonus = ((self.d["strength"] - 1) >> 2) - 2
         self.d["damage bonus"] = "DB=%d" % self.damage_bonus
+        for stat in self.STATS:
+            score = self.d[stat]
+            self.d[f"{stat}_x5"] = score * 5
+            self.d[f"{stat}_distinguishing"] = self.distinguishing(stat, score)
+        self.d["violence"] = "  ".join("X" for _ in range(getattr(self, "adapted_to_violence", 0)))
+        self.d["helplessness"] = "  ".join("X" for _ in range(getattr(self, "adapted_to_helplessness", 0)))
 
     def generate_skills(self):
         # Default skills
@@ -231,23 +254,128 @@ class Need2KnowCharacter(object):
             self.d[f"bond{i}"] = self.d["charisma"]
 
         # Bonus skills
-        self.generate_bonus_skills(self.profession)
+        self.generate_bonus_skills()
 
-    def generate_bonus_skills(self, profession):
-        bonus_skills = self.potential_bonus_skills(profession)
+    def generate_bonus_skills(self):
+        potential_bonus_skills = [
+            s
+            for s in self.profession["skills"].get("bonus", [])
+            if randint(1, 100) <= SUGGESTED_BONUS_CHANCE
+        ] + sample(self.ALL_BONUS, len(self.ALL_BONUS))
+        self.apply_bonuses(potential_bonus_skills, 8, 80)
+
+    def apply_bonuses(self, potential_bonus_skills, number_to_boost, max_level):
         bonuses_applied = 0
-        while bonuses_applied < 8:
-            skill = bonus_skills.pop(0)
+        while bonuses_applied < number_to_boost:
+            skill = potential_bonus_skills.pop(0)
             boosted = self.d.get(skill, 0) + 20
-            if boosted <= 80:
+            if boosted <= max_level:
                 self.d[skill] = boosted
                 bonuses_applied += 1
+                self.bonus_skills.append(skill)
                 logger.debug("%s, boosted %s to %s", self, skill, boosted)
             else:
-                logger.info(
+                logger.debug(
                     "%s, Skipped boost - %s already at %s", self, skill, self.d.get(skill, 0)
                 )
 
+    def veterancy(self, damaged):
+        self.veterancy_skill_boosts()
+        self.veterancy_stat_losses()
+        if damaged:
+            self.damaged_veteran_changes()
+
+    @staticmethod
+    def skill_checks_at_age(age, earned_at_start=4, start_age=25, halve_rate=10):
+        return earned_at_start * (1 / 2 ** ((age - start_age) / halve_rate))
+
+    def veterancy_skill_boosts(self):
+        skills_to_check = set(list(self.profession['skills']['fixed'].keys()) +
+                              list(self.profession['skills'].get('possible', {}).keys()) +
+                              # list(self.DEFAULT_SKILLS.keys()) +
+                              self.bonus_skills)
+        skill_checks = floor(sum(self.skill_checks_at_age(y) for y in range(25, self.age + 1)))
+        for skill in skills_to_check:
+            if isinstance(self.d.get(skill, 0), int) and self.d.get(skill, 0) > 0:
+                original = self.d[skill]
+                for _ in range(skill_checks):
+                    current = self.d[skill]
+                    roll = randint(1, 100)
+                    if roll > current or roll == 100:
+                        self.d[skill] += 1
+                logger.debug("%s, boosted %s from %s to %s by veterancy", self, skill, original, self.d[skill])
+
+    def veterancy_stat_losses(self):
+        losses = 0
+        if 40 <= self.age <= 49: losses = 1
+        elif 50 <= self.age <= 59: losses = 2
+        elif 60 <= self.age <= 69: losses = 4
+        elif 70 <= self.age <= 79: losses = 8
+        elif 80 <= self.age <= 89: losses = 16
+        elif 80 <= self.age: losses = 32
+        while losses and not all(self.d[stat] <= 1 for stat in self.PHYSICAL_STATS):
+            target = choice(self.PHYSICAL_STATS)
+            if self.d[target] > 1:
+                self.d[target] -= 1
+                losses -= 1
+                logger.debug("%s, %s decreased to %s by veterancy", self, target, self.d[target])
+
+    def damaged_veteran_changes(self):
+        damage_count = choices(range(5), weights=[80, 10, 5, 4, 1])[0]
+        if damage_count:
+            damage_methods = sample(
+                [self.extreme_violence_changes,
+                 self.captivity_or_imprisonment_changes,
+                 self.hard_experience_changes,
+                 self.things_man_was_not_meant_to_know_changes],
+                k=damage_count
+            )
+            damage = ["Damaged Veteran:"]
+            for method in damage_methods:
+                method(damage)
+            for i, description in enumerate(damage):
+                self.e[f"detail{i}"] = description
+
+    def extreme_violence_changes(self, damage):
+        damage.append("• Extreme Violence")
+        self.d["occult"] += 10
+        self.san_loss = getattr(self, "san_loss", 0) + 5
+        self.d["charisma"] -= 3
+        for i in range(self.profession["bonds"]):
+            if f"bond{i}" in self.d:
+                self.d[f"bond{i}"] -= 3
+        self.adapted_to_violence = 3
+
+    def captivity_or_imprisonment_changes(self, damage):
+        damage.append("• Captivity or Imprisonment")
+        self.d["occult"] += 10
+        self.san_loss = getattr(self, "san_loss", 0) + 5
+        self.d["power"] -= 3
+        self.adapted_to_helplessness = 3
+
+    def hard_experience_changes(self, damage):
+        damage.append("• Hard Experience")
+        self.d["occult"] += 10
+        potential_bonus_skills = sample(self.ALL_BONUS, len(self.ALL_BONUS))
+        self.apply_bonuses(potential_bonus_skills, 5, 90)
+        self.san_loss = getattr(self, "san_loss", 0) + 5
+        del self.d[f"bond{self.profession['bonds']-1}"]
+
+    def things_man_was_not_meant_to_know_changes(self, damage):
+        damage.append("• Things Man Was Not Meant to Know")
+        self.d["unnatural"] = self.d.get("unnatural", 0) + 10
+        self.d["occult"] += 20
+        self.san_loss = getattr(self, "san_loss", 0) + self.d["power"]
+        self.d["disorder0"] = "Disorder: " + choice(
+            ["Amnesia",
+             "Depersonalization",
+             "Depression",
+             "Dissociative Identity",
+             "Fugues",
+             "Megalomania",
+             "Paranoia",
+             "Sleep Disorder",
+             ])
     def potential_bonus_skills(self, profession):
         return [
             s
@@ -368,6 +496,10 @@ class Need2KnowCharacter(object):
                 f" {damage_note_indicator}" if damage_note_indicator else ""
             )
 
+    def store_footnote(self, note):
+        """Returns indicator character"""
+        return self.footnotes[note] if note else None
+
     def print_footnotes(self):
         notes = list(
             chain(
@@ -383,9 +515,14 @@ class Need2KnowCharacter(object):
         for i, note in enumerate(notes[:12]):
             self.e[f"note{i}"] = note
 
-    def store_footnote(self, note):
-        """Returns indicator character"""
-        return self.footnotes[note] if note else None
+    def __str__(self):
+        return ", ".join(
+            [
+                self.d.get(i)
+                for i in ("name", "profession", "employer", "department", "age")
+                if self.d.get(i)
+            ]
+        )
 
 
 class Need2KnowPDF(object):
@@ -428,6 +565,9 @@ class Need2KnowPDF(object):
         "bond1": (512, 586, 11),
         "bond2": (512, 568, 11),
         "bond3": (512, 550, 11),
+        "disorder0": (340, 482, 11),
+        "violence": (372, 384, 10),
+        "helplessness": (486, 384, 10),
         # Applicable Skill Sets
         "accounting": (200, 361, 11),
         "alertness": (200, 343, 11),
@@ -596,6 +736,12 @@ class Need2KnowPDF(object):
         "note9": (410, 30, 8),
         "note10": (410, 20, 8),
         "note11": (410, 10, 8),
+        "detail0": (75, 338, 8),
+        "detail1": (75, 328, 8),
+        "detail2": (75, 318, 8),
+        "detail3": (75, 308, 8),
+        "detail4": (75, 298, 8),
+        "detail5": (75, 288, 8),
     }
 
     # Fields that also get a multiplier
@@ -775,8 +921,36 @@ def get_options():
         default="data/professions.json",
         help="Data file for professions - defaults to %(default)s",
     )
-    parser.add_argument("-A", "--max-age", action="store", type=int, help="Maximum age of characters", default=55)
-    parser.add_argument("-a", "--min-age", action="store", type=int, help="Minimum age of characters", default=25)
+    parser.add_argument(
+        "-a",
+        "--min-age",
+        action="store",
+        type=int,
+        help="Minimum age of characters - defaults to %(default)s.",
+        default=25
+    )
+    parser.add_argument(
+        "-A",
+        "--max-age",
+        action="store",
+        type=int,
+        help="Maximum age of characters - defaults to %(default)s.",
+        default=55,
+    )
+    parser.add_argument(
+        "--veterancy",
+        action="store_true",
+        dest="veterancy",
+        help="Grant additional experience due to age.",
+        default=False,
+    )
+    parser.add_argument(
+        "--no-damaged",
+        action="store_false",
+        dest="damaged",
+        help="Don't generate damaged veterans.",
+        default=True,
+    )
 
     return parser.parse_args()
 
