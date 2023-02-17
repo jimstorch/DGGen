@@ -762,6 +762,7 @@
     "stun-grenade": {
       "name": "Flash-bang Grenade",
       "skill": "athletics",
+      "bonus": 20,
       "base-range": "20m",
       "damage": {
         "special": "Victim -40%"
