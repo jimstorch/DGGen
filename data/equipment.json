@@ -42,7 +42,13 @@
       ],
       "armour": [
         {
-          "type": "kevlar-vest"
+          "type": "concealed-kevlar-vest"
+        },
+        {
+          "type": "kevlar-vest",
+          "notes": [
+            "In car boot"
+          ]
         },
         {
           "type": "tactical-body",
@@ -880,6 +886,7 @@
     }
   },
   "armour": {
+    "concealed-kevlar-vest": "Concealed Kevlar vest - Armour Rating 3",
     "kevlar-vest": "Reinforced Kevlar vest - Armour Rating 4",
     "tactical-body": "Tactical body armor - Armour Rating 5",
     "kevlar-helmet": "Kevlar helmet - Armour Rating +1",
