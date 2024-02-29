@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import argparse
 import csv
-import datetime
 import json
 import logging
 import os
@@ -10,6 +9,7 @@ import warnings
 from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass
+from datetime import datetime
 from itertools import islice, cycle, chain
 from random import randint, shuffle, choice, sample
 from textwrap import shorten, wrap
@@ -72,7 +72,7 @@ def main():
 
 
 class Need2KnowCharacter(object):
-    statpools = [
+    stat_pools = [
         [13, 13, 12, 12, 11, 11],
         [15, 14, 12, 11, 10, 10],
         [17, 14, 13, 10, 10, 8],
@@ -105,7 +105,7 @@ class Need2KnowCharacter(object):
         "unarmed combat": 40,
     }
 
-    BONUS = [
+    ALL_BONUS = [
         "accounting",
         "alertness",
         "anthropology",
@@ -192,7 +192,7 @@ class Need2KnowCharacter(object):
 
     def generate_stats(self):
         rolled = [[sum(sorted([randint(1, 6) for _ in range(4)])[1:]) for _ in range(6)]]
-        pool = choice(self.statpools + rolled)
+        pool = choice(self.stat_pools + rolled)
         shuffle(pool)
         for score, stat in zip(
             pool, ["strength", "constitution", "dexterity", "intelligence", "power", "charisma"]
@@ -216,7 +216,7 @@ class Need2KnowCharacter(object):
         # Professional skills
         self.d.update(self.profession["skills"]["fixed"])
         for skill, score in sample(
-            self.profession["skills"].get("possible", {}).items(),
+            list(self.profession["skills"].get("possible", {}).items()),
             self.profession["skills"].get("possible-count", 0),
         ):
             self.d[skill] = score
@@ -227,11 +227,7 @@ class Need2KnowCharacter(object):
         self.generate_bonus_skills(self.profession)
 
     def generate_bonus_skills(self, profession):
-        bonus_skills = [
-            s
-            for s in profession["skills"].get("bonus", [])
-            if randint(1, 100) <= SUGGESTED_BONUS_CHANCE
-        ] + sample(self.BONUS, len(self.BONUS))
+        bonus_skills = self.potential_bonus_skills(profession)
         bonuses_applied = 0
         while bonuses_applied < 8:
             skill = bonus_skills.pop(0)
@@ -244,6 +240,13 @@ class Need2KnowCharacter(object):
                 logger.info(
                     "%s, Skipped boost - %s already at %s", self, skill, self.d.get(skill, 0)
                 )
+
+    def potential_bonus_skills(self, profession):
+        return [
+            s
+            for s in profession["skills"].get("bonus", [])
+            if randint(1, 100) <= SUGGESTED_BONUS_CHANCE
+        ] + sample(self.ALL_BONUS, len(self.ALL_BONUS))
 
     def __str__(self):
         return ", ".join(
@@ -374,7 +377,6 @@ class Need2KnowCharacter(object):
 
 
 class Need2KnowPDF(object):
-
     # Location of form fields in Points (1/72 inch) -  0,0 is bottom-left - and font size
     field_xys = {
         # Personal Data
@@ -607,7 +609,7 @@ class Need2KnowPDF(object):
         self.bookmark("Table of Contents")
         self.c.setFillColorRGB(0, 0, 0)
         self.c.setFont("OCRA", 10)
-        now = datetime.datetime.utcnow().isoformat() + "Z"
+        now = datetime.now().isoformat() + "Z"
         self.c.drawString(150, 712, "DGGEN DTG " + now)
         self.c.drawString(150, 700, "CLASSIFIED/DG/NTK//")
         self.c.drawString(150, 688, "SUBJ ROSTER/ACTIVE/NOCELL/CONUS//")
@@ -718,7 +720,7 @@ def get_options():
         "-o",
         "--output",
         action="store",
-        default=f"DeltaGreenPregen-{datetime.datetime.now() :%Y-%m-%d-%H-%M}.pdf",
+        default=f"DeltaGreenPregen-{datetime.now():%Y-%m-%d-%H-%M}.pdf",
         help="Output PDF file. Defaults to %(default)s.",
     )
     parser.add_argument(
