@@ -1,6 +1,5 @@
 *.py[cod]
 .venv/
-venv/
 *.pdf
 *~
 .idea/
