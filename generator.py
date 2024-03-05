@@ -601,6 +601,7 @@ class Need2KnowPDF(object):
         # Register Custom Fonts
         pdfmetrics.registerFont(TTFont("Special Elite", "data/SpecialElite.ttf"))
         pdfmetrics.registerFont(TTFont("OCRA", "data/OCRA.ttf"))
+        self.add_cover()
         if len(professions) > 1:
             self.generate_toc(professions, pages_per_sheet)
 
@@ -609,10 +610,10 @@ class Need2KnowPDF(object):
         self.bookmark("Table of Contents")
         self.c.setFillColorRGB(0, 0, 0)
         self.c.setFont("OCRA", 10)
-        now = datetime.now().isoformat() + "Z"
-        self.c.drawString(150, 712, "DGGEN DTG " + now)
-        self.c.drawString(150, 700, "CLASSIFIED/DG/NTK//")
-        self.c.drawString(150, 688, "SUBJ ROSTER/ACTIVE/NOCELL/CONUS//")
+        #now = datetime.now().isoformat() + "Z"
+        #self.c.drawString(150, 712, "DGGEN DTG " + now)
+        #self.c.drawString(150, 700, "CLASSIFIED/DG/NTK//")
+        #self.c.drawString(150, 688, "SUBJ ROSTER/ACTIVE/NOCELL/CONUS//")
         top = 650
         pagenum = 2
         for count, profession in enumerate(professions):
@@ -663,6 +664,18 @@ class Need2KnowPDF(object):
             self.draw_string(x, y, s, str(value))
         except KeyError:
             logger.error("Unknown field %s", field)
+
+    def add_cover(self):
+        self.c.drawImage("data/front_cover.jpg", 0, 0, 612, 792)
+        self.c.setFillColorRGB(255,255,255)
+        self.c.setFont("OCRA", 24)
+        now = datetime.now().strftime("%Y-%m-%dT%H:%MZ")
+        self.c.drawString(20, 85, "DGGEN DTG " + now)
+        self.c.drawString(20, 55, "CLASSIFIED/DG/NTK//")
+        self.c.drawString(20, 25, "SUBJ ROSTER/ACTIVE/NOCELL/CONUS//")
+        self.c.showPage()
+        self.c.drawImage("data/inside_cover.jpg", 0, 0, 612, 792)
+        self.c.showPage()
 
     def add_page(self, d):
         # Add background.  ReportLab will cache it for repeat
