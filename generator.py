@@ -44,6 +44,13 @@ def main():
     pages_per_sheet = 2 if options.equip else 1
     professions = [data.professions[options.type]] if options.type else data.professions.values()
     p = Need2KnowPDF(options.output, professions, pages_per_sheet=pages_per_sheet)
+
+    ## TODO: Maybe an option to skip cover, especially for single sheets
+    p.add_cover()
+    ## Moved TOC here instead of Need2KnowPDF.init() so cover could precede it
+    if len(professions) > 1:
+        p.generate_toc(professions, pages_per_sheet)
+
     for profession in professions:
         label = generate_label(profession)
         p.bookmark(label)
@@ -601,9 +608,6 @@ class Need2KnowPDF(object):
         # Register Custom Fonts
         pdfmetrics.registerFont(TTFont("Special Elite", "data/SpecialElite.ttf"))
         pdfmetrics.registerFont(TTFont("OCRA", "data/OCRA.ttf"))
-        self.add_cover()
-        if len(professions) > 1:
-            self.generate_toc(professions, pages_per_sheet)
 
     def generate_toc(self, professions, pages_per_sheet):
         """Build a clickable Table of Contents on page 1"""
