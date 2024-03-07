@@ -40,6 +40,8 @@ in each of the following professions:
 
 ## Customising
 
+### Professions
+
 (Edit [`data/professions.json`](data/professions.json) to alter the professions generated, or the number of characters
 generated per profession.)
 
@@ -50,6 +52,19 @@ See [`data/professions-fbi.json`](data/professions-fbi.json) as an example, or y
 Pre-built examples include [`data/professions-fbi.json`](data/professions-fbi.json),
 [`data/professions-cia.json`](data/professions-cia.json), [`data/professions-dea.json`](data/professions-dea.json), and
 [`data/professions-socom.json`](data/professions-socom.json).
+
+### Veterans
+
+If desired, veteran Delta Green agent characters can be generated with the `--veterancy` flag. These characters will
+have gained skill levels due to experience, but may also have suffered some decreases in physical characteristics, and 
+may also suffer some Damaged Veterans effects (from page 38 of the [AH](https://shop.arcdream.com/products/delta-green-agents-handbook)). Minimum and maximum ages can be set 
+with the `-a` and `-A` flags respectively.
+
+If you'd prefer to get the veterancy experience checks and stat losses, but not the Damaged Veterans effects, use the 
+`--no-damaged` flag. This flag has no effect if veterancy is not enabled. This is probably the right thing to do if you 
+need veterans who are not DG agents.
+
+## Credits
 
 The following character sheet images were graciously provided by Simeon Cogswell, designer for Delta Green:
 * Character Sheet NO BACKGROUND.pdf
@@ -92,6 +107,14 @@ Generate standard characters.
 
 ```sh
 ./generator.py
+```
+
+### generate-dg-veterans
+
+Generate cells D-Z of Delta Green veterans.
+
+```sh
+for cell in {D..Z} ; do ./generator.py --type agent --count 3 --output "$cell Cell.pdf" --veterancy ; done
 ```
 
 ### generate-soldiers
