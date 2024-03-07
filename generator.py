@@ -275,6 +275,8 @@ class Need2KnowCharacter(object):
 
             gear = []
             for item in kit["armour"] + kit["gear"]:
+                if item.get("chance", 100) < randint(1, 100):
+                    continue
                 notes = (
                     (" ".join(self.store_footnote(n) for n in item["notes"]) + " ")
                     if "notes" in item
@@ -311,7 +313,10 @@ class Need2KnowCharacter(object):
                 else:
                     logger.error("Unknown weapon type %s", weapon_to_add["type"])
             elif "one-of" in weapon_to_add:
-                result += self.build_weapon_list([choice(weapon_to_add["one-of"])])
+                result += (self.build_weapon_list([choice(weapon_to_add["one-of"])])
+                           if "chance" not in weapon_to_add
+                              or weapon_to_add["chance"] >= randint(1, 100)
+                           else [])
             elif "both" in weapon_to_add:
                 result += self.build_weapon_list(w for w in weapon_to_add["both"])
             else:

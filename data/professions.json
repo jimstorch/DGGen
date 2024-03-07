@@ -22,7 +22,8 @@
         "survival": 50
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "civilian"
   },
   "business": {
     "label": "Business Executive",
@@ -43,7 +44,8 @@
         "pharmacy": 50
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "civilian"
   },
   "compsci": {
     "label": "Computer Scientist",
@@ -72,7 +74,8 @@
         "science3value": 40
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "civilian-with-computer"
   },
   "criminal": {
     "label": "Criminal",
@@ -133,7 +136,8 @@
         "science3value": 40
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "civilian-with-computer"
   },
   "agent": {
     "label": "Federal Agent",
@@ -184,7 +188,8 @@
         "search": 40
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "civilian"
   },
   "foreign-service": {
     "label": "Foreign Service Officer",
@@ -203,7 +208,8 @@
         "persuade": 50
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "civilian"
   },
   "historian": {
     "label": "Historian",
@@ -228,7 +234,8 @@
         "survival": 50
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "civilian"
   },
   "analyst": {
     "label": "Intelligence Analyst",
@@ -247,7 +254,8 @@
         "sigint": 40
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "civilian"
   },
   "case-officer": {
     "label": "Intelligence Case Officer",
@@ -268,7 +276,8 @@
         "unarmed combat": 50
       }
     },
-    "bonds": 2
+    "bonds": 2,
+    "equipment-kit": "civilian"
   },
   "lawyer": {
     "label": "Lawyer",
@@ -289,7 +298,8 @@
         "pharmacy": 50
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "civilian"
   },
   "marine": {
     "label": "Marine",
@@ -349,7 +359,8 @@
         "science1value": 40
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "civilian"
   },
   "nurse": {
     "label": "Nurse",
@@ -375,7 +386,8 @@
         "search": 60
       }
     },
-    "bonds": 2
+    "bonds": 2,
+    "equipment-kit": "civilian"
   },
   "paramedic": {
     "label": "Paramedic",
@@ -401,7 +413,8 @@
         "search": 60
       }
     },
-    "bonds": 2
+    "bonds": 2,
+    "equipment-kit": "civilian"
   },
   "physician": {
     "label": "Physician",
@@ -425,7 +438,8 @@
         "surgery": 50
       }
     },
-    "bonds": 2
+    "bonds": 2,
+    "equipment-kit": "civilian"
   },
   "pilot": {
     "label": "Pilot",
@@ -452,7 +466,8 @@
         "militaryscience1value": 50
       }
     },
-    "bonds": 1
+    "bonds": 1,
+    "equipment-kit": "civilian"
   },
   "police": {
     "label": "Police Officer",
@@ -506,7 +521,8 @@
         "science1value": 30
       }
     },
-    "bonds": 4
+    "bonds": 4,
+    "equipment-kit": "civilian"
   },
   "sailor": {
     "label": "Sailor",
@@ -533,7 +549,8 @@
         "militaryscience1value": 50
       }
     },
-    "bonds": 1
+    "bonds": 1,
+    "equipment-kit": "civilian"
   },
   "scientist": {
     "label": "Scientist",
@@ -556,7 +573,8 @@
         "pharmacy": 40
       }
     },
-    "bonds": 3
+    "bonds": 3,
+    "equipment-kit": "civilian"
   },
   "soldier": {
     "label": "Soldier",

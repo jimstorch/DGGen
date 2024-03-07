@@ -114,6 +114,10 @@
           "notes": [
             "In car boot"
           ]
+        },
+        {
+          "text": "Multi-tool",
+          "chance": 25
         }
       ]
     },
@@ -470,7 +474,40 @@
         }
       ],
       "armour": [],
-      "gear": []
+      "gear": [
+        {
+          "text": "Smartphone",
+          "chance": 95
+        },
+        {
+          "text": "Driver's Licence",
+          "chance": 95
+        },
+        {
+          "text": "Wallet",
+          "chance": 95
+        },
+        {
+          "text": "Laptop",
+          "chance": 25
+        },
+        {
+          "text": "Lockpick",
+          "chance": 25
+        },
+        {
+          "text": "Multi-tool",
+          "chance": 25
+        },
+        {
+          "text": "Flashlight",
+          "chance": 50
+        },
+        {
+          "text": "Emergency first aid kit",
+          "chance": 10
+        }
+      ]
     },
     "swat": {
       "weapons": [
@@ -527,6 +564,89 @@
           ]
         }
       ]
+    },
+    "civilian": {
+      "weapons": [
+        {
+          "one-of": [
+            {"type": "medium-pistol"},
+            {"type": "light-pistol"}
+          ],
+          "chance": 25
+        }
+      ],
+      "gear": [
+        {
+          "text": "Smartphone",
+          "chance": 95
+        },
+        {
+          "text": "Driver's Licence",
+          "chance": 95
+        },
+        {
+          "text": "Wallet",
+          "chance": 95
+        },
+        {
+          "text": "Laptop",
+          "chance": 25
+        },
+        {
+          "text": "Multi-tool",
+          "chance": 25
+        },
+        {
+          "text": "Flashlight",
+          "chance": 10
+        },
+        {
+          "text": "Emergency first aid kit",
+          "chance": 10
+        }
+      ],
+      "armour": []
+    },
+    "civilian-with-computer": {
+      "weapons": [
+        {
+          "one-of": [
+            {"type": "medium-pistol"},
+            {"type": "light-pistol"}
+          ],
+          "chance": 25
+        }
+      ],
+      "gear": [
+        {
+          "text": "Smartphone",
+          "chance": 95
+        },
+        {
+          "text": "Laptop"
+        },
+        {
+          "text": "Driver's Licence",
+          "chance": 95
+        },
+        {
+          "text": "Wallet",
+          "chance": 95
+        },
+        {
+          "text": "Multi-tool",
+          "chance": 25
+        },
+        {
+          "text": "Flashlight",
+          "chance": 10
+        },
+        {
+          "text": "Emergency first aid kit",
+          "chance": 10
+        }
+      ],
+      "armour": []
     }
   },
   "weapons": {
