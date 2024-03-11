@@ -11,7 +11,7 @@ from copy import copy
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import islice, cycle, chain
-from math import floor
+from math import floor, ceil
 from random import randint, shuffle, choice, sample, choices
 from textwrap import shorten, wrap
 from typing import List, Any, Dict, Tuple
@@ -224,6 +224,7 @@ class Need2KnowCharacter(object):
         shuffle(pool)
         for score, stat in zip(pool, self.STATS):
             self.d[stat] = score
+            logger.debug("%s,stat %s is %s", self, stat, score)
 
     def generate_derived_attributes(self):
         self.d["hitpoints"] = int(round((self.d["strength"] + self.d["constitution"]) / 2.0))
@@ -244,12 +245,16 @@ class Need2KnowCharacter(object):
         self.d.update(self.DEFAULT_SKILLS)
 
         # Professional skills
-        self.d.update(self.profession["skills"]["fixed"])
+        for skill, score in self.profession["skills"]["fixed"].items():
+            self.d[skill] = score
+            logger.debug("%s, set fixed professional skill %s to %s", self, skill, score)
+        self.d.update()
         for skill, score in sample(
             list(self.profession["skills"].get("possible", {}).items()),
             self.profession["skills"].get("possible-count", 0),
         ):
             self.d[skill] = score
+            logger.debug("%s, set picked professional skill %s to %s", self, skill, score)
         for i in range(self.profession["bonds"]):
             self.d[f"bond{i}"] = self.d["charisma"]
 
@@ -273,7 +278,7 @@ class Need2KnowCharacter(object):
                 self.d[skill] = boosted
                 bonuses_applied += 1
                 self.bonus_skills.append(skill)
-                logger.debug("%s, boosted %s to %s", self, skill, boosted)
+                logger.debug("%s, boosted bonus skill %s by 20%% to %s", self, skill, boosted)
             else:
                 logger.debug(
                     "%s, Skipped boost - %s already at %s", self, skill, self.d.get(skill, 0)
@@ -303,7 +308,7 @@ class Need2KnowCharacter(object):
                     roll = randint(1, 100)
                     if roll > current or roll == 100:
                         self.d[skill] += 1
-                logger.debug("%s, boosted %s from %s to %s by veterancy", self, skill, original, self.d[skill])
+                logger.debug("%s, veterancy experience %s, %s checks, from %s to %s", self, skill, skill_checks, original, self.d[skill])
 
     def veterancy_stat_losses(self):
         losses = 0
@@ -312,13 +317,13 @@ class Need2KnowCharacter(object):
         elif 60 <= self.age <= 69: losses = 4
         elif 70 <= self.age <= 79: losses = 8
         elif 80 <= self.age <= 89: losses = 16
-        elif 80 <= self.age: losses = 32
+        elif 90 <= self.age: losses = 32
         while losses and not all(self.d[stat] <= 1 for stat in self.PHYSICAL_STATS):
             target = choice(self.PHYSICAL_STATS)
             if self.d[target] > 1:
                 self.d[target] -= 1
                 losses -= 1
-                logger.debug("%s, %s decreased to %s by veterancy", self, target, self.d[target])
+                logger.debug("%s, %s decreased by 1 to %s by veterancy", self, target, self.d[target])
 
     def damaged_veteran_changes(self):
         damage_count = choices(range(5), weights=[80, 10, 5, 4, 1])[0]
@@ -333,6 +338,7 @@ class Need2KnowCharacter(object):
             damage = ["Damaged Veteran:"]
             for method in damage_methods:
                 method(damage)
+                logger.debug("%s, damaged veteran changes %s", self, method.__name__)
             for i, description in enumerate(damage):
                 self.e[f"detail{i}"] = description
 
