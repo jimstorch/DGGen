@@ -11,7 +11,7 @@ from copy import copy
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import islice, cycle, chain
-from math import floor, ceil
+from math import floor
 from random import randint, shuffle, choice, sample, choices
 from textwrap import shorten, wrap
 from typing import List, Any, Dict, Tuple
@@ -177,6 +177,9 @@ class Need2KnowCharacter(object):
         self.data = data
         self.profession = profession
         self.sex = sex
+        self.san_lost = 0
+        self.adapted_to_violence = 0
+        self.adapted_to_helplessness = 0
 
         # Hold all dictionaries
         self.d = {}
@@ -229,7 +232,9 @@ class Need2KnowCharacter(object):
     def generate_derived_attributes(self):
         self.d["hitpoints"] = int(round((self.d["strength"] + self.d["constitution"]) / 2.0))
         self.d["willpower"] = self.d["power"]
-        self.d["sanity"] = (self.d["power"] * 5) - getattr(self, "san_loss", 0)
+        self.d["sanity"] = (self.d["power"] * 5)
+        if self.san_lost:
+            self.d["current_sanity"] = (self.d["power"] * 5) - self.san_lost
         self.d["breaking point"] = self.d["sanity"] - self.d["power"]
         self.damage_bonus = ((self.d["strength"] - 1) >> 2) - 2
         self.d["damage bonus"] = "DB=%d" % self.damage_bonus
@@ -237,8 +242,8 @@ class Need2KnowCharacter(object):
             score = self.d[stat]
             self.d[f"{stat}_x5"] = score * 5
             self.d[f"{stat}_distinguishing"] = self.distinguishing(stat, score)
-        self.d["violence"] = "  ".join("X" for _ in range(getattr(self, "adapted_to_violence", 0)))
-        self.d["helplessness"] = "  ".join("X" for _ in range(getattr(self, "adapted_to_helplessness", 0)))
+        self.d["violence"] = "  ".join("X" for _ in range(self.adapted_to_violence))
+        self.d["helplessness"] = "  ".join("X" for _ in range(self.adapted_to_helplessness))
 
     def generate_skills(self):
         # Default skills
@@ -267,18 +272,21 @@ class Need2KnowCharacter(object):
             for s in self.profession["skills"].get("bonus", [])
             if randint(1, 100) <= SUGGESTED_BONUS_CHANCE
         ] + sample(self.ALL_BONUS, len(self.ALL_BONUS))
-        self.apply_bonuses(potential_bonus_skills, 8, 80)
+        self.apply_bonuses(potential_bonus_skills, 8, 20, 80)
 
-    def apply_bonuses(self, potential_bonus_skills, number_to_boost, max_level):
+    def apply_bonuses(self, potential_bonus_skills: list[str],
+                      number_of_skills_to_boost: int,
+                      boost_by_percentile: int,
+                      max_skill_level: int) -> None:
         bonuses_applied = 0
-        while bonuses_applied < number_to_boost:
+        while bonuses_applied < number_of_skills_to_boost:
             skill = potential_bonus_skills.pop(0)
-            boosted = self.d.get(skill, 0) + 20
-            if boosted <= max_level:
+            boosted = self.d.get(skill, 0) + boost_by_percentile
+            if boosted <= max_skill_level:
                 self.d[skill] = boosted
                 bonuses_applied += 1
                 self.bonus_skills.append(skill)
-                logger.debug("%s, boosted bonus skill %s by 20%% to %s", self, skill, boosted)
+                logger.debug("%s, boosted bonus skill %s by %s%% to %s", self, skill, boost_by_percentile, boosted)
             else:
                 logger.debug(
                     "%s, Skipped boost - %s already at %s", self, skill, self.d.get(skill, 0)
@@ -295,6 +303,9 @@ class Need2KnowCharacter(object):
         return earned_at_start * (1 / 2 ** ((age - start_age) / halve_rate))
 
     def veterancy_skill_boosts(self):
+        ## Fixed prof - 4 per year
+        ## possible prof - 1/2 of them, 2 per year
+        ## Defaults & bonus - 1/4 of them, 2 per year
         skills_to_check = set(list(self.profession['skills']['fixed'].keys()) +
                               list(self.profession['skills'].get('possible', {}).keys()) +
                               # list(self.DEFAULT_SKILLS.keys()) +
@@ -335,43 +346,45 @@ class Need2KnowCharacter(object):
                  self.things_man_was_not_meant_to_know_changes],
                 k=damage_count
             )
-            damage = ["Damaged Veteran:"]
+            damage: list[str] = ["Damaged Veteran:"]
             for method in damage_methods:
-                method(damage)
                 logger.debug("%s, damaged veteran changes %s", self, method.__name__)
+                method(damage)
+                logger.debug("%s, san lost, adapted_to_violence, adapted_to_helplessness now %s, %s, %s", self,
+                             self.san_lost, self.adapted_to_violence, self.adapted_to_helplessness)
             for i, description in enumerate(damage):
                 self.e[f"detail{i}"] = description
 
-    def extreme_violence_changes(self, damage):
+    def extreme_violence_changes(self, damage: list[str]):
         damage.append("• Extreme Violence")
         self.d["occult"] += 10
-        self.san_loss = getattr(self, "san_loss", 0) + 5
+        self.san_lost += 5
         self.d["charisma"] -= 3
         for i in range(self.profession["bonds"]):
             if f"bond{i}" in self.d:
                 self.d[f"bond{i}"] -= 3
         self.adapted_to_violence = 3
 
-    def captivity_or_imprisonment_changes(self, damage):
+    def captivity_or_imprisonment_changes(self, damage: list[str]):
         damage.append("• Captivity or Imprisonment")
         self.d["occult"] += 10
-        self.san_loss = getattr(self, "san_loss", 0) + 5
+        self.san_lost += 5
         self.d["power"] -= 3
         self.adapted_to_helplessness = 3
 
-    def hard_experience_changes(self, damage):
+    def hard_experience_changes(self, damage: list[str]):
         damage.append("• Hard Experience")
         self.d["occult"] += 10
         potential_bonus_skills = sample(self.ALL_BONUS, len(self.ALL_BONUS))
-        self.apply_bonuses(potential_bonus_skills, 5, 90)
-        self.san_loss = getattr(self, "san_loss", 0) + 5
+        self.apply_bonuses(potential_bonus_skills, 5, 10, 90)
+        self.san_lost += 5
         del self.d[f"bond{self.profession['bonds']-1}"]
 
-    def things_man_was_not_meant_to_know_changes(self, damage):
+    def things_man_was_not_meant_to_know_changes(self, damage: list[str]):
         damage.append("• Things Man Was Not Meant to Know")
         self.d["unnatural"] = self.d.get("unnatural", 0) + 10
         self.d["occult"] += 20
-        self.san_loss = getattr(self, "san_loss", 0) + self.d["power"]
+        self.san_lost += self.d["power"]
         self.d["disorder0"] = "Disorder: " + choice(
             ["Amnesia",
              "Depersonalization",
@@ -382,6 +395,7 @@ class Need2KnowCharacter(object):
              "Paranoia",
              "Sleep Disorder",
              ])
+
     def potential_bonus_skills(self, profession):
         return [
             s
@@ -566,6 +580,7 @@ class Need2KnowPDF(object):
         "hitpoints": (195, 482, 11),
         "willpower": (195, 464, 11),
         "sanity": (195, 446, 11),
+        "current_sanity": (265, 446, 11),
         "breaking point": (195, 428, 11),
         "bond0": (512, 604, 11),
         "bond1": (512, 586, 11),
