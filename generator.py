@@ -23,7 +23,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Callable, Iterable
 
 script_name = os.path.basename(sys.argv[0])
 description = """
@@ -243,9 +243,9 @@ class Kit:
 
 @dataclass
 class Data:
-    male_given_names: list[str]
-    female_given_names: list[str]
-    family_names: list[str]
+    male_given_names: "Callable[[], str]"
+    female_given_names: "Callable[[], str]"
+    family_names: "Callable[[], str]"
     towns: list[str]
     professions: dict[str, Profession]
     kits: dict[str, Kit]
@@ -385,13 +385,11 @@ class Need2KnowCharacter:
     ) -> None:
         if self.sex == "male":
             self.d["male"] = "X"
-            self.d["name"] = (
-                choice(self.data.family_names).upper() + ", " + choice(self.data.male_given_names)
-            )
+            self.d["name"] = self.data.family_names().upper() + ", " + self.data.male_given_names()
         else:
             self.d["female"] = "X"
             self.d["name"] = (
-                choice(self.data.family_names).upper() + ", " + choice(self.data.female_given_names)
+                self.data.family_names().upper() + ", " + self.data.female_given_names()
             )
         self.d["profession"] = label_override or self.profession.label
         self.d["employer"] = employer_override or ", ".join(
@@ -1143,6 +1141,15 @@ def get_options() -> Namespace:
         default=True,
     )
 
+    parser.add_argument(
+        "--names",
+        nargs="?",
+        const="en_US",
+        default=None,
+        metavar="LOCALE",
+        help="Use Faker for person name generation instead of data files. "
+        "Optionally specify locale, e.g. en_GB (default: en_US).",
+    )
     data = parser.add_argument_group(title="Data", description="Data file locations")
     data.add_argument(
         "--professions",
@@ -1235,12 +1242,23 @@ def get_options() -> Namespace:
 
 
 def load_data(options: Namespace) -> Data:
-    with options.male_given_names.open() as f:
-        male_given_names = f.read().splitlines()
-    with options.female_given_names.open() as f:
-        female_given_names = f.read().splitlines()
-    with options.surnames.open() as f:
-        family_names = f.read().splitlines()
+    if options.names:
+        from faker import Faker
+
+        faker = Faker(options.names)
+        male_given_names = faker.first_name_male
+        female_given_names = faker.first_name_female
+        family_names = faker.last_name
+    else:
+        with options.male_given_names.open() as f:
+            _male = f.read().splitlines()
+        with options.female_given_names.open() as f:
+            _female = f.read().splitlines()
+        with options.surnames.open() as f:
+            _surnames = f.read().splitlines()
+        male_given_names = lambda: choice(_male)
+        female_given_names = lambda: choice(_female)
+        family_names = lambda: choice(_surnames)
     with options.towns.open() as f:
         towns = f.read().splitlines()
     with options.professions.open() as f:

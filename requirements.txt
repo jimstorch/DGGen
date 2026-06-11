@@ -1,1 +1,2 @@
 reportlab~=4.0
+faker~=40.23.0
