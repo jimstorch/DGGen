@@ -8,20 +8,22 @@ import sys
 import warnings
 from argparse import Namespace
 from collections import defaultdict
-from collections.abc import Iterable
 from copy import copy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from itertools import chain, cycle, islice
 from math import floor
 from pathlib import Path
 from random import choice, choices, randint, sample, shuffle
 from textwrap import shorten, wrap
-from typing import Any, TextIO
+from typing import TYPE_CHECKING, Any, TextIO
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 script_name = os.path.basename(sys.argv[0])
 description = """
@@ -60,7 +62,7 @@ def main() -> None:
         p.bookmark(label)
         for sex in islice(
             cycle(["female", "male"]),
-            options.count or profession["number_to_generate"],
+            options.count or profession.number_to_generate,
         ):
             c = Need2KnowCharacter(
                 data=data,
@@ -74,7 +76,7 @@ def main() -> None:
                 damaged=options.damaged,
             )
             if options.equip:
-                c.equip(profession.get("equipment-kit", None))
+                c.equip(profession.equipment_kit)
             c.print_footnotes()
 
             p.add_page(c.d)
@@ -86,15 +88,168 @@ def main() -> None:
 
 
 @dataclass
+class ProfessionSkills:
+    fixed: dict[str, int]
+    possible: dict[str, int] = field(default_factory=dict)
+    possible_count: int = 0
+    bonus: list[str] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> ProfessionSkills:
+        return cls(
+            fixed=d["fixed"],
+            possible=d.get("possible", {}),
+            possible_count=d.get("possible-count", 0),
+            bonus=d.get("bonus", []),
+        )
+
+
+@dataclass
+class Profession:
+    label: str
+    number_to_generate: int
+    skills: ProfessionSkills
+    bonds: int
+    equipment_kit: str | None = None
+    employer: str = ""
+    division: str = ""
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> Profession:
+        return cls(
+            label=d["label"],
+            number_to_generate=d["number_to_generate"],
+            skills=ProfessionSkills.from_dict(d["skills"]),
+            bonds=d["bonds"],
+            equipment_kit=d.get("equipment-kit"),
+            employer=d.get("employer", ""),
+            division=d.get("division", ""),
+        )
+
+
+@dataclass
+class Damage:
+    dice: int | None = None
+    die_type: int | None = None
+    modifier: int = 0
+    db_applies: bool = False
+    special: str | None = None
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> Damage:
+        return cls(
+            dice=d.get("dice"),
+            die_type=d.get("die-type"),
+            modifier=d.get("modifier", 0),
+            db_applies=d.get("db-applies", False),
+            special=d.get("special"),
+        )
+
+
+@dataclass
+class Lethality:
+    rating: int
+    special: str | None = None
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> Lethality:
+        return cls(rating=d["rating"], special=d.get("special"))
+
+
+@dataclass
+class Weapon:
+    name: str
+    skill: str
+    base_range: str | None = None
+    damage: Damage | None = None
+    bonus: int = 0
+    lethality: Lethality | None = None
+    kill_radius: str | None = None
+    ammo: int | None = None
+    ap: int | None = None
+    notes: list[str] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> Weapon:
+        return cls(
+            name=d["name"],
+            skill=d["skill"],
+            base_range=d.get("base-range"),
+            damage=Damage.from_dict(d["damage"]) if "damage" in d else None,
+            bonus=d.get("bonus", 0),
+            lethality=Lethality.from_dict(d["lethality"]) if "lethality" in d else None,
+            kill_radius=d.get("kill-radius"),
+            ammo=d.get("ammo"),
+            ap=d.get("ap"),
+        )
+
+
+@dataclass
+class WeaponRef:
+    type: str | None = None
+    one_of: list[WeaponRef] = field(default_factory=list)
+    both: list[WeaponRef] = field(default_factory=list)
+    chance: int = 100
+    notes: list[str] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> WeaponRef:
+        return cls(
+            type=d.get("type"),
+            one_of=[WeaponRef.from_dict(w) for w in d.get("one-of", [])],
+            both=[WeaponRef.from_dict(w) for w in d.get("both", [])],
+            chance=d.get("chance", 100),
+            notes=d.get("notes", []),
+        )
+
+
+@dataclass
+class KitArmourEntry:
+    type: str
+    chance: int = 100
+    notes: list[str] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> KitArmourEntry:
+        return cls(type=d["type"], chance=d.get("chance", 100), notes=d.get("notes", []))
+
+
+@dataclass
+class KitGearEntry:
+    text: str
+    chance: int = 100
+    notes: list[str] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> KitGearEntry:
+        return cls(text=d["text"], chance=d.get("chance", 100), notes=d.get("notes", []))
+
+
+@dataclass
+class Kit:
+    weapons: list[WeaponRef]
+    armour: list[KitArmourEntry]
+    gear: list[KitGearEntry]
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> Kit:
+        return cls(
+            weapons=[WeaponRef.from_dict(w) for w in d["weapons"]],
+            armour=[KitArmourEntry.from_dict(a) for a in d["armour"]],
+            gear=[KitGearEntry.from_dict(g) for g in d.get("gear", [])],
+        )
+
+
+@dataclass
 class Data:
     male_given_names: list[str]
     female_given_names: list[str]
     family_names: list[str]
     towns: list[str]
-    professions: dict[str, Any]
-    kits: dict[str, Any]
-    weapons: dict[str, Any]
-    armour: dict[str, Any]
+    professions: dict[str, Profession]
+    kits: dict[str, Kit]
+    weapons: dict[str, Weapon]
+    armour: dict[str, str]
     distinguishing: dict[tuple[str, int], list[str]]
 
 
@@ -235,11 +390,9 @@ class Need2KnowCharacter:
             self.d["name"] = (
                 choice(self.data.family_names).upper() + ", " + choice(self.data.female_given_names)
             )
-        self.d["profession"] = label_override or self.profession["label"]
+        self.d["profession"] = label_override or self.profession.label
         self.d["employer"] = employer_override or ", ".join(
-            e
-            for e in [self.profession.get("employer", ""), self.profession.get("division", "")]
-            if e
+            e for e in [self.profession.employer, self.profession.division] if e
         )
         self.d["nationality"] = "(U.S.A.) " + choice(self.data.towns)
         self.age = randint(min_age, max_age)
@@ -274,17 +427,17 @@ class Need2KnowCharacter:
         self.d.update(self.DEFAULT_SKILLS)
 
         # Professional skills
-        for skill, score in self.profession["skills"]["fixed"].items():
+        for skill, score in self.profession.skills.fixed.items():
             self.d[skill] = score
             logger.debug("%s, set fixed professional skill %s to %s", self, skill, score)
         self.d.update()
         for skill, score in sample(
-            list(self.profession["skills"].get("possible", {}).items()),
-            self.profession["skills"].get("possible-count", 0),
+            list(self.profession.skills.possible.items()),
+            self.profession.skills.possible_count,
         ):
             self.d[skill] = score
             logger.debug("%s, set picked professional skill %s to %s", self, skill, score)
-        for i in range(self.profession["bonds"]):
+        for i in range(self.profession.bonds):
             self.d[f"bond{i}"] = self.d["charisma"]
 
         # Bonus skills
@@ -292,9 +445,7 @@ class Need2KnowCharacter:
 
     def generate_bonus_skills(self) -> None:
         potential_bonus_skills = [
-            s
-            for s in self.profession["skills"].get("bonus", [])
-            if randint(1, 100) <= SUGGESTED_BONUS_CHANCE
+            s for s in self.profession.skills.bonus if randint(1, 100) <= SUGGESTED_BONUS_CHANCE
         ] + sample(self.ALL_BONUS, len(self.ALL_BONUS))
         self.apply_bonuses(potential_bonus_skills, 8, 20, 80)
 
@@ -348,8 +499,8 @@ class Need2KnowCharacter:
         ## possible prof - 1/2 of them, 2 per year
         ## Defaults & bonus - 1/4 of them, 2 per year
         skills_to_check = set(
-            list(self.profession["skills"]["fixed"].keys())
-            + list(self.profession["skills"].get("possible", {}).keys())
+            list(self.profession.skills.fixed.keys())
+            + list(self.profession.skills.possible.keys())
             +
             # list(self.DEFAULT_SKILLS.keys()) +
             self.bonus_skills,
@@ -429,7 +580,7 @@ class Need2KnowCharacter:
         self.d["occult"] += 10
         self.san_lost += 5
         self.d["charisma"] -= 3
-        for i in range(self.profession["bonds"]):
+        for i in range(self.profession.bonds):
             if f"bond{i}" in self.d:
                 self.d[f"bond{i}"] -= 3
         self.adapted_to_violence = 3
@@ -447,7 +598,7 @@ class Need2KnowCharacter:
         potential_bonus_skills = sample(self.ALL_BONUS, len(self.ALL_BONUS))
         self.apply_bonuses(potential_bonus_skills, 5, 10, 90)
         self.san_lost += 5
-        del self.d[f"bond{self.profession['bonds'] - 1}"]
+        del self.d[f"bond{self.profession.bonds - 1}"]
 
     def things_man_was_not_meant_to_know_changes(self, damage: list[str]) -> None:
         damage.append("• Things Man Was Not Meant to Know")
@@ -481,18 +632,21 @@ class Need2KnowCharacter:
         weapons = [self.data.weapons["unarmed"]]
         if kit_name:
             kit = self.data.kits[kit_name]
-            weapons += self.build_weapon_list(kit["weapons"])
+            weapons += self.build_weapon_list(kit.weapons)
 
             gear = []
-            for item in kit["armour"] + kit["gear"]:
-                if item.get("chance", 100) < randint(1, 100):
+            for item in [*kit.armour, *kit.gear]:
+                if item.chance < randint(1, 100):
                     continue
                 notes = (
-                    (" ".join(self.store_footnote(n) for n in item["notes"]) + " ")
-                    if "notes" in item
+                    (" ".join(self.store_footnote(n) for n in item.notes) + " ")
+                    if item.notes
                     else ""
                 )
-                text = notes + (self.data.armour[item["type"]] if "type" in item else item["text"])
+                if isinstance(item, KitArmourEntry):
+                    text = notes + self.data.armour[item.type]
+                else:
+                    text = notes + item.text
                 gear.append(text)
 
             wrapped_gear = list(chain(*[wrap(item, 55, subsequent_indent="  ") for item in gear]))
@@ -506,70 +660,59 @@ class Need2KnowCharacter:
         for i, weapon in enumerate(weapons[:7]):
             self.equip_weapon(i, weapon)
 
-    def build_weapon_list(self, weapons_to_add: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    def build_weapon_list(self, weapons_to_add: Iterable[WeaponRef]) -> list[Weapon]:
         result = []
         for weapon_to_add in weapons_to_add:
-            if "type" in weapon_to_add:
-                weapon = copy(self.data.weapons.get(weapon_to_add["type"], None))
+            if weapon_to_add.type is not None:
+                weapon = copy(self.data.weapons.get(weapon_to_add.type))
                 if weapon:
-                    if "notes" in weapon_to_add:
-                        weapon["notes"] = weapon_to_add["notes"]
-                    result += (
-                        [weapon]
-                        if "chance" not in weapon_to_add
-                        or weapon_to_add["chance"] >= randint(1, 100)
-                        else []
-                    )
+                    if weapon_to_add.notes:
+                        weapon.notes = weapon_to_add.notes
+                    if weapon_to_add.chance >= randint(1, 100):
+                        result.append(weapon)
                 else:
-                    logger.error("Unknown weapon type %s", weapon_to_add["type"])
-            elif "one-of" in weapon_to_add:
-                result += (
-                    self.build_weapon_list([choice(weapon_to_add["one-of"])])
-                    if "chance" not in weapon_to_add or weapon_to_add["chance"] >= randint(1, 100)
-                    else []
-                )
-            elif "both" in weapon_to_add:
-                result += self.build_weapon_list(w for w in weapon_to_add["both"])
+                    logger.error("Unknown weapon type %s", weapon_to_add.type)
+            elif weapon_to_add.one_of:
+                if weapon_to_add.chance >= randint(1, 100):
+                    result += self.build_weapon_list([choice(weapon_to_add.one_of)])
+            elif weapon_to_add.both:
+                result += self.build_weapon_list(weapon_to_add.both)
             else:
                 logger.error("Don't understand weapon %r", weapon_to_add)
         return result
 
-    def equip_weapon(self, slot: int, weapon: dict[str, Any]) -> None:
-        self.e[f"weapon{slot}"] = shorten(weapon["name"], 15, placeholder="…")
-        roll = int(self.d.get(weapon["skill"], 0) + (weapon.get("bonus", 0)))
+    def equip_weapon(self, slot: int, weapon: Weapon) -> None:
+        self.e[f"weapon{slot}"] = shorten(weapon.name, 15, placeholder="…")
+        roll = int(self.d.get(weapon.skill, 0) + weapon.bonus)
         self.e[f"weapon{slot}_roll"] = f"{roll}%"
-        if "base-range" in weapon:
-            self.e[f"weapon{slot}_range"] = weapon["base-range"]
-        if "ap" in weapon:
-            self.e[f"weapon{slot}_ap"] = f"{weapon['ap']}"
-        if "lethality" in weapon:
-            lethality = weapon["lethality"]
+        if weapon.base_range is not None:
+            self.e[f"weapon{slot}_range"] = weapon.base_range
+        if weapon.ap is not None:
+            self.e[f"weapon{slot}_ap"] = f"{weapon.ap}"
+        if weapon.lethality is not None:
+            lethality = weapon.lethality
             lethality_note_indicator = (
-                self.store_footnote(lethality["special"]) if "special" in lethality else None
+                self.store_footnote(lethality.special) if lethality.special else None
             )
             self.e[f"weapon{slot}_lethality"] = (
-                f"{lethality['rating']}%" if lethality["rating"] else ""
+                f"{lethality.rating}%" if lethality.rating else ""
             ) + (f" {lethality_note_indicator}" if lethality_note_indicator else "")
 
-        if "ammo" in weapon:
-            self.e[f"weapon{slot}_ammo"] = f"{weapon['ammo']}"
-        if "kill-radius" in weapon:
-            self.e[f"weapon{slot}_kill_radius"] = f"{weapon['kill-radius']}"
+        if weapon.ammo is not None:
+            self.e[f"weapon{slot}_ammo"] = f"{weapon.ammo}"
+        if weapon.kill_radius is not None:
+            self.e[f"weapon{slot}_kill_radius"] = weapon.kill_radius
 
-        if "notes" in weapon:
-            self.e[f"weapon{slot}_note"] = " ".join(self.store_footnote(n) for n in weapon["notes"])
+        if weapon.notes:
+            self.e[f"weapon{slot}_note"] = " ".join(self.store_footnote(n) for n in weapon.notes)
 
-        if "damage" in weapon:
-            damage = weapon["damage"]
-            damage_note_indicator = (
-                self.store_footnote(damage["special"]) if "special" in damage else None
-            )
+        if weapon.damage is not None:
+            damage = weapon.damage
+            damage_note_indicator = self.store_footnote(damage.special) if damage.special else None
 
-            if "dice" in damage:
-                damage_modifier = (damage.get("modifier", 0)) + (
-                    self.damage_bonus if damage.get("db-applies") else 0
-                )
-                damage_roll = f"{damage['dice']}D{damage['die-type']}" + (
+            if damage.dice is not None:
+                damage_modifier = damage.modifier + (self.damage_bonus if damage.db_applies else 0)
+                damage_roll = f"{damage.dice}D{damage.die_type}" + (
                     f"{damage_modifier:+d}" if damage_modifier else ""
                 )
             else:
@@ -843,7 +986,7 @@ class Need2KnowPDF:
         pdfmetrics.registerFont(TTFont("Special Elite", "data/SpecialElite.ttf"))
         pdfmetrics.registerFont(TTFont("OCRA", "data/OCRA.ttf"))
 
-    def generate_toc(self, professions: list[dict[str, Any]], pages_per_sheet: int) -> None:
+    def generate_toc(self, professions: Iterable[Profession], pages_per_sheet: int) -> None:
         """Build a clickable Table of Contents on page 1."""
         self.bookmark("Table of Contents")
         self.c.setFillColorRGB(0, 0, 0)
@@ -863,11 +1006,9 @@ class Need2KnowPDF:
                 label,
                 (145, (top - 6) - self.line_drop(count), 470, (top + 18) - self.line_drop(count)),
             )
-            pagenum += profession["number_to_generate"] * pages_per_sheet
+            pagenum += profession.number_to_generate * pages_per_sheet
         if pages_per_sheet == 1:
-            chapter = "{:.<40}".format("Blank Character Sheet Second Page") + "{:.>4}".format(
-                pagenum + profession["number_to_generate"],
-            )
+            chapter = "{:.<40}".format("Blank Character Sheet Second Page") + f"{pagenum + profession.number_to_generate:.>4}"
             self.c.drawString(150, top - self.line_drop(pagenum), chapter)
             self.c.linkAbsolute(
                 "Back Page",
@@ -941,16 +1082,8 @@ class Need2KnowPDF:
         self.c.save()
 
 
-def generate_label(profession: dict[str, Any]) -> str:
-    return ", ".join(
-        e
-        for e in [
-            profession.get("label", ""),
-            profession.get("employer", ""),
-            profession.get("division", ""),
-        ]
-        if e
-    )
+def generate_label(profession: Profession) -> str:
+    return ", ".join(e for e in [profession.label, profession.employer, profession.division] if e)
 
 
 def get_options() -> Namespace:
@@ -1054,11 +1187,11 @@ def load_data(options: Namespace) -> Data:
     with Path("data/towns.txt").open() as f:
         towns = f.read().splitlines()
     with options.professions.open() as f:
-        professions = json.load(f)
+        professions = {k: Profession.from_dict(v) for k, v in json.load(f).items()}
     with Path("data/equipment.json").open() as f:
         equipment = json.load(f)
-        kits = equipment["kits"]
-        weapons = equipment["weapons"]
+        kits = {k: Kit.from_dict(v) for k, v in equipment["kits"].items()}
+        weapons = {k: Weapon.from_dict(v) for k, v in equipment["weapons"].items()}
         armour = equipment["armour"]
 
     distinguishing = {}
