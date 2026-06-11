@@ -8,10 +8,11 @@ Some pregenerated sets of characters can be found [here](https://drive.google.co
 
 DGGen is a program written in Python to generate characters for the pen-and-paper roleplaying game Delta Green from Arc
 Dream Publishing. It follows the character creations rules included in Delta Green:Need to Know and the Delta Green
-Agent's Handbook. The [ReportLab](https://www.reportlab.com/dev/opensource/) and [Faker]() libraries are required. 
-Characters are created one-per-page (if unequipped) or two-per-page into a PDF.  (The second-page of the character 
-sheet is included as the final page in the PDF if characters are generated unequipped.) By default, characters of 
-alternating genders are created in each of the following professions:
+Agent's Handbook. The [ReportLab](https://www.reportlab.com/dev/opensource/) and 
+[Faker](https://github.com/joke2k/faker) libraries are required. Characters are created one-per-page (if unequipped) 
+or two-per-page into a PDF.  (The second-page of the character sheet is included as the final page in the PDF if 
+characters are generated unequipped.) By default, characters of alternating genders are created in each of the 
+following professions:
 
 * Anthropologist
 * Business Executive
@@ -186,7 +187,7 @@ Generate a group of Navy SEALS.
 Generate a group of PISCES agents.
 
 ```sh
-./generator.py --professions data/professions-uk.json -n "U.K." --towns data/towns-uk.txt --names en_GB -o "PISCES.pdf"
+./generator.py --professions data/professions-uk.json -n "U.K." --towns data/towns-uk.txt --names en_GB --oconus -o "PISCES.pdf"
 ```
 
 ### help
