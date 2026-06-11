@@ -52,7 +52,7 @@ def main() -> None:
     p = Need2KnowPDF(options.output, pages_per_sheet=pages_per_sheet)
 
     ## TODO: Maybe an option to skip cover, especially for single sheets
-    p.add_cover()
+    p.add_cover(options.oconus)
     ## Moved TOC here instead of Need2KnowPDF.init() so cover could precede it
     if len(professions) > 1:
         p.generate_toc(professions, pages_per_sheet)
@@ -243,9 +243,9 @@ class Kit:
 
 @dataclass
 class Data:
-    male_given_names: "Callable[[], str]"
-    female_given_names: "Callable[[], str]"
-    family_names: "Callable[[], str]"
+    male_given_names: Callable[[], str]
+    female_given_names: Callable[[], str]
+    family_names: Callable[[], str]
     towns: list[str]
     professions: dict[str, Profession]
     kits: dict[str, Kit]
@@ -1048,14 +1048,15 @@ class Need2KnowPDF:
         except KeyError:
             logger.exception("Unknown field %s", field)
 
-    def add_cover(self) -> None:
+    def add_cover(self, oconus: bool) -> None:
         self.c.drawImage("data/front_cover.jpg", 0, 0, 612, 792)
         self.c.setFillColorRGB(255, 255, 255)
         self.c.setFont("OCRA", 24)
         now = datetime.now().strftime("%Y-%m-%dT%H:%MZ")
-        self.c.drawString(20, 85, "DGGEN DTG " + now)
-        self.c.drawString(20, 55, "CLASSIFIED/DG/NTK//")
-        self.c.drawString(20, 25, "SUBJ ROSTER/ACTIVE/NOCELL/CONUS//")
+        self.c.drawString(20, 115, "DGGEN DTG " + now)
+        self.c.drawString(20, 85, "CLASSIFIED/DG/NTK//")
+        self.c.drawString(20, 55, f"SUBJ ROSTER/ACTIVE/NOCELL/{'O' if oconus else ''}CONUS//")
+        self.c.drawString(20, 25, "HTTP://GITHUB.COM/JIMSTORCH/DGGEN")
         self.c.showPage()
         self.c.drawImage("data/inside_cover.jpg", 0, 0, 612, 792)
         self.c.showPage()
@@ -1237,6 +1238,13 @@ def get_options() -> Namespace:
         help="Don't generate damaged veterans.",
         default=True,
     )
+    parser.add_argument(
+        "--oconus",
+        action="store_true",
+        dest="oconus",
+        help="Outside of Continental United States?",
+        default=False,
+    )
 
     return parser.parse_args()
 
@@ -1256,9 +1264,12 @@ def load_data(options: Namespace) -> Data:
             _female = f.read().splitlines()
         with options.surnames.open() as f:
             _surnames = f.read().splitlines()
-        male_given_names = lambda: choice(_male)
-        female_given_names = lambda: choice(_female)
-        family_names = lambda: choice(_surnames)
+        def male_given_names():
+            return choice(_male)
+        def female_given_names():
+            return choice(_female)
+        def family_names():
+            return choice(_surnames)
     with options.towns.open() as f:
         towns = f.read().splitlines()
     with options.professions.open() as f:
