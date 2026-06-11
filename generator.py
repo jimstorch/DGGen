@@ -72,6 +72,7 @@ def main() -> None:
                 employer_override=options.employer,
                 min_age=options.min_age,
                 max_age=options.max_age,
+                nationality=options.nationality,
                 veterancy=options.veterancy,
                 damaged=options.damaged,
             )
@@ -344,6 +345,7 @@ class Need2KnowCharacter:
         employer_override: str | None = None,
         min_age: int = 24,
         max_age: int = 55,
+        nationality: str | None = None,
         veterancy: bool = True,
         damaged: bool = True,
     ) -> None:
@@ -366,7 +368,7 @@ class Need2KnowCharacter:
 
         self.bonus_skills = []
 
-        self.generate_demographics(label_override, employer_override, min_age, max_age)
+        self.generate_demographics(label_override, employer_override, min_age, max_age, nationality)
         self.generate_stats()
         self.generate_skills()
         if veterancy:
@@ -379,6 +381,7 @@ class Need2KnowCharacter:
         employer_override: str | None,
         min_age: int,
         max_age: int,
+        nationality: str | None,
     ) -> None:
         if self.sex == "male":
             self.d["male"] = "X"
@@ -394,7 +397,9 @@ class Need2KnowCharacter:
         self.d["employer"] = employer_override or ", ".join(
             e for e in [self.profession.employer, self.profession.division] if e
         )
-        self.d["nationality"] = "(U.S.A.) " + choice(self.data.towns)
+        self.d["nationality"] = (f"({nationality}) " if nationality else "") + choice(
+            self.data.towns,
+        )
         self.age = randint(min_age, max_age)
         self.d["age"] = "%d    (%s %d)" % (self.age, choice(MONTHS), (randint(1, 28)))
 
@@ -1008,7 +1013,10 @@ class Need2KnowPDF:
             )
             pagenum += profession.number_to_generate * pages_per_sheet
         if pages_per_sheet == 1:
-            chapter = "{:.<40}".format("Blank Character Sheet Second Page") + f"{pagenum + profession.number_to_generate:.>4}"
+            chapter = (
+                "{:.<40}".format("Blank Character Sheet Second Page")
+                + f"{pagenum + profession.number_to_generate:.>4}"
+            )
             self.c.drawString(150, top - self.line_drop(pagenum), chapter)
             self.c.linkAbsolute(
                 "Back Page",
@@ -1158,6 +1166,13 @@ def get_options() -> Namespace:
         type=int,
         help="Maximum age of characters - defaults to %(default)s.",
         default=55,
+    )
+    parser.add_argument(
+        "-n",
+        "--nationality",
+        default="U.S.A.",
+        action="store",
+        help="Set nationality for all generated characters.",
     )
     parser.add_argument(
         "--veterancy",
