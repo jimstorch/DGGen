@@ -8,10 +8,10 @@ Some pregenerated sets of characters can be found [here](https://drive.google.co
 
 DGGen is a program written in Python to generate characters for the pen-and-paper roleplaying game Delta Green from Arc
 Dream Publishing. It follows the character creations rules included in Delta Green:Need to Know and the Delta Green
-Agent's Handbook. The [ReportLab](https://www.reportlab.com/dev/opensource/) library is required. Characters are created
-one-per-page (if unequipped) or two-per-page into a PDF.  (The second-page of the character sheet is included as the
-final page in the PDF if characters are generated unequipped.) By default, characters of alternating genders are created
-in each of the following professions:
+Agent's Handbook. The [ReportLab](https://www.reportlab.com/dev/opensource/) and [Faker]() libraries are required. 
+Characters are created one-per-page (if unequipped) or two-per-page into a PDF.  (The second-page of the character 
+sheet is included as the final page in the PDF if characters are generated unequipped.) By default, characters of 
+alternating genders are created in each of the following professions:
 
 * Anthropologist
 * Business Executive
@@ -50,8 +50,8 @@ the number of characters generated for each. Different sets of professions can b
 See [`data/professions-fbi.json`](data/professions-fbi.json) as an example, or you can create your own.
 
 Pre-built examples include [`data/professions-fbi.json`](data/professions-fbi.json),
-[`data/professions-cia.json`](data/professions-cia.json), [`data/professions-dea.json`](data/professions-dea.json), and
-[`data/professions-socom.json`](data/professions-socom.json).
+[`data/professions-cia.json`](data/professions-cia.json), [`data/professions-dea.json`](data/professions-dea.json),
+[`data/professions-socom.json`](data/professions-socom.json), and [`data/professions-uk.json`](data/professions-uk.json).
 
 ### Veterans
 
@@ -179,6 +179,14 @@ Generate a group of Navy SEALS.
 
 ```sh
 ./generator.py --professions data/professions-socom.json --type seal --count 12 -o "Operation ROOKHAVEN.pdf"
+```
+
+### generate-pisces
+
+Generate a group of PISCES agents.
+
+```sh
+./generator.py --professions data/professions-uk.json -n "U.K." --towns data/towns-uk.txt --names en_GB -o "PISCES.pdf"
 ```
 
 ### help
