@@ -1151,6 +1151,48 @@ def get_options() -> Namespace:
         default=Path("data/professions.json"),
         help="Data file for professions - defaults to %(default)s",
     )
+    data.add_argument(
+        "--male-given-names",
+        action="store",
+        type=Path,
+        default=Path("data/boys1986.txt"),
+        help="Data file for male given names - defaults to %(default)s",
+    )
+    data.add_argument(
+        "--female-given-names",
+        action="store",
+        type=Path,
+        default=Path("data/girls1986.txt"),
+        help="Data file for female given names - defaults to %(default)s",
+    )
+    data.add_argument(
+        "--surnames",
+        action="store",
+        type=Path,
+        default=Path("data/surnames.txt"),
+        help="Data file for family names - defaults to %(default)s",
+    )
+    data.add_argument(
+        "--towns",
+        action="store",
+        type=Path,
+        default=Path("data/towns.txt"),
+        help="Data file for towns - defaults to %(default)s",
+    )
+    data.add_argument(
+        "--equipment",
+        action="store",
+        type=Path,
+        default=Path("data/equipment.json"),
+        help="Data file for equipment - defaults to %(default)s",
+    )
+    data.add_argument(
+        "--distinguishing-features",
+        action="store",
+        type=Path,
+        default=Path("data/distinguishing-features.csv"),
+        help="Data file for distinguishing features - defaults to %(default)s",
+    )
     parser.add_argument(
         "-a",
         "--min-age",
@@ -1193,24 +1235,24 @@ def get_options() -> Namespace:
 
 
 def load_data(options: Namespace) -> Data:
-    with Path("data/boys1986.txt").open() as f:
+    with options.male_given_names.open() as f:
         male_given_names = f.read().splitlines()
-    with Path("data/girls1986.txt").open() as f:
+    with options.female_given_names.open() as f:
         female_given_names = f.read().splitlines()
-    with Path("data/surnames.txt").open() as f:
+    with options.surnames.open() as f:
         family_names = f.read().splitlines()
-    with Path("data/towns.txt").open() as f:
+    with options.towns.open() as f:
         towns = f.read().splitlines()
     with options.professions.open() as f:
         professions = {k: Profession.from_dict(v) for k, v in json.load(f).items()}
-    with Path("data/equipment.json").open() as f:
+    with options.equipment.open() as f:
         equipment = json.load(f)
         kits = {k: Kit.from_dict(v) for k, v in equipment["kits"].items()}
         weapons = {k: Weapon.from_dict(v) for k, v in equipment["weapons"].items()}
         armour = equipment["armour"]
 
     distinguishing = {}
-    with Path("data/distinguishing-features.csv").open() as f:
+    with options.distinguishing_features.open() as f:
         for row in csv.DictReader(f):
             for value in range(int(row["from"]), int(row["to"]) + 1):
                 distinguishing.setdefault((row["statistic"], value), []).append(
