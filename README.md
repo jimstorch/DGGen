@@ -181,6 +181,14 @@ Generate a group of Navy SEALS.
 ./generator.py --professions data/professions-socom.json --type seal --count 12 -o "Operation ROOKHAVEN.pdf"
 ```
 
+### generate-pisces
+
+Generate a group of PISCES agents.
+
+```sh
+./generator.py --professions data/professions-uk.json -n "U.K."  -o "PISCES.pdf"
+```
+
 ### help
 
 To see what options you have available, run:

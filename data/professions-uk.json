@@ -1,0 +1,389 @@
+{
+  "mi5-case-officer": {
+    "label": "Intelligence Case Officer",
+    "employer": "Security Service",
+    "division": "MI5",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "disguise": 50,
+        "drive": 40,
+        "firearms": 30,
+        "language1": 50,
+        "language2": 40,
+        "humint": 60,
+        "sigint": 40,
+        "stealth": 60,
+        "unarmed combat": 50
+      },
+      "bonus": [
+        "language1",
+        "language2",
+        "humint",
+        "sigint",
+        "computer science"
+      ]
+    },
+    "bonds": 2
+  },
+  "mi5-analyst": {
+    "label": "Intelligence Analyst",
+    "employer": "Security Service",
+    "division": "MI5",
+    "number_to_generate": 15,
+    "skills": {
+      "fixed": {
+        "anthropology": 40,
+        "bureaucracy": 50,
+        "computer science": 40,
+        "criminology": 50,
+        "language1": 50,
+        "language2": 50,
+        "language3": 40,
+        "history": 30,
+        "humint": 50,
+        "sigint": 40
+      },
+      "bonus": [
+        "criminology",
+        "computer science",
+        "humint",
+        "sigint"
+      ]
+    },
+    "bonds": 3
+  },
+  "mi5-technical": {
+    "label": "Technical Officer",
+    "employer": "Security Service",
+    "division": "MI5",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "computer science": 60,
+        "craft1label": "Electrician",
+        "craft1value": 20,
+        "craft2label": "Mechanic",
+        "craft2value": 20,
+        "craft3label": "Microelectronics",
+        "craft3value": 50,
+        "science1label": "Mathematics",
+        "science1value": 40,
+        "sigint": 50
+      },
+      "possible-count": 3,
+      "possible": {
+        "bureaucracy": 50,
+        "forensics": 40,
+        "language1": 40,
+        "search": 50,
+        "stealth": 40,
+        "science3value": 40
+      },
+      "bonus": [
+        "computer science",
+        "sigint",
+        "craft3value",
+        "science1value"
+      ]
+    },
+    "bonds": 3
+  },
+  "mi6-case-officer": {
+    "label": "Intelligence Case Officer",
+    "employer": "Secret Intelligence Service",
+    "division": "MI6",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "disguise": 50,
+        "drive": 40,
+        "firearms": 40,
+        "language1": 50,
+        "language2": 40,
+        "humint": 60,
+        "sigint": 40,
+        "stealth": 50,
+        "unarmed combat": 50
+      },
+      "bonus": [
+        "bureaucracy",
+        "humint",
+        "persuade",
+        "sigint"
+      ]
+    },
+    "bonds": 2
+  },
+  "mi6-analyst": {
+    "label": "Intelligence Analyst",
+    "employer": "Secret Intelligence Service",
+    "division": "MI6",
+    "number_to_generate": 15,
+    "skills": {
+      "fixed": {
+        "anthropology": 40,
+        "bureaucracy": 50,
+        "computer science": 40,
+        "criminology": 40,
+        "language1": 50,
+        "language2": 50,
+        "language3": 40,
+        "history": 40,
+        "humint": 50,
+        "sigint": 40
+      },
+      "bonus": [
+        "anthropology",
+        "humint",
+        "sigint",
+        "history"
+      ]
+    },
+    "bonds": 3
+  },
+  "gchq-analyst": {
+    "label": "Intelligence Analyst",
+    "employer": "GCHQ",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "bureaucracy": 40,
+        "computer science": 60,
+        "language1": 50,
+        "language2": 50,
+        "language3": 40,
+        "history": 30,
+        "humint": 30,
+        "science1label": "Mathematics",
+        "science1value": 40,
+        "search": 40,
+        "sigint": 60
+      },
+      "bonus": [
+        "computer science",
+        "language1",
+        "language2",
+        "sigint"
+      ]
+    },
+    "bonds": 3
+  },
+  "gchq-technical": {
+    "label": "Technical Officer",
+    "employer": "GCHQ",
+    "number_to_generate": 15,
+    "skills": {
+      "fixed": {
+        "computer science": 60,
+        "craft1label": "Electrician",
+        "craft1value": 20,
+        "craft2label": "Mechanic",
+        "craft2value": 20,
+        "craft3label": "Microelectronics",
+        "craft3value": 40,
+        "science1label": "Mathematics",
+        "science1value": 40,
+        "sigint": 60
+      },
+      "possible-count": 3,
+      "possible": {
+        "accounting": 50,
+        "bureaucracy": 50,
+        "craft4value": 40,
+        "language1": 50,
+        "law": 40,
+        "science3value": 40
+      },
+      "bonus": [
+        "computer science",
+        "science1value",
+        "sigint",
+        "craft3value"
+      ]
+    },
+    "bonds": 3
+  },
+  "int-corps-analyst": {
+    "label": "Intelligence Analyst",
+    "employer": "British Army",
+    "division": "Intelligence Corps",
+    "number_to_generate": 15,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "athletics": 50,
+        "bureaucracy": 40,
+        "drive": 40,
+        "firearms": 40,
+        "first aid": 30,
+        "language1": 40,
+        "humint": 50,
+        "militaryscience1value": 40,
+        "militaryscience1label": "Land",
+        "navigate": 40,
+        "persuade": 40,
+        "sigint": 40,
+        "unarmed combat": 50
+      },
+      "possible-count": 1,
+      "possible": {
+        "art1": 40,
+        "computer science": 40,
+        "craft1value": 40,
+        "language2": 40
+      },
+      "bonus": [
+        "athletics",
+        "language1",
+        "humint",
+        "sigint"
+      ]
+    },
+    "bonds": 3,
+    "equipment-kit": "soldier"
+  },
+  "int-corps-field": {
+    "label": "Field Intelligence Officer",
+    "employer": "British Army",
+    "division": "Intelligence Corps",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "athletics": 60,
+        "firearms": 60,
+        "heavy weapons": 50,
+        "humint": 50,
+        "melee weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
+        "navigate": 50,
+        "sigint": 50,
+        "stealth": 50,
+        "survival": 50,
+        "swim": 50,
+        "unarmed combat": 60
+      },
+      "bonus": [
+        "firearms",
+        "navigate",
+        "search",
+        "stealth"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  },
+  "special-branch": {
+    "label": "Counter Terrorism Officer",
+    "employer": "Metropolitan Police",
+    "division": "Special Branch",
+    "number_to_generate": 20,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "bureaucracy": 40,
+        "criminology": 50,
+        "drive": 50,
+        "firearms": 40,
+        "forensics": 30,
+        "humint": 60,
+        "law": 40,
+        "persuade": 50,
+        "search": 50,
+        "unarmed combat": 60
+      },
+      "possible-count": 1,
+      "possible": {
+        "accounting": 60,
+        "computer science": 50,
+        "language1": 50,
+        "heavy weapons": 50,
+        "pharmacy": 50
+      },
+      "bonus": [
+        "language1",
+        "language2",
+        "humint",
+        "sigint",
+        "computer science"
+      ]
+    },
+    "bonds": 3,
+    "equipment-kit": "agent"
+  },
+  "22-sas": {
+    "label": "Special Forces Operator",
+    "employer": "British Army",
+    "division": "22 SAS",
+    "number_to_generate": 15,
+    "skills": {
+      "fixed": {
+        "alertness": 60,
+        "athletics": 60,
+        "demolitions": 40,
+        "firearms": 60,
+        "language1": 20,
+        "heavy weapons": 50,
+        "humint": 40,
+        "melee weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
+        "navigate": 50,
+        "persuade": 30,
+        "stealth": 50,
+        "survival": 50,
+        "swim": 50,
+        "unarmed combat": 60
+      },
+      "bonus": [
+        "firearms",
+        "demolitions",
+        "stealth",
+        "survival"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  },
+  "sbs": {
+    "label": "Special Forces Operator",
+    "employer": "Royal Navy",
+    "division": "Special Boat Service",
+    "number_to_generate": 10,
+    "skills": {
+      "fixed": {
+        "alertness": 50,
+        "athletics": 60,
+        "demolitions": 40,
+        "firearms": 60,
+        "heavy weapons": 50,
+        "melee weapons": 50,
+        "militaryscience1value": 60,
+        "militaryscience1label": "Land",
+        "navigate": 50,
+        "pilot1value": 40,
+        "pilot1label": "Small boat",
+        "stealth": 50,
+        "survival": 50,
+        "swim": 70,
+        "unarmed combat": 60
+      },
+      "bonus": [
+        "firearms",
+        "melee weapons",
+        "stealth",
+        "swim"
+      ]
+    },
+    "bonds": 1,
+    "equipment-kit": "spec-ops"
+  }
+}
