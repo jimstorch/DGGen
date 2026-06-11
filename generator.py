@@ -6,15 +6,18 @@ import logging
 import os
 import sys
 import warnings
+from argparse import Namespace
 from collections import defaultdict
+from collections.abc import Iterable
 from copy import copy
 from dataclasses import dataclass
 from datetime import datetime
-from itertools import islice, cycle, chain
+from itertools import chain, cycle, islice
 from math import floor
-from random import randint, shuffle, choice, sample, choices
+from pathlib import Path
+from random import choice, choices, randint, sample, shuffle
 from textwrap import shorten, wrap
-from typing import List, Any, Dict, Tuple
+from typing import Any, TextIO
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -35,7 +38,7 @@ MONTHS = ("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", 
 SUGGESTED_BONUS_CHANCE = 75
 
 
-def main():
+def main() -> None:
     options = get_options()
     init_logger(options.verbosity)
     logger.debug(options)
@@ -44,7 +47,7 @@ def main():
 
     pages_per_sheet = 2 if options.equip else 1
     professions = [data.professions[options.type]] if options.type else data.professions.values()
-    p = Need2KnowPDF(options.output, professions, pages_per_sheet=pages_per_sheet)
+    p = Need2KnowPDF(options.output, pages_per_sheet=pages_per_sheet)
 
     ## TODO: Maybe an option to skip cover, especially for single sheets
     p.add_cover()
@@ -56,7 +59,8 @@ def main():
         label = generate_label(profession)
         p.bookmark(label)
         for sex in islice(
-            cycle(["female", "male"]), options.count or profession["number_to_generate"]
+            cycle(["female", "male"]),
+            options.count or profession["number_to_generate"],
         ):
             c = Need2KnowCharacter(
                 data=data,
@@ -81,9 +85,22 @@ def main():
     logger.info("Wrote %s", options.output)
 
 
-class Need2KnowCharacter(object):
+@dataclass
+class Data:
+    male_given_names: list[str]
+    female_given_names: list[str]
+    family_names: list[str]
+    towns: list[str]
+    professions: dict[str, Any]
+    kits: dict[str, Any]
+    weapons: dict[str, Any]
+    armour: dict[str, Any]
+    distinguishing: dict[tuple[str, int], list[str]]
+
+
+class Need2KnowCharacter:
     PHYSICAL_STATS = ["strength", "constitution", "dexterity"]
-    STATS = PHYSICAL_STATS + ["intelligence", "power", "charisma"]
+    STATS = [*PHYSICAL_STATS, "intelligence", "power", "charisma"]
 
     stat_pools = [
         [13, 13, 12, 12, 11, 11],
@@ -163,17 +180,18 @@ class Need2KnowCharacter(object):
         "language1",
     ]
 
-    def __init__(self,
-                 data,
-                 sex,
-                 profession,
-                 label_override=None,
-                 employer_override=None,
-                 min_age=24,
-                 max_age=55,
-                 veterancy=True,
-                 damaged=True,
-        ):
+    def __init__(
+        self,
+        data: Data,
+        sex: str,
+        profession: dict[str, Any],
+        label_override: str | None = None,
+        employer_override: str | None = None,
+        min_age: int = 24,
+        max_age: int = 55,
+        veterancy: bool = True,
+        damaged: bool = True,
+    ) -> None:
         self.data = data
         self.profession = profession
         self.sex = sex
@@ -187,8 +205,8 @@ class Need2KnowCharacter(object):
 
         self.footnotes = defaultdict(
             iter(
-                ["*", "†", "‡", "§", "¶", "**", "††", "‡‡", "§§", "¶¶", "***", "†††", "‡‡‡", "§§§"]
-            ).__next__
+                ["*", "†", "‡", "§", "¶", "**", "††", "‡‡", "§§", "¶¶", "***", "†††", "‡‡‡", "§§§"],
+            ).__next__,
         )
 
         self.bonus_skills = []
@@ -200,7 +218,13 @@ class Need2KnowCharacter(object):
             self.veterancy(damaged)
         self.generate_derived_attributes()
 
-    def generate_demographics(self, label_override, employer_override, min_age, max_age):
+    def generate_demographics(
+        self,
+        label_override: str | None,
+        employer_override: str | None,
+        min_age: int,
+        max_age: int,
+    ) -> None:
         if self.sex == "male":
             self.d["male"] = "X"
             self.d["name"] = (
@@ -221,18 +245,18 @@ class Need2KnowCharacter(object):
         self.age = randint(min_age, max_age)
         self.d["age"] = "%d    (%s %d)" % (self.age, choice(MONTHS), (randint(1, 28)))
 
-    def generate_stats(self):
+    def generate_stats(self) -> None:
         rolled = [[sum(sorted([randint(1, 6) for _ in range(4)])[1:]) for _ in range(6)]]
         pool = choice(self.stat_pools + rolled)
         shuffle(pool)
-        for score, stat in zip(pool, self.STATS):
+        for score, stat in zip(pool, self.STATS, strict=False):
             self.d[stat] = score
             logger.debug("%s,stat %s is %s", self, stat, score)
 
-    def generate_derived_attributes(self):
-        self.d["hitpoints"] = int(round((self.d["strength"] + self.d["constitution"]) / 2.0))
+    def generate_derived_attributes(self) -> None:
+        self.d["hitpoints"] = round((self.d["strength"] + self.d["constitution"]) / 2.0)
         self.d["willpower"] = self.d["power"]
-        self.d["sanity"] = (self.d["power"] * 5)
+        self.d["sanity"] = self.d["power"] * 5
         if self.san_lost:
             self.d["current_sanity"] = (self.d["power"] * 5) - self.san_lost
         self.d["breaking point"] = self.d["sanity"] - self.d["power"]
@@ -245,7 +269,7 @@ class Need2KnowCharacter(object):
         self.d["violence"] = "  ".join("X" for _ in range(self.adapted_to_violence))
         self.d["helplessness"] = "  ".join("X" for _ in range(self.adapted_to_helplessness))
 
-    def generate_skills(self):
+    def generate_skills(self) -> None:
         # Default skills
         self.d.update(self.DEFAULT_SKILLS)
 
@@ -266,7 +290,7 @@ class Need2KnowCharacter(object):
         # Bonus skills
         self.generate_bonus_skills()
 
-    def generate_bonus_skills(self):
+    def generate_bonus_skills(self) -> None:
         potential_bonus_skills = [
             s
             for s in self.profession["skills"].get("bonus", [])
@@ -274,10 +298,13 @@ class Need2KnowCharacter(object):
         ] + sample(self.ALL_BONUS, len(self.ALL_BONUS))
         self.apply_bonuses(potential_bonus_skills, 8, 20, 80)
 
-    def apply_bonuses(self, potential_bonus_skills: list[str],
-                      number_of_skills_to_boost: int,
-                      boost_by_percentile: int,
-                      max_skill_level: int) -> None:
+    def apply_bonuses(
+        self,
+        potential_bonus_skills: list[str],
+        number_of_skills_to_boost: int,
+        boost_by_percentile: int,
+        max_skill_level: int,
+    ) -> None:
         bonuses_applied = 0
         while bonuses_applied < number_of_skills_to_boost:
             skill = potential_bonus_skills.pop(0)
@@ -286,30 +313,47 @@ class Need2KnowCharacter(object):
                 self.d[skill] = boosted
                 bonuses_applied += 1
                 self.bonus_skills.append(skill)
-                logger.debug("%s, boosted bonus skill %s by %s%% to %s", self, skill, boost_by_percentile, boosted)
+                logger.debug(
+                    "%s, boosted bonus skill %s by %s%% to %s",
+                    self,
+                    skill,
+                    boost_by_percentile,
+                    boosted,
+                )
             else:
                 logger.debug(
-                    "%s, Skipped boost - %s already at %s", self, skill, self.d.get(skill, 0)
+                    "%s, Skipped boost - %s already at %s",
+                    self,
+                    skill,
+                    self.d.get(skill, 0),
                 )
 
-    def veterancy(self, damaged):
+    def veterancy(self, damaged: bool) -> None:
         self.veterancy_skill_boosts()
         self.veterancy_stat_losses()
         if damaged:
             self.damaged_veteran_changes()
 
     @staticmethod
-    def skill_checks_at_age(age, earned_at_start=4, start_age=25, halve_rate=10):
+    def skill_checks_at_age(
+        age: int,
+        earned_at_start: int = 4,
+        start_age: int = 25,
+        halve_rate: int = 10,
+    ) -> float:
         return earned_at_start * (1 / 2 ** ((age - start_age) / halve_rate))
 
-    def veterancy_skill_boosts(self):
+    def veterancy_skill_boosts(self) -> None:
         ## Fixed prof - 4 per year
         ## possible prof - 1/2 of them, 2 per year
         ## Defaults & bonus - 1/4 of them, 2 per year
-        skills_to_check = set(list(self.profession['skills']['fixed'].keys()) +
-                              list(self.profession['skills'].get('possible', {}).keys()) +
-                              # list(self.DEFAULT_SKILLS.keys()) +
-                              self.bonus_skills)
+        skills_to_check = set(
+            list(self.profession["skills"]["fixed"].keys())
+            + list(self.profession["skills"].get("possible", {}).keys())
+            +
+            # list(self.DEFAULT_SKILLS.keys()) +
+            self.bonus_skills,
+        )
         skill_checks = floor(sum(self.skill_checks_at_age(y) for y in range(25, self.age + 1)))
         for skill in skills_to_check:
             if isinstance(self.d.get(skill, 0), int) and self.d.get(skill, 0) > 0:
@@ -319,43 +363,68 @@ class Need2KnowCharacter(object):
                     roll = randint(1, 100)
                     if roll > current or roll == 100:
                         self.d[skill] += 1
-                logger.debug("%s, veterancy experience %s, %s checks, from %s to %s", self, skill, skill_checks, original, self.d[skill])
+                logger.debug(
+                    "%s, veterancy experience %s, %s checks, from %s to %s",
+                    self,
+                    skill,
+                    skill_checks,
+                    original,
+                    self.d[skill],
+                )
 
-    def veterancy_stat_losses(self):
+    def veterancy_stat_losses(self) -> None:
         losses = 0
-        if 40 <= self.age <= 49: losses = 1
-        elif 50 <= self.age <= 59: losses = 2
-        elif 60 <= self.age <= 69: losses = 4
-        elif 70 <= self.age <= 79: losses = 8
-        elif 80 <= self.age <= 89: losses = 16
-        elif 90 <= self.age: losses = 32
+        if 40 <= self.age <= 49:
+            losses = 1
+        elif 50 <= self.age <= 59:
+            losses = 2
+        elif 60 <= self.age <= 69:
+            losses = 4
+        elif 70 <= self.age <= 79:
+            losses = 8
+        elif 80 <= self.age <= 89:
+            losses = 16
+        elif self.age >= 90:
+            losses = 32
         while losses and not all(self.d[stat] <= 1 for stat in self.PHYSICAL_STATS):
             target = choice(self.PHYSICAL_STATS)
             if self.d[target] > 1:
                 self.d[target] -= 1
                 losses -= 1
-                logger.debug("%s, %s decreased by 1 to %s by veterancy", self, target, self.d[target])
+                logger.debug(
+                    "%s, %s decreased by 1 to %s by veterancy",
+                    self,
+                    target,
+                    self.d[target],
+                )
 
-    def damaged_veteran_changes(self):
+    def damaged_veteran_changes(self) -> None:
         damage_count = choices(range(5), weights=[80, 10, 5, 4, 1])[0]
         if damage_count:
             damage_methods = sample(
-                [self.extreme_violence_changes,
-                 self.captivity_or_imprisonment_changes,
-                 self.hard_experience_changes,
-                 self.things_man_was_not_meant_to_know_changes],
-                k=damage_count
+                [
+                    self.extreme_violence_changes,
+                    self.captivity_or_imprisonment_changes,
+                    self.hard_experience_changes,
+                    self.things_man_was_not_meant_to_know_changes,
+                ],
+                k=damage_count,
             )
             damage: list[str] = ["Damaged Veteran:"]
             for method in damage_methods:
                 logger.debug("%s, damaged veteran changes %s", self, method.__name__)
                 method(damage)
-                logger.debug("%s, san lost, adapted_to_violence, adapted_to_helplessness now %s, %s, %s", self,
-                             self.san_lost, self.adapted_to_violence, self.adapted_to_helplessness)
+                logger.debug(
+                    "%s, san lost, adapted_to_violence, adapted_to_helplessness now %s, %s, %s",
+                    self,
+                    self.san_lost,
+                    self.adapted_to_violence,
+                    self.adapted_to_helplessness,
+                )
             for i, description in enumerate(damage):
                 self.e[f"detail{i}"] = description
 
-    def extreme_violence_changes(self, damage: list[str]):
+    def extreme_violence_changes(self, damage: list[str]) -> None:
         damage.append("• Extreme Violence")
         self.d["occult"] += 10
         self.san_lost += 5
@@ -365,57 +434,50 @@ class Need2KnowCharacter(object):
                 self.d[f"bond{i}"] -= 3
         self.adapted_to_violence = 3
 
-    def captivity_or_imprisonment_changes(self, damage: list[str]):
+    def captivity_or_imprisonment_changes(self, damage: list[str]) -> None:
         damage.append("• Captivity or Imprisonment")
         self.d["occult"] += 10
         self.san_lost += 5
         self.d["power"] -= 3
         self.adapted_to_helplessness = 3
 
-    def hard_experience_changes(self, damage: list[str]):
+    def hard_experience_changes(self, damage: list[str]) -> None:
         damage.append("• Hard Experience")
         self.d["occult"] += 10
         potential_bonus_skills = sample(self.ALL_BONUS, len(self.ALL_BONUS))
         self.apply_bonuses(potential_bonus_skills, 5, 10, 90)
         self.san_lost += 5
-        del self.d[f"bond{self.profession['bonds']-1}"]
+        del self.d[f"bond{self.profession['bonds'] - 1}"]
 
-    def things_man_was_not_meant_to_know_changes(self, damage: list[str]):
+    def things_man_was_not_meant_to_know_changes(self, damage: list[str]) -> None:
         damage.append("• Things Man Was Not Meant to Know")
         self.d["unnatural"] = self.d.get("unnatural", 0) + 10
         self.d["occult"] += 20
         self.san_lost += self.d["power"]
         self.d["disorder0"] = "Disorder: " + choice(
-            ["Amnesia",
-             "Depersonalization",
-             "Depression",
-             "Dissociative Identity",
-             "Fugues",
-             "Megalomania",
-             "Paranoia",
-             "Sleep Disorder",
-             ])
+            [
+                "Amnesia",
+                "Depersonalization",
+                "Depression",
+                "Dissociative Identity",
+                "Fugues",
+                "Megalomania",
+                "Paranoia",
+                "Sleep Disorder",
+            ],
+        )
 
-    def potential_bonus_skills(self, profession):
+    def potential_bonus_skills(self, profession: dict[str, Any]) -> list[str]:
         return [
             s
             for s in profession["skills"].get("bonus", [])
             if randint(1, 100) <= SUGGESTED_BONUS_CHANCE
         ] + sample(self.ALL_BONUS, len(self.ALL_BONUS))
 
-    def __str__(self):
-        return ", ".join(
-            [
-                self.d.get(i)
-                for i in ("name", "profession", "employer", "department")
-                if self.d.get(i)
-            ]
-        )
-
-    def distinguishing(self, field, value):
+    def distinguishing(self, field: str, value: int) -> str:
         return choice(self.data.distinguishing.get((field, value), [""]))
 
-    def equip(self, kit_name=None):
+    def equip(self, kit_name: str | None = None) -> None:
         weapons = [self.data.weapons["unarmed"]]
         if kit_name:
             kit = self.data.kits[kit_name]
@@ -444,7 +506,7 @@ class Need2KnowCharacter(object):
         for i, weapon in enumerate(weapons[:7]):
             self.equip_weapon(i, weapon)
 
-    def build_weapon_list(self, weapons_to_add):
+    def build_weapon_list(self, weapons_to_add: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
         result = []
         for weapon_to_add in weapons_to_add:
             if "type" in weapon_to_add:
@@ -461,19 +523,20 @@ class Need2KnowCharacter(object):
                 else:
                     logger.error("Unknown weapon type %s", weapon_to_add["type"])
             elif "one-of" in weapon_to_add:
-                result += (self.build_weapon_list([choice(weapon_to_add["one-of"])])
-                           if "chance" not in weapon_to_add
-                              or weapon_to_add["chance"] >= randint(1, 100)
-                           else [])
+                result += (
+                    self.build_weapon_list([choice(weapon_to_add["one-of"])])
+                    if "chance" not in weapon_to_add or weapon_to_add["chance"] >= randint(1, 100)
+                    else []
+                )
             elif "both" in weapon_to_add:
                 result += self.build_weapon_list(w for w in weapon_to_add["both"])
             else:
                 logger.error("Don't understand weapon %r", weapon_to_add)
         return result
 
-    def equip_weapon(self, slot, weapon):
+    def equip_weapon(self, slot: int, weapon: dict[str, Any]) -> None:
         self.e[f"weapon{slot}"] = shorten(weapon["name"], 15, placeholder="…")
-        roll = int(self.d.get(weapon["skill"], 0) + (weapon["bonus"] if "bonus" in weapon else 0))
+        roll = int(self.d.get(weapon["skill"], 0) + (weapon.get("bonus", 0)))
         self.e[f"weapon{slot}_roll"] = f"{roll}%"
         if "base-range" in weapon:
             self.e[f"weapon{slot}_range"] = weapon["base-range"]
@@ -503,8 +566,8 @@ class Need2KnowCharacter(object):
             )
 
             if "dice" in damage:
-                damage_modifier = (damage["modifier"] if "modifier" in damage else 0) + (
-                    self.damage_bonus if "db-applies" in damage and damage["db-applies"] else 0
+                damage_modifier = (damage.get("modifier", 0)) + (
+                    self.damage_bonus if damage.get("db-applies") else 0
                 )
                 damage_roll = f"{damage['dice']}D{damage['die-type']}" + (
                     f"{damage_modifier:+d}" if damage_modifier else ""
@@ -516,18 +579,18 @@ class Need2KnowCharacter(object):
                 f" {damage_note_indicator}" if damage_note_indicator else ""
             )
 
-    def store_footnote(self, note):
-        """Returns indicator character"""
+    def store_footnote(self, note: str | None) -> str | None:
+        """Returns indicator character."""
         return self.footnotes[note] if note else None
 
-    def print_footnotes(self):
+    def print_footnotes(self) -> None:
         notes = list(
             chain(
                 *[
                     wrap(f"{pointer} {note}", 40, subsequent_indent="  ")
                     for (note, pointer) in list(self.footnotes.items())
-                ]
-            )
+                ],
+            ),
         )
 
         if len(notes) > 12:
@@ -535,17 +598,17 @@ class Need2KnowCharacter(object):
         for i, note in enumerate(notes[:12]):
             self.e[f"note{i}"] = note
 
-    def __str__(self):
+    def __str__(self) -> str:
         return ", ".join(
             [
                 self.d.get(i)
                 for i in ("name", "profession", "employer", "department", "age")
                 if self.d.get(i)
-            ]
+            ],
         )
 
 
-class Need2KnowPDF(object):
+class Need2KnowPDF:
     # Location of form fields in Points (1/72 inch) -  0,0 is bottom-left - and font size
     field_xys = {
         # Personal Data
@@ -768,12 +831,11 @@ class Need2KnowPDF(object):
     # Fields that also get a multiplier
     x5_stats = ["strength", "constitution", "dexterity", "intelligence", "power", "charisma"]
 
-    def __init__(self, filename, professions, pages_per_sheet=1):
+    def __init__(self, filename: Path, pages_per_sheet: int = 1) -> None:
         self.filename = filename
         self.pages_per_sheet = pages_per_sheet
-        self.c = canvas.Canvas(self.filename)
-        # Set US Letter in points
-        self.c.setPageSize((612, 792))
+        self.c = canvas.Canvas(str(self.filename))
+        self.c.setPageSize((612, 792))  # Set US Letter in points
         self.c.setAuthor("https://github.com/jimstorch/DGGen")
         self.c.setTitle("Delta Green Agent Roster")
         self.c.setSubject("Pre-generated characters for the Delta Green RPG")
@@ -781,22 +843,20 @@ class Need2KnowPDF(object):
         pdfmetrics.registerFont(TTFont("Special Elite", "data/SpecialElite.ttf"))
         pdfmetrics.registerFont(TTFont("OCRA", "data/OCRA.ttf"))
 
-    def generate_toc(self, professions, pages_per_sheet):
-        """Build a clickable Table of Contents on page 1"""
+    def generate_toc(self, professions: list[dict[str, Any]], pages_per_sheet: int) -> None:
+        """Build a clickable Table of Contents on page 1."""
         self.bookmark("Table of Contents")
         self.c.setFillColorRGB(0, 0, 0)
         self.c.setFont("OCRA", 10)
-        #now = datetime.now().isoformat() + "Z"
-        #self.c.drawString(150, 712, "DGGEN DTG " + now)
-        #self.c.drawString(150, 700, "CLASSIFIED/DG/NTK//")
-        #self.c.drawString(150, 688, "SUBJ ROSTER/ACTIVE/NOCELL/CONUS//")
+        # now = datetime.now().isoformat() + "Z"
+        # self.c.drawString(150, 712, "DGGEN DTG " + now)
+        # self.c.drawString(150, 700, "CLASSIFIED/DG/NTK//")
+        # self.c.drawString(150, 688, "SUBJ ROSTER/ACTIVE/NOCELL/CONUS//")
         top = 650
         pagenum = 2
         for count, profession in enumerate(professions):
             label = generate_label(profession)
-            chapter = "{:.<40}".format(shorten(label, 37, placeholder="")) + "{:.>4}".format(
-                pagenum
-            )
+            chapter = "{:.<40}".format(shorten(label, 37, placeholder="")) + f"{pagenum:.>4}"
             self.c.drawString(150, top - self.line_drop(count), chapter)
             self.c.linkAbsolute(
                 label,
@@ -806,7 +866,7 @@ class Need2KnowPDF(object):
             pagenum += profession["number_to_generate"] * pages_per_sheet
         if pages_per_sheet == 1:
             chapter = "{:.<40}".format("Blank Character Sheet Second Page") + "{:.>4}".format(
-                pagenum + profession["number_to_generate"]
+                pagenum + profession["number_to_generate"],
             )
             self.c.drawString(150, top - self.line_drop(pagenum), chapter)
             self.c.linkAbsolute(
@@ -822,28 +882,28 @@ class Need2KnowPDF(object):
         self.c.showPage()
 
     @staticmethod
-    def line_drop(count, linesize=22):
+    def line_drop(count: int, linesize: int = 22) -> int:
         return count * linesize
 
-    def bookmark(self, text):
+    def bookmark(self, text: str) -> None:
         self.c.bookmarkPage(text)
         self.c.addOutlineEntry(text, text)
 
-    def draw_string(self, x, y, size, text):
+    def draw_string(self, x: int, y: int, size: int, text: str) -> None:
         self.c.setFont(DEFAULT_FONT, size)
         self.c.setFillColorRGB(*TEXT_COLOR)
         self.c.drawString(x, y, str(text))
 
-    def fill_field(self, field, value):
+    def fill_field(self, field: str, value: Any) -> None:
         try:
             x, y, s = self.field_xys[field]
             self.draw_string(x, y, s, str(value))
         except KeyError:
-            logger.error("Unknown field %s", field)
+            logger.exception("Unknown field %s", field)
 
-    def add_cover(self):
+    def add_cover(self) -> None:
         self.c.drawImage("data/front_cover.jpg", 0, 0, 612, 792)
-        self.c.setFillColorRGB(255,255,255)
+        self.c.setFillColorRGB(255, 255, 255)
         self.c.setFont("OCRA", 24)
         now = datetime.now().strftime("%Y-%m-%dT%H:%MZ")
         self.c.drawString(20, 85, "DGGEN DTG " + now)
@@ -853,7 +913,7 @@ class Need2KnowPDF(object):
         self.c.drawImage("data/inside_cover.jpg", 0, 0, 612, 792)
         self.c.showPage()
 
-    def add_page(self, d):
+    def add_page(self, d: dict[str, Any]) -> None:
         # Add background.  ReportLab will cache it for repeat
         self.c.drawImage("data/Character Sheet NO BACKGROUND FRONT.jpg", 0, 0, 612, 792)
 
@@ -863,7 +923,7 @@ class Need2KnowPDF(object):
         # Tell ReportLab we're done with current page
         self.c.showPage()
 
-    def add_page_2(self, e):
+    def add_page_2(self, e: dict[str, Any]) -> None:
         # Add background.  ReportLab will cache it for repeat
         self.c.drawImage("data/Character Sheet NO BACKGROUND BACK.jpg", 0, 0, 612, 792)
 
@@ -873,7 +933,7 @@ class Need2KnowPDF(object):
         # Tell ReportLab we're done with current page
         self.c.showPage()
 
-    def save_pdf(self):
+    def save_pdf(self) -> None:
         if self.pages_per_sheet == 1:
             self.bookmark("Back Page")
             self.c.drawImage("data/Character Sheet NO BACKGROUND BACK.jpg", 0, 0, 612, 792)
@@ -881,7 +941,7 @@ class Need2KnowPDF(object):
         self.c.save()
 
 
-def generate_label(profession):
+def generate_label(profession: dict[str, Any]) -> str:
     return ", ".join(
         e
         for e in [
@@ -893,7 +953,7 @@ def generate_label(profession):
     )
 
 
-def get_options():
+def get_options() -> Namespace:
     """Get options and arguments from argv string."""
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
@@ -909,11 +969,15 @@ def get_options():
         "-o",
         "--output",
         action="store",
-        default=f"DeltaGreenPregen-{datetime.now():%Y-%m-%d-%H-%M}.pdf",
+        type=Path,
+        default=Path(f"DeltaGreenPregen-{datetime.now():%Y-%m-%d-%H-%M}.pdf"),
         help="Output PDF file. Defaults to %(default)s.",
     )
     parser.add_argument(
-        "-t", "--type", action="store", help=f"Select single profession to generate."
+        "-t",
+        "--type",
+        action="store",
+        help="Select single profession to generate.",
     )
     parser.add_argument("-l", "--label", action="store", help="Override profession label.")
     parser.add_argument(
@@ -924,7 +988,10 @@ def get_options():
         help="Generate this many characters of each profession.",
     )
     parser.add_argument(
-        "-e", "--employer", action="store", help="Set employer for all generated characters."
+        "-e",
+        "--employer",
+        action="store",
+        help="Set employer for all generated characters.",
     )
     parser.add_argument(
         "-u",
@@ -939,7 +1006,8 @@ def get_options():
     data.add_argument(
         "--professions",
         action="store",
-        default="data/professions.json",
+        type=Path,
+        default=Path("data/professions.json"),
         help="Data file for professions - defaults to %(default)s",
     )
     parser.add_argument(
@@ -948,7 +1016,7 @@ def get_options():
         action="store",
         type=int,
         help="Minimum age of characters - defaults to %(default)s.",
-        default=25
+        default=25,
     )
     parser.add_argument(
         "-A",
@@ -976,45 +1044,32 @@ def get_options():
     return parser.parse_args()
 
 
-@dataclass
-class Data:
-    male_given_names: List[str]
-    female_given_names: List[str]
-    family_names: List[str]
-    towns: List[str]
-    professions: Dict[str, Any]
-    kits: Dict[str, Any]
-    weapons: Dict[str, Any]
-    armour: Dict[str, Any]
-    distinguishing: Dict[Tuple[str, int], List[str]]
-
-
-def load_data(options):
-    with open("data/boys1986.txt") as f:
+def load_data(options: Namespace) -> Data:
+    with Path("data/boys1986.txt").open() as f:
         male_given_names = f.read().splitlines()
-    with open("data/girls1986.txt") as f:
+    with Path("data/girls1986.txt").open() as f:
         female_given_names = f.read().splitlines()
-    with open("data/surnames.txt") as f:
+    with Path("data/surnames.txt").open() as f:
         family_names = f.read().splitlines()
-    with open("data/towns.txt") as f:
+    with Path("data/towns.txt").open() as f:
         towns = f.read().splitlines()
-    with open(options.professions) as f:
+    with options.professions.open() as f:
         professions = json.load(f)
-    with open("data/equipment.json") as f:
+    with Path("data/equipment.json").open() as f:
         equipment = json.load(f)
         kits = equipment["kits"]
         weapons = equipment["weapons"]
         armour = equipment["armour"]
 
     distinguishing = {}
-    with open("data/distinguishing-features.csv") as f:
+    with Path("data/distinguishing-features.csv").open() as f:
         for row in csv.DictReader(f):
             for value in range(int(row["from"]), int(row["to"]) + 1):
                 distinguishing.setdefault((row["statistic"], value), []).append(
-                    row["distinguishing"]
+                    row["distinguishing"],
                 )
 
-    data = Data(
+    return Data(
         male_given_names=male_given_names,
         female_given_names=female_given_names,
         family_names=family_names,
@@ -1025,12 +1080,12 @@ def load_data(options):
         armour=armour,
         distinguishing=distinguishing,
     )
-    return data
 
 
-def init_logger(verbosity, stream=sys.stdout):
+def init_logger(verbosity: int, stream: TextIO = sys.stdout) -> None:
     """Initialize logger and warnings according to verbosity argument.
-    Verbosity levels of 0-3 supported."""
+    Verbosity levels of 0-3 supported.
+    """
     is_not_debug = verbosity <= 2
     level = (
         [logging.ERROR, logging.WARNING, logging.INFO][verbosity] if is_not_debug else logging.DEBUG
