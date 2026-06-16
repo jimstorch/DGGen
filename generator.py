@@ -1096,6 +1096,9 @@ def generate_label(profession: Profession) -> str:
 def get_options() -> Namespace:
     """Get options and arguments from argv string."""
     parser = argparse.ArgumentParser(description=description)
+    gen = parser.add_argument_group(title="Character generation", description="Character generation options")
+    data = parser.add_argument_group(title="Data", description="Data file locations")
+    doc = parser.add_argument_group(title="Document options", description="Document options")
     parser.add_argument(
         "-v",
         "--verbosity",
@@ -1105,7 +1108,7 @@ def get_options() -> Namespace:
         "i.e. -v to see warnings, -vv for information messages, or -vvv for debug messages.",
     )
     parser.add_argument("-V", "--version", action="version", version=__version__)
-    parser.add_argument(
+    doc.add_argument(
         "-o",
         "--output",
         action="store",
@@ -1113,33 +1116,33 @@ def get_options() -> Namespace:
         default=Path(f"DeltaGreenPregen-{datetime.now():%Y-%m-%d-%H-%M}.pdf"),
         help="Output PDF file. Defaults to %(default)s.",
     )
-    parser.add_argument(
+    gen.add_argument(
         "-t",
         "--type",
         action="store",
         help="Select single profession to generate.",
     )
-    parser.add_argument(
+    doc.add_argument(
         "-T",
         "--title",
         action="store",
         help="Document title for cover page.",
     )
-    parser.add_argument("-l", "--label", action="store", help="Override profession label.")
-    parser.add_argument(
+    gen.add_argument("-l", "--label", action="store", help="Override profession label.")
+    gen.add_argument(
         "-c",
         "--count",
         type=int,
         action="store",
         help="Generate this many characters of each profession.",
     )
-    parser.add_argument(
+    gen.add_argument(
         "-e",
         "--employer",
         action="store",
         help="Set employer for all generated characters.",
     )
-    parser.add_argument(
+    gen.add_argument(
         "-u",
         "--unequipped",
         action="store_false",
@@ -1148,7 +1151,7 @@ def get_options() -> Namespace:
         default=True,
     )
 
-    parser.add_argument(
+    data.add_argument(
         "--names",
         nargs="?",
         const="en_US",
@@ -1157,7 +1160,6 @@ def get_options() -> Namespace:
         help="Use Faker for person name generation instead of data files. "
         "Optionally specify locale, e.g. en_GB (default: en_US).",
     )
-    data = parser.add_argument_group(title="Data", description="Data file locations")
     data.add_argument(
         "--professions",
         action="store",
@@ -1207,7 +1209,7 @@ def get_options() -> Namespace:
         default=Path("data/distinguishing-features.csv"),
         help="Data file for distinguishing features - defaults to %(default)s",
     )
-    parser.add_argument(
+    gen.add_argument(
         "-a",
         "--min-age",
         action="store",
@@ -1215,7 +1217,7 @@ def get_options() -> Namespace:
         help="Minimum age of characters - defaults to %(default)s.",
         default=25,
     )
-    parser.add_argument(
+    gen.add_argument(
         "-A",
         "--max-age",
         action="store",
@@ -1223,28 +1225,28 @@ def get_options() -> Namespace:
         help="Maximum age of characters - defaults to %(default)s.",
         default=55,
     )
-    parser.add_argument(
+    gen.add_argument(
         "-n",
         "--nationality",
         default="U.S.A.",
         action="store",
         help="Set nationality for all generated characters.",
     )
-    parser.add_argument(
+    gen.add_argument(
         "--veterancy",
         action="store_true",
         dest="veterancy",
         help="Grant additional experience due to age.",
         default=False,
     )
-    parser.add_argument(
+    gen.add_argument(
         "--no-damaged",
         action="store_false",
         dest="damaged",
         help="Don't generate damaged veterans.",
         default=True,
     )
-    parser.add_argument(
+    doc.add_argument(
         "--oconus",
         action="store_true",
         dest="oconus",
