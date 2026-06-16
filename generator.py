@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import csv
+import itertools
 import json
 import logging
 import os
@@ -246,7 +247,7 @@ class Data:
     male_given_names: Callable[[], str]
     female_given_names: Callable[[], str]
     family_names: Callable[[], str]
-    towns: list[str]
+    towns: Callable[[], str]
     professions: dict[str, Profession]
     kits: dict[str, Kit]
     weapons: dict[str, Weapon]
@@ -395,9 +396,7 @@ class Need2KnowCharacter:
         self.d["employer"] = employer_override or ", ".join(
             e for e in [self.profession.employer, self.profession.division] if e
         )
-        self.d["nationality"] = (f"({nationality}) " if nationality else "") + choice(
-            self.data.towns,
-        )
+        self.d["nationality"] = (f"({nationality}) " if nationality else "") + self.data.towns()
         self.age = randint(min_age, max_age)
         self.d["age"] = "%d    (%s %d)" % (self.age, choice(MONTHS), (randint(1, 28)))
 
@@ -1271,7 +1270,14 @@ def load_data(options: Namespace) -> Data:
         def family_names():
             return choice(_surnames)
     with options.towns.open() as f:
-        towns = f.read().splitlines()
+        if options.towns.suffix == ".csv":
+            rows = list(csv.DictReader(f))
+            _towns = [r["town"] for r in rows]
+            _pops = list(itertools.accumulate(int(r["pop"]) for r in rows))
+        else:
+            _towns, _pops = f.read().splitlines(), None
+    def towns():
+        return choices(_towns, cum_weights=_pops, k=1)[0]
     with options.professions.open() as f:
         professions = {k: Profession.from_dict(v) for k, v in json.load(f).items()}
     with options.equipment.open() as f:

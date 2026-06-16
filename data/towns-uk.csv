@@ -1,0 +1,459 @@
+town,pop
+London,8776535
+Birmingham,1121375
+Leeds,536280
+Liverpool,506565
+Sheffield,500535
+Manchester,470405
+Bristol,425215
+Leicester,406580
+Coventry,344285
+Bradford,333950
+Nottingham,299790
+Newcastle upon Tyne,286445
+Brighton and Hove,277105
+Derby,275575
+Kingston upon Hull,270810
+Plymouth,266955
+Milton Keynes,264349
+Stoke-on-Trent,260560
+Southampton,249620
+Northampton,243520
+Wolverhampton,234025
+Luton,233525
+Portsmouth,223305
+Reading,203795
+Norwich,200770
+Bournemouth,196455
+Peterborough,190605
+Bolton,184090
+Swindon,183680
+Southend-on-Sea,182305
+Warrington,174970
+Oxford,170805
+Sunderland,168315
+Slough,166855
+Fishponds,160270
+Telford,156910
+Cambridge,152740
+Ipswich,151565
+Blackpool,149070
+Middlesbrough,148215
+York,141685
+Huddersfield,141675
+Poole,141005
+Watford,131325
+Colchester,130245
+Exeter,126175
+Blackburn,124955
+Crawley,120550
+Gloucester,118555
+Stockport,117935
+Basingstoke,117210
+Basildon,115955
+Cheltenham,115940
+Gateshead,115280
+Worthing,111620
+Rochdale,111255
+Oldham,110720
+Chelmsford,110625
+Birkenhead,109835
+Maidstone,109490
+Gillingham,108480
+Salford,108410
+Solihull,107735
+St Helens,107680
+Worcester,105465
+Lincoln,104555
+West Bromwich,103110
+Eastbourne,99180
+Wakefield,97870
+Wythenshawe,97660
+Bedford,97235
+Hemel Hempstead,95985
+Preston,94490
+Stevenage,94470
+Southport,94440
+Bath,94080
+Harlow,93580
+Royal Sutton Coldfield,93375
+Darlington,93015
+Chester,92760
+Hastings,91490
+Nuneaton,88815
+Halifax,88115
+Hartlepool,87995
+Aylesbury,87950
+Doncaster,87455
+Grimsby,85925
+Wallasey,85610
+Stockton-on-Tees,84815
+Weston-super-Mare,84605
+High Wycombe,83535
+Ashford,82140
+Redditch,81635
+Wigan,81580
+Scunthorpe,81265
+Bury,81095
+Bracknell,78675
+Burnley,78255
+Rugby,78120
+Guildford,77880
+Carlisle,77730
+Chatham,76955
+Newcastle-under-Lyme,76505
+Chesterfield,76420
+Burton upon Trent,76255
+Tamworth,76090
+Shrewsbury,76015
+Woking,75660
+St Albans,75540
+Harrogate,75515
+Crewe,74120
+South Shields,73345
+Stafford,71690
+Rotherham,71535
+Barnsley,71405
+Lowestoft,71315
+Walsall,70775
+Gosport,70110
+Dartford,69130
+Bognor Regis,68435
+Corby,68160
+Paignton,67520
+Maidenhead,67375
+Rochester,67285
+Ellesmere Port,65430
+Loughborough,64860
+Dudley,64270
+Dewsbury,63720
+Mansfield,63445
+Margate,63320
+Kettering,63150
+Cannock,63065
+Sale,62550
+Taunton,61665
+Runcorn,61645
+Farnborough,60655
+Tynemouth,60605
+Hereford,60480
+Halesowen,60110
+Widnes,59935
+Huyton with Roby,59845
+Scarborough,59505
+Gravesend,58105
+Bebington,57600
+Kidderminster,57560
+Stourbridge,56950
+Smethwick,56340
+Weymouth,55535
+Brentwood,55340
+Barrow-in-Furness,55255
+Canterbury,55090
+Wellingborough,54425
+Sittingbourne,54390
+Macclesfield,54345
+Bootle,53720
+Carlton,53555
+Clacton-on-Sea,53200
+Lancaster,52655
+Beeston,52355
+Banbury,52045
+Torquay,52035
+Folkestone,51995
+Kingswinford,51910
+Bloxwich,51875
+Welwyn Garden City,51505
+Washington,51320
+Royal Leamington Spa,51310
+Royal Tunbridge Wells,51220
+Hinckley,50725
+Durham,50510
+Wokingham,50325
+Crosby,50215
+Horsham,50215
+Yeovil,50170
+Thundersley,49885
+Altrincham,49680
+Willenhall,49580
+Christchurch,48985
+Keighley,48750
+Ashton-under-Lyne,48600
+Andover,48480
+Winchester,48480
+Eastleigh,48360
+Bridgwater,47860
+Salisbury,47690
+King's Lynn,47615
+Tipton,47200
+West Molesey,47150
+Havant,46960
+Middleton,46630
+Kirkby,45560
+Leigh,45495
+Castleford,45355
+Wallsend,45355
+Boston,45340
+Oldbury,45180
+Bletchley,45010
+Grantham,44905
+Batley,44500
+Grays,44345
+Bexhill-on-Sea,43755
+Trowbridge,43750
+Cheshunt,43680
+Worksop,43440
+Braintree,43190
+Leighton Buzzard,42735
+Lytham St Anne's,42695
+Fareham,42625
+Newbury,42260
+Ramsgate,42030
+Urmston,41740
+Hatfield,41560
+Bury St Edmunds,41280
+Eccles,41125
+Bishop's Stortford,40915
+Hoddesdon,40615
+Bamber Bridge,40360
+Haywards Heath,40185
+Arnold,40010
+Aldershot,39825
+Borehamwood,39765
+Blyth,39730
+Chorley,39535
+Leyland,39295
+Prescot,39225
+Rowley Regis,39050
+Ilkeston,38725
+Canvey Island,38010
+Long Eaton,37820
+Fleet,37790
+Bicester,37755
+Redcar,37660
+Chadderton,37610
+Whitley Bay,36880
+Camberley,36785
+Warwick,36680
+West Bridgford,36490
+Sutton in Ashfield,36425
+Dover,36360
+Tonbridge,36125
+Chippenham,36090
+Denton,35995
+Hyde,35895
+Epsom,35850
+Hucknall,35840
+Locks Heath,35755
+Exmouth,35500
+Hitchin,35220
+Skelmersdale,34915
+Accrington,34895
+Pudsey,34850
+Bridlington,34845
+Waterlooville,34775
+Bromsgrove,34755
+Wigston,34730
+Fulwood,34690
+Bilston,34640
+Didcot,34600
+Swadlincote,34565
+Dunstable,34500
+Billericay,34075
+Horndean,34050
+Letchworth Garden City,33990
+Billingham,33920
+Rustington,33885
+Nelson,33805
+Burgess Hill,33355
+Loughton,33345
+St Neots,33265
+Great Malvern,33185
+Abingdon-on-Thames,33175
+Brighouse,33160
+Caversham,33040
+West Byfleet,33035
+Pontefract,32975
+Morecambe,32750
+Lichfield,32580
+Morley,32550
+Winsford,32530
+Redhill,32525
+Rayleigh,32380
+Brierley Hill,32305
+Whitstable,32195
+Sedgley,31990
+Chandler's Ford,31975
+Chichester,31710
+Rushden,31685
+Windsor,31560
+Prestwich,31495
+Barnstaple,31275
+Radcliffe,31115
+Bedworth,31090
+Harpenden,30965
+Beverley,30930
+Spalding,30550
+Witney,30165
+Congleton,30005
+Northfleet,29900
+Consett,29885
+Newark-on-Trent,29755
+Heywood,29725
+Cleethorpes,29670
+Newton Abbot,29650
+Eston,29635
+Stanford-le-Hope,29525
+Jarrow,29470
+Shipley,29225
+Heswall,29075
+Deal,28985
+Great Yarmouth,28985
+Kendal,28940
+Cramlington,28845
+Hertford,28800
+Farnworth,28760
+Bushey,28425
+Yate,28350
+Ashington,28280
+Evesham,28250
+Stratford-upon-Avon,28120
+Totton,28090
+Woodley,28025
+Stretford,28015
+Egham,28000
+Lancing,27930
+Frome,27905
+Burntwood,27900
+Darwen,27900
+Daventry,27790
+Ormskirk,27715
+Atherton,27575
+Wickford,27535
+Ewell,27515
+Melton Mowbray,27450
+Witham,27395
+Tadworth,27095
+Horley,27070
+Walton-on-Thames,27020
+Longbenton,26880
+Stalybridge,26830
+Wisbech,26795
+Haverhill,26705
+Sevenoaks,26475
+Droitwich Spa,26420
+Ashton-in-Makerfield,26375
+Portishead,26355
+East Grinstead,26350
+Rickmansworth,26290
+Fleetwood,26225
+Larkfield,26150
+Rugeley,26145
+Stroud,26080
+Little Hulton,25825
+Broadstairs,25775
+Newton Aycliffe,25765
+Wilmslow,25725
+Huntingdon,25600
+Golborne,25555
+Thatcham,25550
+Thetford,25510
+Newport,25405
+Coseley,25205
+Bradley Stoke,25200
+Herne Bay,24870
+Cheadle Hulme,24785
+Wickersley,24655
+Newton-le-Willows,24650
+Newquay,24545
+Hindley,24490
+Gorleston-on-Sea,24470
+St Austell,24360
+Lee-on-the-Solent,24315
+Ash Vale,24285
+Heanor,24260
+Felixstowe,24220
+Market Harborough,24165
+Ryde,24105
+Falmouth,24070
+Oadby,24030
+Ascot,23995
+Sudbury,23920
+Droylsden,23915
+Seaford,23865
+Reigate,23780
+Retford,23740
+Chesham,23695
+Rawtenstall,23680
+Shoreham-by-Sea,23660
+West Thurrock,23585
+Chester-le-Street,23560
+Orrell,23410
+Potters Bar,23400
+Ingleby Barwick,23380
+Maldon,23380
+Bishop Auckland,23355
+Thornaby-on-Tees,23350
+Hedge End,23190
+Truro,23060
+Royton,22990
+Whitehaven,22945
+Clifton,22935
+Formby,22890
+Swinton,22885
+Ashford,22825
+Kempston,22785
+Caterham,22755
+Hailsham,22550
+South Ockendon,22440
+Kenilworth,22235
+Reddish,22200
+Whitefield,22185
+Chapeltown,22180
+Crowborough,21990
+Coalville,21980
+Normanton,21980
+Westhoughton,21960
+Biggleswade,21950
+Gainsborough,21910
+Ossett,21855
+Seaham,21665
+Great Bookham,21655
+Darlaston,21540
+Stowmarket,21535
+Sunbury-on-Thames,21475
+Old Trafford,21445
+Dorchester,21360
+Hebburn,21345
+March,21345
+Bingley,21330
+Staines-upon-Thames,21325
+Workington,21275
+Kirkby-in-Ashfield,21270
+Berkhamsted,21240
+Brownhills,21240
+Dronfield,21160
+Dukinfield,21155
+Quedgeley,21125
+Clevedon,21085
+Rothwell,20965
+Faversham,20940
+Dereham,20785
+Stamford,20750
+Horwich,20700
+Skegness,20700
+Stratton St Margaret,20690
+Farnham,20500
+Penwortham,20485
+Camborne,20450
+Spennymoor,20410
+Maghull,20370
+Wednesbury,20315
+Stourport-on-Severn,20305
+Harwich,20215
+Sandhurst,20215
+Ripley,20180
+Goole,20175
+Hazel Grove,20170
+Buxton,20050
+Hazlemere,20005
