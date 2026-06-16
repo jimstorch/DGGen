@@ -53,7 +53,7 @@ def main() -> None:
     p = Need2KnowPDF(options.output, pages_per_sheet=pages_per_sheet)
 
     ## TODO: Maybe an option to skip cover, especially for single sheets
-    p.add_cover(options.oconus)
+    p.add_cover(options.title, options.oconus)
     ## Moved TOC here instead of Need2KnowPDF.init() so cover could precede it
     if len(professions) > 1:
         p.generate_toc(professions, pages_per_sheet)
@@ -1047,11 +1047,12 @@ class Need2KnowPDF:
         except KeyError:
             logger.exception("Unknown field %s", field)
 
-    def add_cover(self, oconus: bool) -> None:
+    def add_cover(self, title: str, oconus: bool) -> None:
         self.c.drawImage("data/front_cover.jpg", 0, 0, 612, 792)
         self.c.setFillColorRGB(255, 255, 255)
         self.c.setFont("OCRA", 24)
         now = datetime.now().strftime("%Y-%m-%dT%H:%MZ")
+        if title:  self.c.drawString(20, 175, title)
         self.c.drawString(20, 115, "DGGEN DTG " + now)
         self.c.drawString(20, 85, "CLASSIFIED/DG/NTK//")
         self.c.drawString(20, 55, f"SUBJ ROSTER/ACTIVE/NOCELL/{'O' if oconus else ''}CONUS//")
@@ -1117,6 +1118,12 @@ def get_options() -> Namespace:
         "--type",
         action="store",
         help="Select single profession to generate.",
+    )
+    parser.add_argument(
+        "-T",
+        "--title",
+        action="store",
+        help="Document title for cover page.",
     )
     parser.add_argument("-l", "--label", action="store", help="Override profession label.")
     parser.add_argument(
