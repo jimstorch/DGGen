@@ -187,7 +187,7 @@ Generate a group of Navy SEALS.
 Generate a group of PISCES agents.
 
 ```sh
-./generator.py --professions data/professions-uk.json -n "U.K." --towns data/towns-uk.txt --names en_GB --oconus -o "PISCES.pdf"
+./generator.py --professions data/professions-uk.json -n "U.K." --towns data/towns-uk.csv --names en_GB --oconus -o "PISCES.pdf"
 ```
 
 ### help
