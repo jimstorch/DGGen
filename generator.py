@@ -19,6 +19,7 @@ from random import choice, choices, randint, sample, shuffle
 from textwrap import shorten, wrap
 from typing import TYPE_CHECKING, Any, TextIO
 
+from faker import Faker
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
@@ -1052,7 +1053,8 @@ class Need2KnowPDF:
         self.c.setFillColorRGB(255, 255, 255)
         self.c.setFont("OCRA", 24)
         now = datetime.now().strftime("%Y-%m-%dT%H:%MZ")
-        if title:  self.c.drawString(20, 175, title)
+        if title:
+            self.c.drawString(20, 175, title)
         self.c.drawString(20, 115, "DGGEN DTG " + now)
         self.c.drawString(20, 85, "CLASSIFIED/DG/NTK//")
         self.c.drawString(20, 55, f"SUBJ ROSTER/ACTIVE/NOCELL/{'O' if oconus else ''}CONUS//")
@@ -1096,7 +1098,10 @@ def generate_label(profession: Profession) -> str:
 def get_options() -> Namespace:
     """Get options and arguments from argv string."""
     parser = argparse.ArgumentParser(description=description)
-    gen = parser.add_argument_group(title="Character generation", description="Character generation options")
+    gen = parser.add_argument_group(
+        title="Character generation",
+        description="Character generation options",
+    )
     data = parser.add_argument_group(title="Data", description="Data file locations")
     doc = parser.add_argument_group(title="Document options", description="Document options")
     parser.add_argument(
@@ -1259,8 +1264,6 @@ def get_options() -> Namespace:
 
 def load_data(options: Namespace) -> Data:
     if options.names:
-        from faker import Faker
-
         faker = Faker(options.names)
         male_given_names = faker.first_name_male
         female_given_names = faker.first_name_female
@@ -1272,12 +1275,16 @@ def load_data(options: Namespace) -> Data:
             _female = f.read().splitlines()
         with options.surnames.open() as f:
             _surnames = f.read().splitlines()
+
         def male_given_names():
             return choice(_male)
+
         def female_given_names():
             return choice(_female)
+
         def family_names():
             return choice(_surnames)
+
     with options.towns.open() as f:
         if options.towns.suffix == ".csv":
             rows = list(csv.DictReader(f))
@@ -1285,8 +1292,10 @@ def load_data(options: Namespace) -> Data:
             _pops = list(itertools.accumulate(int(r["pop"]) for r in rows))
         else:
             _towns, _pops = f.read().splitlines(), None
+
     def towns():
         return choices(_towns, cum_weights=_pops, k=1)[0]
+
     with options.professions.open() as f:
         professions = {k: Profession.from_dict(v) for k, v in json.load(f).items()}
     with options.equipment.open() as f:
