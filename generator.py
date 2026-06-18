@@ -1197,7 +1197,7 @@ def get_options() -> Namespace:
         "--towns",
         action="store",
         type=Path,
-        default=Path("data/towns.txt"),
+        default=Path("data/towns-us.csv"),
         help="Data file for towns - defaults to %(default)s",
     )
     data.add_argument(
