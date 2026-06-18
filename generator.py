@@ -19,6 +19,7 @@ from random import choice, choices, randint, sample, shuffle
 from textwrap import shorten, wrap
 from typing import TYPE_CHECKING, Any, TextIO
 
+from faker import Faker
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
@@ -53,7 +54,7 @@ def main() -> None:
     p = Need2KnowPDF(options.output, pages_per_sheet=pages_per_sheet)
 
     ## TODO: Maybe an option to skip cover, especially for single sheets
-    p.add_cover(options.oconus)
+    p.add_cover(options.title, options.oconus)
     ## Moved TOC here instead of Need2KnowPDF.init() so cover could precede it
     if len(professions) > 1:
         p.generate_toc(professions, pages_per_sheet)
@@ -1047,11 +1048,13 @@ class Need2KnowPDF:
         except KeyError:
             logger.exception("Unknown field %s", field)
 
-    def add_cover(self, oconus: bool) -> None:
+    def add_cover(self, title: str, oconus: bool) -> None:
         self.c.drawImage("data/front_cover.jpg", 0, 0, 612, 792)
         self.c.setFillColorRGB(255, 255, 255)
         self.c.setFont("OCRA", 24)
         now = datetime.now().strftime("%Y-%m-%dT%H:%MZ")
+        if title:
+            self.c.drawString(20, 175, title)
         self.c.drawString(20, 115, "DGGEN DTG " + now)
         self.c.drawString(20, 85, "CLASSIFIED/DG/NTK//")
         self.c.drawString(20, 55, f"SUBJ ROSTER/ACTIVE/NOCELL/{'O' if oconus else ''}CONUS//")
@@ -1095,6 +1098,12 @@ def generate_label(profession: Profession) -> str:
 def get_options() -> Namespace:
     """Get options and arguments from argv string."""
     parser = argparse.ArgumentParser(description=description)
+    gen = parser.add_argument_group(
+        title="Character generation",
+        description="Character generation options",
+    )
+    data = parser.add_argument_group(title="Data", description="Data file locations")
+    doc = parser.add_argument_group(title="Document options", description="Document options")
     parser.add_argument(
         "-v",
         "--verbosity",
@@ -1104,7 +1113,7 @@ def get_options() -> Namespace:
         "i.e. -v to see warnings, -vv for information messages, or -vvv for debug messages.",
     )
     parser.add_argument("-V", "--version", action="version", version=__version__)
-    parser.add_argument(
+    doc.add_argument(
         "-o",
         "--output",
         action="store",
@@ -1112,27 +1121,33 @@ def get_options() -> Namespace:
         default=Path(f"DeltaGreenPregen-{datetime.now():%Y-%m-%d-%H-%M}.pdf"),
         help="Output PDF file. Defaults to %(default)s.",
     )
-    parser.add_argument(
+    gen.add_argument(
         "-t",
         "--type",
         action="store",
         help="Select single profession to generate.",
     )
-    parser.add_argument("-l", "--label", action="store", help="Override profession label.")
-    parser.add_argument(
+    doc.add_argument(
+        "-T",
+        "--title",
+        action="store",
+        help="Document title for cover page.",
+    )
+    gen.add_argument("-l", "--label", action="store", help="Override profession label.")
+    gen.add_argument(
         "-c",
         "--count",
         type=int,
         action="store",
         help="Generate this many characters of each profession.",
     )
-    parser.add_argument(
+    gen.add_argument(
         "-e",
         "--employer",
         action="store",
         help="Set employer for all generated characters.",
     )
-    parser.add_argument(
+    gen.add_argument(
         "-u",
         "--unequipped",
         action="store_false",
@@ -1141,7 +1156,7 @@ def get_options() -> Namespace:
         default=True,
     )
 
-    parser.add_argument(
+    data.add_argument(
         "--names",
         nargs="?",
         const="en_US",
@@ -1150,7 +1165,6 @@ def get_options() -> Namespace:
         help="Use Faker for person name generation instead of data files. "
         "Optionally specify locale, e.g. en_GB (default: en_US).",
     )
-    data = parser.add_argument_group(title="Data", description="Data file locations")
     data.add_argument(
         "--professions",
         action="store",
@@ -1200,7 +1214,7 @@ def get_options() -> Namespace:
         default=Path("data/distinguishing-features.csv"),
         help="Data file for distinguishing features - defaults to %(default)s",
     )
-    parser.add_argument(
+    gen.add_argument(
         "-a",
         "--min-age",
         action="store",
@@ -1208,7 +1222,7 @@ def get_options() -> Namespace:
         help="Minimum age of characters - defaults to %(default)s.",
         default=25,
     )
-    parser.add_argument(
+    gen.add_argument(
         "-A",
         "--max-age",
         action="store",
@@ -1216,28 +1230,28 @@ def get_options() -> Namespace:
         help="Maximum age of characters - defaults to %(default)s.",
         default=55,
     )
-    parser.add_argument(
+    gen.add_argument(
         "-n",
         "--nationality",
         default="U.S.A.",
         action="store",
         help="Set nationality for all generated characters.",
     )
-    parser.add_argument(
+    gen.add_argument(
         "--veterancy",
         action="store_true",
         dest="veterancy",
         help="Grant additional experience due to age.",
         default=False,
     )
-    parser.add_argument(
+    gen.add_argument(
         "--no-damaged",
         action="store_false",
         dest="damaged",
         help="Don't generate damaged veterans.",
         default=True,
     )
-    parser.add_argument(
+    doc.add_argument(
         "--oconus",
         action="store_true",
         dest="oconus",
@@ -1250,8 +1264,6 @@ def get_options() -> Namespace:
 
 def load_data(options: Namespace) -> Data:
     if options.names:
-        from faker import Faker
-
         faker = Faker(options.names)
         male_given_names = faker.first_name_male
         female_given_names = faker.first_name_female
@@ -1263,12 +1275,16 @@ def load_data(options: Namespace) -> Data:
             _female = f.read().splitlines()
         with options.surnames.open() as f:
             _surnames = f.read().splitlines()
+
         def male_given_names():
             return choice(_male)
+
         def female_given_names():
             return choice(_female)
+
         def family_names():
             return choice(_surnames)
+
     with options.towns.open() as f:
         if options.towns.suffix == ".csv":
             rows = list(csv.DictReader(f))
@@ -1276,8 +1292,10 @@ def load_data(options: Namespace) -> Data:
             _pops = list(itertools.accumulate(int(r["pop"]) for r in rows))
         else:
             _towns, _pops = f.read().splitlines(), None
+
     def towns():
         return choices(_towns, cum_weights=_pops, k=1)[0]
+
     with options.professions.open() as f:
         professions = {k: Profession.from_dict(v) for k, v in json.load(f).items()}
     with options.equipment.open() as f:

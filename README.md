@@ -102,93 +102,129 @@ Install dependencies
 pip install -U -r requirements.txt
 ```
 
+### out-dir
+
+Run: once
+
+```sh
+mkdir -p out/dg-veterans
+```
+
 ### generate
 
 Generate standard characters.
 
+Requires: out-dir
+
 ```sh
-./generator.py
+./generator.py --output "out/1001 DG Characters.pdf"
 ```
 
 ### generate-dg-veterans
 
 Generate cells D-Z of Delta Green veterans.
 
+Requires: out-dir
+
 ```sh
-for cell in {D..Z} ; do ./generator.py --type agent --count 3 --output "$cell Cell.pdf" --veterancy ; done
+for cell in D E F G H I J K L M N O P Q R S T U V W X Y Z ; do ./generator.py --type agent --count 3 --output "out/dg-veterans/$cell Cell.pdf" -T "$cell Cell" --veterancy ; done
 ```
 
 ### generate-soldiers
 
 Generate a group of Green Berets.
 
+Requires: out-dir
+
 ```sh
-./generator.py --type soldier --label "Green Beret" --employer "United States Army" --count 24 --output "Bravo Company.pdf"
+./generator.py --type soldier --label "Green Beret" --employer "United States Army" --count 24 --output "out/Bravo Company.pdf" -T "Bravo Company, Green Berets"
 ```
 
 ### generate-police
 
 Generate a group of Police.
 
+Requires: out-dir
+
 ```sh
-./generator.py --type police --employer "NYPD" --output "The 17th Precinct.pdf"
+./generator.py --type police --employer "NYPD" --output "out/The 17th Precinct.pdf" -T "17th Precinct, NYPD"
 ```
 
 ### generate-criminals
 
 Generate a group of criminals.
 
+Requires: out-dir
+
 ```sh
-./generator.py --type criminal --label "Thug" --employer "Fat Tony" --count 12 --output "Tony's Enforcers.pdf"
+./generator.py --type criminal --label "Thug" --employer "Fat Tony" --count 12 --output "out/Tony's Enforcers.pdf" -T "Tony's Enforcers"
 ```
 
 ### generate-fbi
 
 Generate a group of FBI Agents.
 
+Requires: out-dir
+
 ```sh
-./generator.py --professions data/professions-fbi.json -o "FBI Field Office.pdf"
+./generator.py --professions data/professions-fbi.json -o "out/FBI Field Office.pdf" -T "FBI Field Office"
 ```
 
 ### generate-cia
 
 Generate a group of CIA Agents.
 
+Requires: out-dir
+
 ```sh
-./generator.py --professions data/professions-cia.json -o "CIA London Station.pdf"
+./generator.py --professions data/professions-cia.json -o "out/CIA London Station.pdf" -T "London Station, CIA"
 ```
 
 ### generate-socom
 
 Generate a group of special forces soldiers.
 
+Requires: out-dir
+
 ```sh
-./generator.py --professions data/professions-socom.json -o "SOCOM Camp Echo.pdf"
+./generator.py --professions data/professions-socom.json -o "out/SOCOM Camp Echo.pdf" -T "Camp Echo, SOCOM"
 ```
 
 Generate a group of DEA Agents.
 
+Requires: out-dir
+
 ### generate-dea
 
 ```sh
-./generator.py --professions data/professions-dea.json -o "DEA Field Office.pdf"
+./generator.py --professions data/professions-dea.json -o "out/DEA Field Office.pdf" -T "DEA Field Office"
 ```
 
 ### generate-seals
 
 Generate a group of Navy SEALS.
 
+Requires: out-dir
+
 ```sh
-./generator.py --professions data/professions-socom.json --type seal --count 12 -o "Operation ROOKHAVEN.pdf"
+./generator.py --professions data/professions-socom.json --type seal --count 12 -o "out/Operation ROOKHAVEN.pdf" -T "Operation ROOKHAVEN, Navy SEALs"
 ```
 
 ### generate-pisces
 
 Generate a group of PISCES agents.
 
+Requires: out-dir
+
 ```sh
-./generator.py --professions data/professions-uk.json -n "U.K." --towns data/towns-uk.csv --names en_GB --oconus -o "PISCES.pdf"
+./generator.py --professions data/professions-uk.json -n "U.K." --towns data/towns-uk.csv --names en_GB --oconus -o "out/PISCES.pdf" -T "Suspected PISCES agents"
 ```
+
+### generate-all
+
+Requires: generate, generate-dg-veterans, generate-soldiers, generate-police, generate-cia, generate-fbi, generate-socom, generate-dea, generate-seals, generate-pisces
+
+RunDeps: async
 
 ### help
 
